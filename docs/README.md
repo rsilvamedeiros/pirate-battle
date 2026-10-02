@@ -60,4 +60,4 @@ These points are recorded in the [test plan](testing/test-plan.md#review-blocker
 
 For each completed step, record what changed, which requirements it addresses, how it was verified, and any AI contribution. Distinguish documentation checks from executed application tests. Update ADR status only after review, and link actual reports or measurements when available.
 
-The root README remains the intended entry point for the final application's setup, controls, commands, network scenarios, and deployment instructions required by §11. This guide tracks the construction process and the use of AI during that work.
+The root [README.md](../README.md) preserves the original challenge. [TECHNICAL.md](../TECHNICAL.md) describes the current implementation, while [TESTING.md](../TESTING.md) contains setup and practical verification instructions. This guide tracks the construction process and the use of AI during that work. Expand the solution guides with remaining scenario and deployment instructions as those features are delivered.
