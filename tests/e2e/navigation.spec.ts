@@ -10,8 +10,9 @@ test('abandons an active match on refresh without persisting or submitting it', 
 })
 
 test('abandonment keeps the earlier completed result and pending queue unchanged', async ({ page }) => {
-  await startGame(page, 'lethal-chaser')
+  await startGame(page, 'lethal-chaser', 'http-4xx')
   await advance(page, 100)
+  await expect(page.getByRole('status')).toContainText('Registration pending. Please retry.')
   const previous = await page.evaluate(() => [localStorage.getItem('pirate-battle.last-result.v1'), localStorage.getItem('pirate-battle.outbox.v1')])
   await page.getByRole('button', { name: 'Play Again', exact: true }).click()
   await expect.poll(() => page.evaluate(() => window.__game?.getState().status)).toBe('running')

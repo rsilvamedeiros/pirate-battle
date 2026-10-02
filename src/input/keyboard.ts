@@ -7,6 +7,7 @@ const bindings: Record<string, GameAction> = {
 
 export function attachKeyboard(engine: GameEngine) {
   function keydown(event: KeyboardEvent) {
+    if (engine.getState().status === 'completed') return
     if (event.target instanceof HTMLElement && event.target.closest('input, textarea, select, [contenteditable="true"]')) return
     if (event.code === 'Escape' || event.code === 'KeyP') {
       event.preventDefault()

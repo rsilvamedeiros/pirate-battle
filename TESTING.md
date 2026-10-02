@@ -49,16 +49,43 @@ Open the URL printed by Vite. Start with a new browser profile/context for defau
 | Automatic pause | Switch browser tabs or move focus away; return | Session stays paused until explicit Resume; paused time is excluded |
 | Exit and restart | Pause, choose Main Menu, then Play again | Old canvas is removed; ship, health, score and timer reset |
 | Time completion | Save a 60-second session, Play, and let active time expire | Completion dialog appears; movement stops; Play Again starts fresh |
-| Result and refresh | Complete a match, return to Main Menu, refresh, select Last Result | Score, active duration, reason and date remain unchanged; registration is pending |
+| Result and refresh | Complete a match in success; return to Main Menu, refresh, select Last Result | Details remain unchanged; registration stays confirmed; outbox has no duplicate entry |
 | Pending matches | Complete two matches with Play Again between them | Distinct match IDs stay in the outbox; the second result is the latest; gameplay remains available |
 | Abandonment | Complete a match, start another, pause and leave or refresh before completion | Previous result and pending entries are unchanged; active combat is not restored |
-| Feature availability | Inspect Ranking and Match History | Tabs remain disabled; HTTP registration and confirmed records are pending |
+| Ranking and history | Open each tab, change pages, return to a previously shown tab | Identified players, scores, dates/durations/reasons and independent pagination; returning refetches |
+| Configuration grouping | Save different Options or choose Last result under Ranking configuration | Only records with the same full configuration are compared |
+| Offline recovery | Use offline-at-match-end, finish a match, refresh and select Recover connection | Pending payload survives; recovery confirms the same ID in both views |
+| Post-commit timeout | Use submit-timeout-after-commit and finish a match | Database commits once; client times out/retries and confirms without duplicating |
+| Demo reset | Expand Network scenarios, read reset scope and select Reset demo data | Last result/outbox/database fixtures reset; Options, identity and unrelated keys remain |
 
 To repeat default-value checks in an existing profile, remove only `pirate-battle.options.v1` in browser DevTools and refresh. This also resets the local player identity. Do not clear unrelated site data.
 
 For invalid-data recovery, replace that key with malformed JSON or an unsupported version, then refresh. Defaults and visible feedback should appear; a subsequent valid Save should succeed. Automated tests also cover blocked storage, failed writes, and retry without overwriting previous values.
 
-Results use `pirate-battle.last-result.v1` and `pirate-battle.outbox.v1`. Inspect them in DevTools: every pending entry retains its matchId, frozen record and zero HTTP attempts. No registration request is made in this increment. A failed write shows Retry Save; restore storage access and retry to save the same payload. If the last-result write was interrupted after the outbox write, refresh recovers the queued result. Invalid/unreadable outbox data is preserved; inspect/export it before removing only the damaged owned key. Clearing the outbox discards pending records and is not a recovery test.
+Results use `pirate-battle.last-result.v1` and `pirate-battle.outbox.v1`; confirmed records use `pirate-battle.msw-db.v1`. Inspect entries in DevTools: each pending record retains its ID/payload and tracks actual HTTP attempts. Registration runs through Axios/TanStack Query/MSW after readiness. Failed local writes show Retry Save; failed HTTP registration shows Retry Registration. These actions have different responsibilities. Interrupted writes recover from the queue; invalid/unreadable outbox data is preserved. Inspect/export damaged data before removing only the affected key. Clearing the outbox discards pending records and is not a recovery test.
+
+## Network scenario reproduction
+
+Open `/?scenario=<id>&seed=42` or expand Network scenarios, select a scenario and choose Apply. Ordinary selection preserves stored records. Empty/multi-page fixture layouts apply only on first initialization with clean owned storage or explicit Reset demo data. Reset retains Options/local identity, removes last-result/outbox contents, reseeds confirmed records and invalidates delayed work. Recover connection changes offline-at-match-end to success and replays pending IDs.
+
+| Scenario | Manual observation |
+| --- | --- |
+| success | Registration confirms; both tabs contain the same completed ID |
+| empty | Fresh/reset demo lists are empty until a real completion confirms |
+| multi-page | Fresh/reset demo has 25 comparable records; pages contain 10/10/5 rows |
+| slow | Two-second loading/sending; game and Options remain available |
+| variable-latency | 100–1500 ms delays from independent seeded endpoint streams |
+| out-of-order | Alternating 2000/100 ms reads; changing views cannot replace current data with an obsolete response |
+| timeout | Five-second Axios timeout, three attempts maximum, then manual recovery |
+| connection-failure | No HTTP response; bounded retries preserve the pending record |
+| http-4xx | HTTP 400; no automatic retry; payload remains pending |
+| http-5xx | HTTP 503; bounded retries, then explicit recovery |
+| ranking-failure | Only ranking fails; history/registration remain available |
+| history-failure | Only history fails; ranking/registration remain available |
+| submit-timeout-after-commit | Commit precedes lost response; retry/refresh confirms the first payload once |
+| offline-at-match-end | Registration remains pending; another voyage can start; Recover connection confirms after refresh |
+
+Use Network scenarios in the menu for recovery after leaving a completed result. Independent pending entries each have Retry Registration. Demo reset is destructive to owned demo match data as described beside its button; it is not a retry mechanism.
 
 ## Automated verification
 
@@ -75,7 +102,7 @@ npm run test:e2e
 
 | Command | Purpose |
 | --- | --- |
-| npm run test:unit | Run core, engine and result persistence suites with Vitest |
+| npm run test:unit | Run core, engine, persistence, API/coordinator and shared MSW/database suites with Vitest |
 | npm run test:unit:watch | Rerun unit tests while editing |
 | npm run typecheck | Check application, tooling, and E2E TypeScript |
 | npm run lint | Run ESLint |
@@ -93,6 +120,7 @@ npm run test:e2e -- tests/e2e/movement.spec.ts tests/e2e/pause.spec.ts
 npm run test:e2e -- tests/e2e/combat.spec.ts tests/e2e/assets.spec.ts
 npm run test:e2e -- tests/e2e/enemies.spec.ts tests/e2e/match-end.spec.ts
 npm run test:e2e -- tests/e2e/result.spec.ts tests/e2e/navigation.spec.ts
+npm run test:e2e -- tests/e2e/leaderboard.spec.ts tests/e2e/submission.spec.ts tests/e2e/resilience.spec.ts
 npm run test:e2e -- --project=chromium-mobile
 ```
 
@@ -134,7 +162,7 @@ Record the actual failing command, browser project, values used, and visible err
 
 ## Current coverage
 
-The result increment contains 128 unit tests and 114 E2E executions. Execution results are recorded in the [construction guide](docs/README.md#increment-6-persisted-results-and-pending-outbox); rerun them on your checkout.
+The data-integration increment passed all 158 unit/integration cases and all 158 E2E executions (79 cases per project). Lint and the optimized build also passed; the build checks TypeScript and retains a large-chunk warning. Execution details are recorded in the [construction guide](docs/README.md#increment-7-http-records-and-recovery); rerun them on your checkout. Counts do not establish visual regression or measured performance.
 
 | Suite | Cases | Execution |
 | --- | ---: | --- |
@@ -145,7 +173,12 @@ The result increment contains 128 unit tests and 114 E2E executions. Execution r
 | src/core/combat.test.ts | 12 | Vitest / Node; weapon mechanics |
 | src/core/enemies.test.ts | 15 | Vitest / Node; seed, spawn safety, routes and behavior |
 | src/core/damage.test.ts | 7 | Vitest / Node; teams, damage, scoring and terminal ordering |
-| src/persistence/results.test.ts | 13 | Vitest / Node; snapshots, validation, durable queue and write recovery |
+| src/persistence/results.test.ts | 17 | Vitest / Node; durable queue, validation, confirmation and storage recovery |
+| src/mocks/database.test.ts | 6 | Vitest / Node; shared records, grouping, ordering, pagination and durable commits |
+| src/mocks/scenarios.test.ts | 4 | Vitest / Node; 14 schedules, seeds, endpoint isolation and generations |
+| src/api/integration.test.ts | 8 | Vitest / Node; real Axios and shared MSW handlers with controlled waits |
+| src/api/submissions.test.ts | 6 | Vitest / Node; actual TanStack mutations, coalescing, retries and stale acknowledgment guards |
+| src/api/runtime.test.ts | 2 | Vitest / Node; worker readiness/bootstrap using a lifecycle test double |
 | tests/e2e/options.spec.ts | 13 | Desktop and mobile: 26 executions |
 | tests/e2e/assets.spec.ts | 7 | Desktop and mobile: 14 executions |
 | tests/e2e/combat.spec.ts | 9 | Desktop and mobile: 18 executions |
@@ -155,7 +188,10 @@ The result increment contains 128 unit tests and 114 E2E executions. Execution r
 | tests/e2e/pause.spec.ts | 4 | Desktop and mobile: 8 executions |
 | tests/e2e/result.spec.ts | 7 | Desktop and mobile: 14 executions |
 | tests/e2e/navigation.spec.ts | 3 | Desktop and mobile: 6 executions |
+| tests/e2e/leaderboard.spec.ts | 8 | Desktop and mobile: 16 executions |
+| tests/e2e/submission.spec.ts | 4 | Desktop and mobile: 8 executions |
+| tests/e2e/resilience.spec.ts | 10 | Desktop and mobile: 20 executions |
 
-All 128 units, lint, type checking and production build pass. The full browser run passed 112 of 114 executions and found two duplicate-status failures under blocked storage. After correction, all 46 Options/result/navigation revalidation executions passed, including both failures. The latest HTML report contains this targeted desktop/mobile run; remaining suites passed in the full run. Separate development StrictMode review checked five completion/exit cycles per layout, exactly one pending entry per match, one canvas, deleted hooks, refresh restoration and no unhandled page errors. Portrait/landscape screenshots are review artifacts, not versioned visual baselines or memory measurements.
+The current execution record is maintained in [increment 7](docs/README.md#increment-7-http-records-and-recovery). Earlier increment results are historical. Playwright reports describe the latest actual run, and failures retain traces. Development StrictMode/lifecycle review is recorded separately. Screenshots are review artifacts unless explicitly versioned as visual baselines; lifecycle assertions are not memory measurements.
 
-HTTP registration, ranking/history, MSW scenarios, visual baselines and performance measurements remain pending. Result/browser suites cover completed details, refresh, full configuration, consecutive pending matches, interrupted writes, storage retry and abandonment. Registration transitions beyond pending still require real HTTP integration. Focus-loss pause is automated; hidden-tab behavior also needs manual browser verification. Remaining planned cases stay in the [test plan](docs/testing/test-plan.md); the [profiling template](docs/performance/profiling.md) requires real measurements.
+Visual baselines, measured profiling and public deployment remain pending. HTTP coverage includes pagination, loading/empty/errors, cache refresh, boot/manual recovery, bounded retries, post-commit timeout and reset/obsolete-response protection. Unit schedules accept controlled waits; native HTTP timeout tests use the documented timeout boundary and observable states. Gameplay time stays independent. Expanded planned variants, variable-latency browser repetition and hidden-tab manual verification remain in the [test plan](docs/testing/test-plan.md). The [profiling template](docs/performance/profiling.md) requires actual measurements. Review the [challenge audit](docs/delivery/challenge-audit.md) before submission.

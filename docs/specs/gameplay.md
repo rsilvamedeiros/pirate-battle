@@ -118,6 +118,8 @@ An abandoned match does not replace the last completed result. A pending submiss
 
 Increment 6 implements completion capture and a proposed Last Result menu action. It restores completed details after refresh, preserves pending match IDs and allows new gameplay independently of the queue. Registration stays pending with an explicit availability message until HTTP integration; Retry Save addresses local write failure and does not send an API request.
 
+Increment 7 replaces the temporary pending-only message with actual registration sending/error/confirmed states and Retry Registration. Confirmed records appear in both paginated menu tabs. Pending IDs survive refresh and replay independently of gameplay; Retry Save remains limited to local persistence. The older increment note records delivery history rather than current behavior.
+
 ## Visual feedback
 
 Provide perceptible firing effects, impact/damage feedback, destruction explosions, and ship deterioration as HP decreases. Keep the arena readable and show health above the player and every enemy ship using PixiJS.

@@ -14,13 +14,16 @@ Projeto de um jogo naval 2D desenvolvido para o desafio técnico de React, TypeS
 - Barras de vida, deterioração visual dos navios e explosões de destruição.
 - Resultado persistido com pontuação, duração ativa, motivo, data e identificação única; consulta pelo botão Last Result.
 - Fila persistente de registros pendentes, recuperação de gravação interrompida e nova tentativa de salvamento local.
+- Ranking e Match History com paginação, agrupamento por configuração, cache e atualização após registro.
+- APIs simuladas com MSW, chamadas Axios e TanStack Query, PUT idempotente, retries e recuperação de envios após refresh.
+- Painel com 14 cenários de rede, recuperação de conexão e reset explícito dos dados de demonstração.
 - Testes unitários e E2E dos fluxos implementados, incluindo inimigos, dano, pontuação e reinício em desktop e Pixel 7 emulado.
 
 Os resultados da verificação de cada etapa estão registrados no [guia de testes](TESTING.md#current-coverage).
 
 ## Estado atual
 
-É possível alterar as opções e selecionar Play para enfrentar Chasers e Shooters, acumular pontos e terminar por tempo ou perda de vida. O resultado fica salvo após refresh e pode ser consultado em Last Result. Partidas abandonadas não substituem o resultado anterior. Os registros ficam pendentes; o envio HTTP será implementado na próxima etapa. Ranking, Match History, APIs, baselines visuais, profiling e deploy ainda estão pendentes.
+É possível jogar, consultar o resultado após refresh e registrar cada partida uma única vez nas APIs simuladas. Ranking e Match History estão ativos; falhas de rede preservam envios pendentes e permitem continuar jogando. Baselines visuais versionadas, profiling medido, deploy público e revisão final da documentação ainda estão pendentes. A [auditoria do enunciado](docs/delivery/challenge-audit.md) registra a cobertura e as lacunas; a introdução em português deste README deverá ser traduzida antes da entrega para cumprir a §3.
 
 ## Como executar
 
@@ -33,12 +36,15 @@ npm run dev
 
 Abra a URL indicada pelo Vite. A etapa atual não exige variáveis de ambiente nem serviços externos. Em Play, use W/seta para cima para avançar, A/D ou setas para girar, Space para disparar à frente, Q/E para disparar pelos lados e Esc/P para pausar; no mobile, use os botões de toque. Para testar opções, salve novos valores, recarregue e confira se foram mantidos.
 
+Para reproduzir falhas, use `?scenario=offline-at-match-end&seed=42`, termine uma partida, recarregue e abra Network scenarios no menu. Recover connection tenta registrar o mesmo identificador. Selecionar outro cenário com Apply preserva os registros; Reset demo data descarta resultados e envios pendentes, mantendo Options e a identidade local. Os comandos completos e os 14 cenários estão no [guia de testes](TESTING.md#network-scenario-reproduction).
+
 ## Documentação do projeto
 
 - [Guia técnico](TECHNICAL.md): estrutura, tecnologias, implementação atual e pendências, em inglês.
 - [Instruções de teste](TESTING.md): comandos, roteiro manual e relatórios, em inglês.
 - [Guia de construção e apoio da IA](docs/README.md): etapas realizadas e registro das contribuições.
 - [Arquitetura](ARCHITECTURE.md) e [decisões de arquitetura](docs/adr/README.md).
+- [Auditoria do enunciado](docs/delivery/challenge-audit.md): evidências por requisito e bloqueios para a entrega.
 - [Especificação de gameplay](docs/specs/gameplay.md), [contratos de API](docs/specs/api-contracts.md) e [cenários de rede](docs/specs/network-scenarios.md).
 
 ## Apoio da IA

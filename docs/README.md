@@ -10,7 +10,7 @@ The developer sets the scope and constraints. Proposed decisions and generated m
 
 The documentation preparation covered test cases, determinism, isolation, failure scenarios, and reporting, with changes limited to Markdown. The test plan enumerates 124 logical cases; it is not a claim that the full suite is implemented or passing. Profiling tables contain placeholders, not measured results.
 
-Implementation started at the developer's request. AI assisted with configuration and tests; menu/Options and persistence; navigation and PixiJS lifecycle; weapons and obstacle contacts; seeded enemies, damage/scoring and feedback; and now completed-result persistence, a pending outbox and corresponding tests. HTTP registration and remote data remain pending.
+Implementation started at the developer's request. AI assisted with configuration, menus/persistence, navigation/PixiJS, weapons, seeded enemies/damage, completed results and now HTTP integration, shared MSW scenarios, registration recovery, tests and a requirement audit. Visual baselines, measured profiling and public deployment remain pending.
 
 As testing is implemented, AI may also support writing tests, reviewing assertions, and investigating failures. Record that assistance here when it occurs, together with the commands actually executed and their results. Claims of coverage and performance must be supported by executable tests, reports, traces, and measurements.
 
@@ -24,8 +24,8 @@ As testing is implemented, AI may also support writing tests, reviewing assertio
 | 2 | Specify gameplay, configuration, screens, API contracts, and network scenarios | Drafted; design choices remain proposed | [Gameplay](specs/gameplay.md), [API contracts](specs/api-contracts.md), [network scenarios](specs/network-scenarios.md) |
 | 3 | Map requirements to tests and define profiling procedures | Drafted | [Test plan](testing/test-plan.md), [profiling template](performance/profiling.md) |
 | 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: local combat and persisted result implemented | [Simulation](../src/core/simulation.ts), [game screen](../src/ui/GameScreen.tsx), [result details](../src/ui/ResultDetails.tsx) |
-| 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | In progress: Options/result/outbox persistence implemented | [Results store](../src/persistence/results.ts), [typed records](../src/api/contracts.ts); HTTP dispatch, handlers and scenarios remain pending |
-| 6 | Implement and execute core/E2E tests and review visual baselines | In progress: local combat and result/browser suites | [Persistence units](../src/persistence/results.test.ts), [result E2E](../tests/e2e/result.spec.ts), [navigation E2E](../tests/e2e/navigation.spec.ts); API suites and baselines remain pending |
+| 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | Implemented locally; public worker verification pending | [Runtime](../src/api/runtime.ts), [coordinator](../src/api/submissions.ts), [handlers](../src/mocks/handlers.ts), [database](../src/mocks/database.ts) |
+| 6 | Implement and execute core/E2E tests and review visual baselines | Functional suites implemented; visual baselines pending | [Leaderboard E2E](../tests/e2e/leaderboard.spec.ts), [submission E2E](../tests/e2e/submission.spec.ts), [resilience E2E](../tests/e2e/resilience.spec.ts); final run record below |
 | 7 | Profile the optimized build, document limitations, and complete delivery | Planned | Filled profiling record, public deployment, and project setup/reproduction instructions |
 
 Steps may overlap. Update statuses and link evidence as work is completed; keep implementation details in the corresponding specifications and architecture documents.
@@ -90,11 +90,25 @@ Development StrictMode review completed five completion/exit cycles per layout w
 
 AI assisted with typed records, persistence/recovery implementation, semantic result UI, unit/browser tests and documentation. For review, complete a match, return to the menu, refresh and open Last Result; start a new voyage while the previous result is pending, then abandon it and check that the old result remains.
 
+## Increment 7: HTTP records and recovery
+
+Delivered: real Axios GET/PUT through an always-enabled MSW worker and TanStack Query reads/mutations; typed paginated Ranking/Match History, configuration grouping and deterministic ordering; shared persisted confirmed records and fixtures. The outbox dispatches only after readiness/durable queue writes, shares in-flight work per ID, retries bounded transient failures and supports boot/manual recovery. Older acknowledgments cannot overwrite newer results. Failed initialization/storage does not block gameplay.
+
+All 14 network schedules have query-parameter/UI selection, per-endpoint seeded randomness and generation guards. Ordinary selection preserves records; explicit reset describes and clears only owned demo match data, keeping Options/identity. Recovery replays pending identifiers. Tests cover post-commit timeout, pending refresh, errors, page/tab refresh, stale reads and reset without late data resurrection. Core rules and continuous state remain outside React/network layers.
+
+Verification: `npm run test:unit` passes all 158 unit/integration cases across 13 files. `npm run lint` and the optimized build pass; the build also performs TypeScript checking and reports an entry chunk above 500 kB. The final `npm run test:e2e` run passes all 158 executions (79 cases per desktop/mobile project) in 12.1 minutes, with no automatic test retries. The latest HTML report is in `playwright-report/index.html`; open it with `npm run test:e2e:report`.
+
+Earlier runs exposed a too-short retry assertion, page routing that missed Service Worker-owned assets, unguarded MSW imports under blocked storage and automatic worker-startup reloads that erased recovery notices. The assertion now covers specified retries; context routing, guarded imports and explicit worker activation/control address those problems. All 40 targeted assets/Options executions passed before the final complete run. Solution Markdown links resolve; four original challenge asset links retain their historical paths, with working solution links documented in TECHNICAL.md. The original challenge text remains unchanged.
+
+Development StrictMode review completed five completion/exit cycles per desktop/mobile layout: five confirmed non-fixture records, no pending entries, one canvas during each match, no canvas/hooks after exit and no unhandled page errors. Hard refresh triggered exactly one navigation and preserved eight local history entries (five completions plus three fixtures); the last-configuration ranking contained the five completions. Desktop/mobile result and ranking screenshots, including landscape, were captured for review. These are not versioned visual baselines or memory profiling.
+
+AI assisted with implementation, tests, investigation, documentation and a [challenge compliance audit](delivery/challenge-audit.md). No score or hiring outcome is inferred. Before final submission, create versioned visual baselines, measure actual frame/memory behavior, deploy publicly, translate the developer-requested Portuguese solution introduction and package reports/final documentation. The original challenge remains unchanged.
+
 ## Decisions to validate during implementation
 
 - Time-first boundary ordering and successful-spawn type sequencing are implemented as proposed choices; validate their documented behavior.
 - Collision footprints, projectile spacing, aiming tolerance and island routes are implemented; validate balancing, mobile usability and safe-spawn availability.
-- Pending result/outbox storage is implemented; HTTP dispatch/confirmation, remote scenarios, visual baselines, profiling and deployment remain required delivery work.
+- HTTP dispatch/confirmation and remote scenarios are implemented locally; visual baselines, measured profiling, public deployment and final documentation/report packaging remain required delivery work.
 
 These points are recorded in the [test plan](testing/test-plan.md#review-blockers-and-unresolved-details). Review the affected proposed decisions/specifications before setting final assertions.
 

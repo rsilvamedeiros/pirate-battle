@@ -8,7 +8,7 @@ Describe the browser-only naval game and its architectural boundaries, following
 
 Describe core, engine, render, input, ui, api, and mocks, with dependencies directed away from the pure simulation ([ADR 0002](docs/adr/0002-functional-core-imperative-shell.md)). TODO: map layers to actual modules and public interfaces.
 
-Implemented navigation modules: `src/core/simulation.ts` owns pure rules, `src/engine/game-engine.ts` schedules steps and HUD snapshots, `src/input/keyboard.ts` owns browser input, `src/render/arena-view.ts` owns PixiJS, and `src/ui/GameScreen.tsx` owns lifecycle and dialogs. API and mock layers remain pending.
+Implemented modules: `src/core/simulation.ts` owns pure rules, `src/engine/game-engine.ts` schedules steps and HUD snapshots, `src/input/keyboard.ts` owns browser input, `src/render/arena-view.ts` owns PixiJS, and `src/ui/GameScreen.tsx` owns lifecycle and dialogs. `src/api/` owns Axios, QueryClient and submission coordination; `src/mocks/` owns shared MSW handlers, fixtures/database and scenario schedules.
 
 `src/core/enemies.ts` owns spawn validation, steering and obstacle routes; `src/core/random.ts` owns pure seeded transitions. `src/engine/scenarios.ts` prepares pre-match E2E fixtures without exposing running-state mutation. Browser crypto supplies normal seeds in the shell.
 
@@ -54,11 +54,21 @@ Describe persisted options, the last completed result, confirmed mock records, a
 
 `src/persistence/results.ts` captures completed states once, outside the core, using shell UUIDs/timestamps and immutable typed records from `src/api/contracts.ts`. It writes a versioned outbox before the last result, retains multiple pending records and restores the latest queued result after interrupted writes. Last Result is accessible from the menu after refresh; active combat is abandoned without writing a record. Storage failures keep in-memory payloads and allow Retry Save with the same IDs. Invalid/unreadable outbox data is preserved rather than overwritten. See [technical persistence details](TECHNICAL.md#configuration-and-persistence) for schemas and recovery limits.
 
+Sending/error entries survive refresh as pending. Confirmation updates only a matching last result, saves it before removing the acknowledged queue entry, and filters that ID from subsequent storage merges. Interrupted acknowledgement writes can replay the same ID safely. The mock database persists a single confirmed-record collection before acknowledging PUT; both query views derive from it. Storage failure never fabricates confirmation.
+
 Related specification: [API contracts](docs/specs/api-contracts.md#local-persistence-proposed).
 
 ## Ranking & match history
 
 Describe Axios and TanStack Query integration, shared MSW contracts, and idempotent registration ([ADR 0005](docs/adr/0005-idempotent-match-submission-outbox.md), [ADR 0006](docs/adr/0006-msw-in-production.md)). TODO: document endpoints, pagination, configuration comparison, deterministic tie-breaking, cache keys, invalidation, stale-response protection, retries, and boot recovery.
+
+`src/api/runtime.ts` bootstraps outside StrictMode, starts the worker in development and optimized builds and gates HTTP on readiness. One QueryClient serves `['ranking', configKey, page, 10]` and `['match-history', playerId, page, 10]`; queries use 30-second staleTime, explicit refetch on tab mount and Axios AbortSignal cancellation. Registration uses a TanStack MutationObserver keyed by matchId plus a coordinator that shares in-flight work. Timeout/connection/429/5xx receive at most two retries (1 s, then 2 s); other 4xx do not retry automatically.
+
+Guarded dynamic MSW imports preserve gameplay when storage is unavailable. A small wrapper imports the unchanged generated worker; explicit activation/page control prevents MSW startup from reloading a restored page.
+
+PUT uses a frozen payload and first-write-wins identity. Confirmation cancels obsolete reads and invalidates both resource families. Ranking compares all 31 validated configuration fields and orders score descending, duration ascending, UTC completion date ascending, then lexical matchId; history is player-scoped and newest first. Independent tab pages and current-options/last-result group selection are UI state. Both views show loading, empty, error and background refresh without blocking gameplay.
+
+Scenario changes cancel reads, suspend/abort submissions and advance handler/mutation generations before replay. Reset reseeds the selected fixture collection, clears only owned result/outbox data and preserves Options/identity. Delayed pre-reset commits and acknowledgements cannot repopulate cleared data. Per-endpoint seeded network schedules remain independent of simulation RNG.
 
 Related specifications: [API contracts](docs/specs/api-contracts.md), [Network scenarios](docs/specs/network-scenarios.md).
 
@@ -72,6 +82,8 @@ Related specification: [Gameplay](docs/specs/gameplay.md#game-configuration).
 
 Record observed constraints and evidence, including local mock data and behavior under clamped frame delays ([ADR 0006](docs/adr/0006-msw-in-production.md), [ADR 0003](docs/adr/0003-fixed-timestep-simulation.md)). TODO: document supported mobile orientation, reference hardware/browser, three-minute frame metrics, five-cycle memory results, and verified limitations.
 
-The current increment supports movement, weapons, both enemy types, damage, scoring and persisted time/death results in portrait/landscape. Registration is pending with no HTTP dispatch yet; APIs, visual baselines, profiling and deployment remain pending. Storage uses two ordered writes rather than a transaction, recovering from the durable outbox; simultaneous-tab coordination is not implemented. Routes are designed for the current single circular island and spawn attempts are bounded. Excess frame delay above the clamp is discarded; performance and memory targets are unmeasured.
+The current increment supports local combat, persisted results, HTTP registration, both record views and 14 network scenarios in portrait/landscape. Confirmed records are local to this browser, not a shared online backend. Visual baselines, profiling and deployment remain pending. Storage uses ordered writes rather than transactions; simultaneous-tab coordination is not implemented. Routes assume the current circular island and spawn attempts are bounded. Excess delay above the clamp is discarded; performance and memory targets remain unmeasured. The build reports a large entry chunk that must be considered during profiling and delivery.
+
+Delivery review: [Challenge audit](docs/delivery/challenge-audit.md).
 
 Related validation: [Profiling template](docs/performance/profiling.md).

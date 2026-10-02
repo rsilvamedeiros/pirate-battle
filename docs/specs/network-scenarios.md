@@ -4,6 +4,8 @@ Sources: [CHALLENGE.md](../../CHALLENGE.md) §6, §8, and §11; [ADR 0006](../ad
 
 All scenario categories are required by §6. IDs, timing, selection controls, failure schedules, and reset behavior below are **proposed**. MSW runs at the network boundary in development, tests, and the published build; all scenarios leave gameplay and Options available.
 
+Increment 7 implements all 14 schedules with shared browser/Node handlers and an injectable wait function. Endpoint RNG streams are seeded independently. Browser controls and `?scenario=` select schedules; unknown IDs fall back visibly. Selection preserves records, reset reseeds them and advances generations, and offline recovery replays pending IDs. Optimized preview is exercised by E2E; a public deployment is still pending. Native browser HTTP timeouts use the documented 5000 ms boundary; scheduler units and selected response/reset cases control waits or browser timers. Expanded variable-latency browser repetition remains planned.
+
 ## Scenario matrix
 
 Endpoint abbreviations: R = GET /api/ranking; H = GET /api/players/:playerId/matches; S = PUT /api/matches/:matchId. All three still use Axios and TanStack Query.

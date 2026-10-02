@@ -6,6 +6,10 @@ import { GameScreen } from './ui/GameScreen'
 import { defaultGameplayConfig } from './core/config'
 import type { ResultsStore } from './persistence/results'
 import { ResultDetails } from './ui/ResultDetails'
+import type { DataRuntime } from './api/runtime'
+import { configurationKey } from './api/contracts'
+import { RecordsPanel } from './ui/RecordsPanel'
+import { NetworkPanel } from './ui/NetworkPanel'
 import './App.css'
 
 const controls = [
@@ -18,7 +22,7 @@ const controls = [
   ['Pause', 'Esc / P', 'Tap Pause'],
 ]
 
-function App({ initialOptions, resultsStore }: { initialOptions: LoadedOptions; resultsStore: ResultsStore }) {
+function App({ initialOptions, resultsStore, dataRuntime }: { initialOptions: LoadedOptions; resultsStore: ResultsStore; dataRuntime: DataRuntime }) {
   const [screen, setScreen] = useState<'menu' | 'options' | 'game' | 'result'>('menu')
   const [session, setSession] = useState(0)
   const [options, setOptions] = useState(initialOptions.options)
@@ -26,6 +30,12 @@ function App({ initialOptions, resultsStore }: { initialOptions: LoadedOptions; 
   const optionsButton = useRef<HTMLButtonElement>(null)
   const resultHeading = useRef<HTMLHeadingElement>(null)
   const results = useSyncExternalStore(resultsStore.subscribe, resultsStore.getSnapshot)
+  const [tab, setTab] = useState<'ranking' | 'history' | null>(null)
+  const [rankingPage, setRankingPage] = useState(1)
+  const [historyPage, setHistoryPage] = useState(1)
+  const [group, setGroup] = useState<'current' | 'last'>('current')
+  const key = group === 'last' && results.lastResult ? results.lastResult.record.configKey
+    : configurationKey({ ...defaultGameplayConfig, sessionTime: options.sessionTime, enemySpawnInterval: options.enemySpawnInterval })
   useEffect(() => { if (screen === 'result') resultHeading.current?.focus() }, [screen])
 
   function play() { setSession((value) => value + 1); setScreen('game') }
@@ -33,6 +43,7 @@ function App({ initialOptions, resultsStore }: { initialOptions: LoadedOptions; 
   function saveOptions(nextOptions: Readonly<PlayerOptions>) {
     if (!savePlayerOptions(browserOptionsStorage, nextOptions)) return false
     setOptions(nextOptions)
+    setRankingPage(1)
     setNotice(null)
     return true
   }
@@ -90,11 +101,24 @@ function App({ initialOptions, resultsStore }: { initialOptions: LoadedOptions; 
                 </table>
               </div>
             </details>
-            <nav className="ranking-actions" aria-label="Match records">
-              <button type="button" className="secondary-button" disabled aria-describedby="records-availability">Ranking</button>
-              <button type="button" className="secondary-button" disabled aria-describedby="records-availability">Match History</button>
-            </nav>
-            <p id="records-availability" className="availability">Match records are coming soon.</p>
+            <div className="ranking-actions" role="tablist" aria-label="Match records">
+              {(['ranking', 'history'] as const).map((kind) => <button key={kind} id={`${kind}-tab`} type="button" role="tab"
+                className="secondary-button" aria-selected={tab === kind} aria-controls={`${kind}-panel`}
+                onClick={() => setTab(kind)} onKeyDown={(event) => {
+                  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'Home' || event.key === 'End') {
+                    event.preventDefault()
+                    const next = event.key === 'Home' ? 'ranking' : event.key === 'End' ? 'history' : kind === 'ranking' ? 'history' : 'ranking'
+                    setTab(next); document.getElementById(`${next}-tab`)?.focus()
+                  }
+                }}>{kind === 'ranking' ? 'Ranking' : 'Match History'}</button>)}
+            </div>
+            {tab === 'ranking' && <div className="configuration-group"><label htmlFor="ranking-group">Ranking configuration</label>
+              <select id="ranking-group" value={group === 'last' && !results.lastResult ? 'current' : group} onChange={(event) => {
+                setGroup(event.target.value === 'last' ? 'last' : 'current'); setRankingPage(1)
+              }}><option value="current">Current options</option>{results.lastResult && <option value="last">Last result</option>}</select></div>}
+            {tab && <RecordsPanel key={tab} runtime={dataRuntime} kind={tab} playerId={options.playerId} configKey={key}
+              page={tab === 'ranking' ? rankingPage : historyPage} onPage={tab === 'ranking' ? setRankingPage : setHistoryPage} />}
+            <NetworkPanel runtime={dataRuntime} store={resultsStore} />
           </section>
         )}
       </div>

@@ -2,30 +2,32 @@
 
 The root [README.md](README.md) preserves the original challenge. This document describes the evolving implementation; [TESTING.md](TESTING.md) provides setup, commands, and practical verification steps.
 
+The preserved challenge uses original `assets/` relative links. In this Vite repository, the supplied files are in [public/assets/](public/assets/), including [the UI atlas](public/assets/spritesheet/ui_sheet.json), [the retina atlas](public/assets/spritesheet/ui_sheet_retina.json) and [sounds](public/assets/sounds/).
+
 ## Current implementation
 
 | Area | Implemented | Pending |
 | --- | --- | --- |
-| Core / engine | Typed configuration, navigation, weapons, seeded safe spawns, Chaser/Shooter behavior, damage, score, pause/restart and time/death completion | Network integration in the shell |
-| React / PixiJS | Menu, Options, arena/ships/projectiles, HUD, simultaneous controls, health/deterioration, completion details and Last Result view | HTTP registration statuses and ranking/history views |
-| Local persistence | Versioned Options/identity, completed results and pending outbox; validation and write recovery | Confirmed mock records and HTTP replay |
-| Tests | Core/engine/persistence units; gameplay, result and abandonment browser suites | API suites and visual baselines |
+| Core / engine | Typed configuration, navigation, weapons, seeded safe spawns, Chaser/Shooter behavior, damage, score, pause/restart and time/death completion | Final playtesting and profiling |
+| React / PixiJS | Menus, Options, arena, controls/HUD/feedback, results, paginated Ranking/Match History and network panel | Final accessibility/visual review |
+| Local persistence / HTTP | Options/identity, last result, pending outbox, confirmed database, idempotent PUT and boot/manual replay | Simultaneous-tab coordination; deployment verification |
+| Tests | Core/engine/persistence/API/mock units and integration; all twelve functional browser flows | Versioned visual baselines and expanded adversarial variants |
 | Delivery | Production build verified locally | Public deployment and profiling evidence |
 
-Play starts combat with both enemy types, three weapons, HP and scoring. Completed results survive refresh and are available through Last Result. Registration remains pending with an explicit availability message; no HTTP requests are made yet. Ranking and Match History remain disabled. Installed packages alone do not mean their corresponding features are implemented.
+Play starts combat with both enemy types, three weapons, HP and scoring. Completed results survive refresh and are available through Last Result. Registration uses real mocked HTTP, with sending/confirmed/error states and retry. Ranking and Match History are active menu tabs; both derive from confirmed records. This remains a local browser demonstration, not a shared online leaderboard.
 
 ## Technology roles
 
 | Technology | Current role |
 | --- | --- |
 | Vite | Development server and production build |
-| React | Menus, Options, HUD snapshots and session dialogs; StrictMode at the entry point |
+| React | Menus, Options, HUD snapshots, session dialogs and record/scenario panels; StrictMode at the entry point |
 | TypeScript | Strict checking for application, tooling, and E2E files |
 | Vitest 4 | Core, engine and persistence tests in Node with injected storage |
 | Playwright | Browser tests against the optimized preview build |
 | PixiJS | Arena, supplied ship/projectile/effect sprites and ship health indicator |
-| Axios / TanStack Query | Installed; ranking/history integration pending |
-| MSW | Installed with its generated worker; handlers, startup, and scenarios pending |
+| Axios / TanStack Query | GET/PUT transport, paginated queries, keyed mutations, retries, cancellation and invalidation |
+| MSW | Browser worker in development/optimized builds; shared REST handlers, fixtures, persisted records and scenarios |
 
 ## Source organization
 
@@ -44,8 +46,17 @@ Play starts combat with both enemy types, three weapons, HP and scoring. Complet
 | [src/ui/GameScreen.tsx](src/ui/GameScreen.tsx) | Canvas lifecycle, touch pointers, semantic HUD, dialogs and gated test hooks |
 | [src/persistence/options.ts](src/persistence/options.ts) | Versioned storage envelope, local player identity, loading/saving/recovery |
 | [src/api/contracts.ts](src/api/contracts.ts) | Immutable MatchRecord, full configuration grouping and persisted-record validation |
+| [src/api/client.ts](src/api/client.ts) | Axios GET/PUT, 5-second timeout, cancellation, normalized errors and retry policies |
+| [src/api/submissions.ts](src/api/submissions.ts) | Keyed TanStack mutations, one in-flight request per match, boot/manual replay and invalidation |
+| [src/api/runtime.ts](src/api/runtime.ts) | One-time QueryClient/worker bootstrap, readiness, scenario changes and reset |
+| [src/mocks/database.ts](src/mocks/database.ts) | Shared confirmed-record collection, fixtures, first-write-wins PUT, sorting and pagination |
+| [src/mocks/handlers.ts](src/mocks/handlers.ts) | Shared MSW handlers and generation-guarded delayed requests |
+| [src/mocks/activate-worker.ts](src/mocks/activate-worker.ts) | Bounded worker activation and explicit page control before MSW startup |
+| [src/mocks/scenarios.ts](src/mocks/scenarios.ts) | Fourteen selectable schedules, seeded endpoint RNG and reset generations |
 | [src/persistence/results.ts](src/persistence/results.ts) | Completion capture, versioned last result/outbox, restore and storage retry |
 | [src/ui/ResultDetails.tsx](src/ui/ResultDetails.tsx) | Semantic score, duration, reason, date, registration status and save retry |
+| [src/ui/RecordsPanel.tsx](src/ui/RecordsPanel.tsx) | Loading/empty/error/refresh states and paginated record views |
+| [src/ui/NetworkPanel.tsx](src/ui/NetworkPanel.tsx) | Scenario selection/recovery, explicit demo reset and pending retries |
 | [src/ui/OptionsScreen.tsx](src/ui/OptionsScreen.tsx) | Two-field form, associated errors, Save/Main Menu actions, focus |
 | [src/App.tsx](src/App.tsx) | Menu/Options/game/result navigation and saved state subscriptions |
 | [src/main.tsx](src/main.tsx) | One-time storage bootstrap and React StrictMode mount |
@@ -65,11 +76,27 @@ The `pirate-battle.options.v1` localStorage envelope contains version, playerId,
 
 Completed-match capture runs in the shell on the engine's terminal transition. It generates one cryptographic UUID and UTC completion timestamp, freezes the full configuration and records floor(elapsedMs), score, player identity and end reason. Repeated notifications for the same terminal state reuse that record. `configKey` is `v1:` plus compact JSON of all validated configuration fields in lexical order; seed and presentation are excluded.
 
-The results store bootstraps outside StrictMode and exposes stable snapshots. It writes `pirate-battle.outbox.v1` first (`{ version: 1, entries }`, keyed by matchId, each entry holding record and attempts), then `pirate-battle.last-result.v1` (`{ version: 1, record, submissionStatus }`). New entries are pending with zero HTTP attempts. Recovery restores pending/sending/error states as pending; an outbox entry overrides stale confirmed status. A newer queued record recovers a missing or older last result after an interrupted write.
+The results store bootstraps outside StrictMode and exposes stable snapshots. It writes `pirate-battle.outbox.v1` first (`{ version: 1, entries }`, keyed by matchId, each entry holding record, attempts and optional lastError), then `pirate-battle.last-result.v1` (`{ version: 1, record, submissionStatus, lastError? }`). Sending attempts increment before dispatch. Recovery restores transient states as pending; the outbox overrides stale confirmed status and recovers interrupted writes. Confirmation saves the matching last result before queue removal; acknowledged IDs cannot reappear in later storage merges.
 
 Storage failure keeps records in memory and shows Retry Save without claiming refresh recovery. Retry preserves identifiers and merges readable existing pending records. Unreadable or invalid outbox data is preserved and blocks overwrite: inspect/export it in DevTools before removing only the corrupted owned key and retrying. Invalid last results have visible feedback and can be recovered from valid pending records. Automatic migration and simultaneous-tab coordination are not implemented.
 
-Refresh or leaving active combat abandons it without creating a record or replacing an earlier result. Completed pending matches never prevent starting another match. Last Result opens the most recent completed details from the menu and offers Play Again/Main Menu; loading the page returns to the menu rather than resuming combat. HTTP dispatch, confirmation, boot replay and manual submission retry remain pending.
+Refresh or leaving active combat abandons it without creating a record or replacing an earlier result. Pending matches never prevent another match. Last Result offers Play Again/Main Menu and registration retry; page loading returns to the menu rather than resuming combat. `pirate-battle.msw-db.v1` stores version, records keyed by matchId, fixture player IDs and revision. A successful PUT persists before acknowledgment; a duplicate ID returns the first stored payload unchanged. Ranking and history read this same collection.
+
+## Ranking, history and network recovery
+
+The MSW worker starts without a development-only guard and serves the same three endpoints in development and optimized preview. Startup gates HTTP, while game/menu/Options remain available on failure. Retry Connection retries initialization; Reset demo data can replace corrupt owned demo state. Public deployment and worker delivery there remain unverified.
+
+The small `public/pirate-battle-worker.js` wrapper imports the unchanged generated MSW worker and supports explicit page claiming. Bootstrap establishes control before starting MSW, preventing an automatic reload that could erase recovery notices or interrupt a game. MSW modules load inside guarded startup because their cookie store may access localStorage during module evaluation; unavailable storage must leave the menu and gameplay usable.
+
+TanStack Query owns ranking/history cache and submission mutations. Query keys contain configuration/player identity, page and pageSize; staleTime is 30 seconds. Tab mount refetches even fresh cached data. Axios consumes query AbortSignals and enforces a 5000 ms timeout. At most two retries follow connection/timeout/429/5xx failures, after 1000 and 2000 ms; other 4xx do not retry automatically. A MutationObserver and outbox coordinator share work by matchId independently of screen lifecycle. Confirmation cancels reads and invalidates both resource families.
+
+Ranking compares the full configuration and sorts score descending, duration ascending, playedAt ascending and matchId lexically. History sorts newest first for the local player. Each tab retains its page; ranking can select current Options or the last result's configuration. Empty data, initial loading, background refresh and query errors are separate UI states. Confirmation of an older match does not replace a newer result.
+
+Use `?scenario=<id>&seed=42`, or expand Network scenarios and Apply a choice. All 14 schedules in the [scenario specification](docs/specs/network-scenarios.md) are implemented. Scenario selection preserves stored records; only explicit Reset demo data reseeds empty/multi-page fixtures and clears last result/outbox, retaining Options and identity. Recovery switches offline-at-match-end to success and replays pending IDs. Generation checks and aborts prevent delayed reads/commits/acknowledgments from crossing a reset. Endpoint-specific network RNG streams never alter simulation RNG.
+
+Implementation references: [TanStack cancellation](https://tanstack.com/query/latest/docs/framework/react/guides/query-cancellation), [TanStack mutations](https://tanstack.com/query/latest/docs/framework/react/guides/mutations), [Axios cancellation](https://axios-http.com/docs/cancellation) and [MSW worker startup](https://mswjs.io/api/setup-worker/start). Their APIs are used alongside the installed source/types.
+
+Asset-failure tests use `browserContext.route`, which can intercept Service Worker-owned requests; page-level interception alone misses those requests. See [Playwright Service Worker testing](https://playwright.dev/docs/service-workers).
 
 ## Assets and interface
 
@@ -115,7 +142,7 @@ Mobile emulation does not establish performance on a physical device. Review scr
 
 ADRs remain Proposed. Frame clamping, collision geometry, routing, aiming, successful-spawn sequencing and time-first terminal ordering are implemented as proposed choices. Validate tuning through gameplay and profiling. Ship-to-ship separation beyond spawn checks and Chaser impact is not modeled; routes assume the current circular island.
 
-Next work is Axios/TanStack Query and MSW registration, ranking/history, idempotent replay and network scenarios, then visual baselines, profiling and public deployment. See the [construction guide](docs/README.md) for incremental delivery and AI assistance.
+Next work is visual baselines, real profiling and public deployment, followed by final English documentation/report packaging. The build's large entry chunk is an observed optimization concern; no frame-performance conclusion follows from its size. See the [challenge audit](docs/delivery/challenge-audit.md) for requirement-by-requirement gaps and the [construction guide](docs/README.md) for AI assistance and verification history.
 
 ## Documentation references
 
