@@ -2,7 +2,11 @@
 
 Sources: [CHALLENGE.md](../../CHALLENGE.md), especially §§8–9; the [ADR index](../adr/README.md); [Gameplay](../specs/gameplay.md), [API contracts](../specs/api-contracts.md), and [Network scenarios](../specs/network-scenarios.md).
 
-This is a plan, not evidence of implemented or passing tests. All filenames, case names, project settings, commands, and artifact locations are **proposed**. Vitest core tests supplement the required Playwright coverage; the challenge does not mandate Vitest. Assertions for proposed spec choices remain subject to acceptance of those choices.
+This is a plan, not evidence that the full suite is implemented or passing. Filenames, case names, browser project settings, and artifact locations are **proposed**, unless an implementation update below states otherwise. Vitest core tests supplement the required Playwright coverage; the challenge does not mandate Vitest. Assertions for proposed spec choices remain subject to acceptance of those choices.
+
+Implementation update: the configuration suite now runs with Vitest 4 and covers defaults, Options boundaries, invalid numbers/containers, integer HP, spawn weights, Shooter reach, and immutable snapshots. It passes 52 parameterized tests in `src/core/config.test.ts`; browser suites and other core files remain planned. See the [construction guide](../README.md#increment-1-configuration-and-unit-test-foundation) for the delivered increment and local verification commands.
+
+U1 remains unchecked until boundary cases for every balancing field are exercised; the first increment verifies the exposed Options boundaries and representative balancing limits.
 
 ## Traceability matrix
 
@@ -267,7 +271,7 @@ Open the report using `npm run test:e2e:report`; inspect a failed case's trace f
 
 ## Commands
 
-These scripts are **planned**, not added to package.json; Vitest is not currently installed. Commands become runnable only after the corresponding implementation/configuration work.
+The three E2E scripts are **planned** and have not been added to package.json. Vitest 4 and `test:unit` are implemented for the configuration suite; `test:unit:watch` and `typecheck` are also available. Browser commands become runnable only after the corresponding implementation/configuration work.
 
 | npm script | Proposed script body | Purpose |
 | --- | --- | --- |
@@ -283,4 +287,4 @@ Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for 
 - [Gameplay match rules](../specs/gameplay.md#match-rules) check time exhaustion before combat but also give player-death precedence when both coincide. Clarify ordering before defining the coincident-end assertion; other completion cases remain independently testable.
 - [Gameplay enemies](../specs/gameplay.md#enemies) permit skipping unsafe spawns while claiming the first two intervals guarantee both types. That guarantee depends on safe points being available. Clarify whether type sequencing advances on successful spawns or scheduled attempts before fixing the blocked-spawn/type assertions.
 - ADR 0003 leaves the frame clamp unspecified; gameplay leaves collision geometry, aiming tolerance, and projectile spacing unresolved. Tests should use accepted values/policies, not silently introduce them.
-- Test scripts/configuration and Vitest are pending implementation. StrictMode, hook exposure, network scheduling, and published-worker readiness need verification in the actual app.
+- Browser test scripts/configuration and the remaining core suites are pending implementation. Vitest and configuration tests are available. StrictMode, hook exposure, network scheduling, and published-worker readiness need verification in the actual app.
