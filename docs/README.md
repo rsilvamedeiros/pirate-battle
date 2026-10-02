@@ -10,7 +10,7 @@ The developer sets the scope and constraints. Proposed decisions and generated m
 
 The documentation preparation covered test cases, determinism, isolation, failure scenarios, and reporting, with changes limited to Markdown. The test plan enumerates 124 logical cases; it is not a claim that the full suite is implemented or passing. Profiling tables contain placeholders, not measured results.
 
-Implementation has now started at the developer's request. AI assisted with the pure TypeScript gameplay configuration module, its validation and immutable snapshots, and the Vitest configuration tests. The first increment also enables TypeScript strict mode and adds unit-test/type-check commands. The second increment adds the React menu/Options interface, local persistence, and browser tests. Further game systems and other browser suites remain pending.
+Implementation has now started at the developer's request. AI assisted with the pure TypeScript gameplay configuration module, validation, snapshots and Vitest tests. The second increment adds the React menu/Options interface, local persistence and browser tests. The third adds navigation, the fixed-step engine, PixiJS lifecycle, keyboard/touch input, pause and related tests. Combat and remote data remain pending.
 
 As testing is implemented, AI may also support writing tests, reviewing assertions, and investigating failures. Record that assistance here when it occurs, together with the commands actually executed and their results. Claims of coverage and performance must be supported by executable tests, reports, traces, and measurements.
 
@@ -23,9 +23,9 @@ As testing is implemented, AI may also support writing tests, reviewing assertio
 | 1 | Read the challenge and document architecture boundaries and alternatives | Drafted; ADRs remain Proposed | [ADR index](adr/README.md), [architecture skeleton](../ARCHITECTURE.md) |
 | 2 | Specify gameplay, configuration, screens, API contracts, and network scenarios | Drafted; design choices remain proposed | [Gameplay](specs/gameplay.md), [API contracts](specs/api-contracts.md), [network scenarios](specs/network-scenarios.md) |
 | 3 | Map requirements to tests and define profiling procedures | Drafted | [Test plan](testing/test-plan.md), [profiling template](performance/profiling.md) |
-| 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: configuration, menu, and Options implemented | [Configuration module](../src/core/config.ts), [Options screen](../src/ui/OptionsScreen.tsx); gameplay systems remain pending |
+| 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: configuration, menu, Options and navigable arena implemented | [Simulation](../src/core/simulation.ts), [engine](../src/engine/game-engine.ts), [game screen](../src/ui/GameScreen.tsx); combat remains pending |
 | 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | In progress: Options persistence implemented | [Options storage](../src/persistence/options.ts); remote contracts, outbox, and handlers remain pending |
-| 6 | Implement and execute core/E2E tests and review visual baselines | In progress: configuration and Options suites implemented | [Configuration tests](../src/core/config.test.ts), [Options E2E](../tests/e2e/options.spec.ts); other suites and baselines remain pending |
+| 6 | Implement and execute core/E2E tests and review visual baselines | In progress: configuration, navigation, engine, Options, assets, movement and pause suites | [Simulation units](../src/core/simulation.test.ts), [movement E2E](../tests/e2e/movement.spec.ts), [pause E2E](../tests/e2e/pause.spec.ts); combat/API suites and baselines remain pending |
 | 7 | Profile the optimized build, document limitations, and complete delivery | Planned | Filled profiling record, public deployment, and project setup/reproduction instructions |
 
 Steps may overlap. Update statuses and link evidence as work is completed; keep implementation details in the corresponding specifications and architecture documents.
@@ -48,11 +48,21 @@ Verification: 13 Options E2E cases passed in each of Chromium desktop and Pixel 
 
 AI assisted with interface/persistence implementation and browser-test design and execution. For developer review, run `npm run dev`, open Options, save valid values, refresh, and retry with invalid values. Run `npx playwright install chromium` once if needed, then `npm run test:e2e`; open its HTML report with `npm run test:e2e:report`. Browser artifacts remain untracked.
 
+## Increment 3: Navigable arena and fixed-step session
+
+Delivered: a pure navigation simulation, injectable-clock engine at 60 Hz with a proposed 250 ms clamp, PixiJS water/island/ship and health indicator, semantic HUD snapshots, keyboard and simultaneous touch movement, manual/focus-loss/hidden-tab pause, explicit resume, clean menu exit and restart. Options are captured at session start. Time expiry stops navigation and shows a temporary completion dialog; combat, the full persisted result and submission remain pending.
+
+The proposed arena is 1000 × 700 lu with an island at (500, 350), radius 100 lu, and a player radius of 40 lu. Loading has visible feedback, retry and menu exit. Async initialization uses disposal guards; teardown removes the private ticker, canvas and input listeners while retaining the cached ship texture. Hooks only exist with `?e2e=1` and provide copied-state observation and manual time advance through the real rules. Seeded randomness is pending because navigation has no random behavior.
+
+Verification: 72 units pass (52 configuration, 11 navigation, 9 engine) and 48 browser executions pass (24 cases on each of desktop/mobile: 13 Options, 2 assets, 5 movement, 4 pause). Lint, type checking and production build pass. A development StrictMode review completed five navigation cycles per layout with one canvas per session and no unhandled page errors. Desktop, mobile portrait and landscape screenshots were reviewed; profiling and versioned visual baselines remain pending.
+
+AI assisted with implementation, test design/execution, lifecycle investigation and documentation updates. Headless WebGL stalls were resolved by forcing SwiftShader in Playwright. The full Chromium channel permits the focus-loss test to switch to another actual page. For review, run `npm run dev`, select Play, move with W/arrows and A/D, try the island/boundaries, pause with Esc/P, switch tabs, resume and return to the menu. Touch controls allow forward movement and rotation together.
+
 ## Decisions to resolve before implementation
 
 - Clarify simultaneous match-end ordering: the gameplay spec checks time exhaustion before combat but also gives death precedence when both coincide.
 - Clarify enemy type sequencing when unsafe spawn attempts are skipped; the first-two-interval guarantee depends on valid spawn positions.
-- Choose the frame clamp, collision geometry, aiming tolerance, and projectile spacing; validate proposed balancing and mobile layouts.
+- Initial navigation uses a proposed 250 ms frame clamp and circular collision footprints. Choose combat geometry, aiming tolerance and projectile spacing; validate balancing and mobile layouts.
 
 These points are recorded in the [test plan](testing/test-plan.md#review-blockers-and-unresolved-details). Review the affected proposed decisions/specifications before setting final assertions.
 

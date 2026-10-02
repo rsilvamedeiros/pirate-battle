@@ -8,13 +8,14 @@ Projeto de um jogo naval 2D desenvolvido para o desafio técnico de React, TypeS
 - Configuração tipada com 31 parâmetros de gameplay, validação e snapshots imutáveis para futuras partidas.
 - Menu principal com os assets fornecidos, instruções de controle e layout adaptado para desktop e mobile.
 - Tela Options com validação, salvamento no localStorage, recuperação de dados inválidos e mensagens acessíveis.
-- Testes unitários da configuração e testes E2E de Options em Chromium desktop e Pixel 7 emulado.
+- Arena em PixiJS com navio navegável, colisão com ilha e limites, controles de teclado/toque, HUD, pausa e reinício.
+- Testes unitários da configuração, simulação e engine; testes E2E de Options, assets, movimento e pausa em desktop e Pixel 7 emulado.
 
-Na última verificação registrada, passaram 52 testes unitários e 26 execuções E2E, além de lint, verificação de tipos e build.
+Os resultados da verificação de cada etapa estão registrados no [guia de testes](TESTING.md#current-coverage).
 
 ## Estado atual
 
-É possível abrir o menu, consultar os controles e alterar as opções. Play, Ranking e Match History estão desabilitados enquanto essas funcionalidades são implementadas. Combate, tela de resultado, integração das APIs, baselines visuais, profiling e deploy ainda estão pendentes.
+É possível alterar as opções e selecionar Play para navegar na arena. Ranking e Match History continuam desabilitados. Armas, inimigos, resultado completo com persistência, APIs, baselines visuais, profiling e deploy ainda estão pendentes.
 
 ## Como executar
 
@@ -25,7 +26,7 @@ npm ci
 npm run dev
 ```
 
-Abra a URL indicada pelo Vite. A etapa atual não exige variáveis de ambiente nem serviços externos. Para testar opções, salve novos valores, recarregue a página e confira se foram mantidos.
+Abra a URL indicada pelo Vite. A etapa atual não exige variáveis de ambiente nem serviços externos. Em Play, use W/seta para cima para avançar, A/D ou setas para girar e Esc/P para pausar; no mobile, use os botões de toque. Para testar opções, salve novos valores, recarregue e confira se foram mantidos.
 
 ## Documentação do projeto
 

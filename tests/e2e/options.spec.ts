@@ -64,6 +64,8 @@ test('discards unsaved changes when returning to the menu', async ({ page }) => 
 
 test('supports keyboard navigation validation and focus restoration', async ({ page }) => {
   await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeFocused()
+  await page.keyboard.press('Tab')
   await expect(page.getByRole('button', { name: 'Options', exact: true })).toBeFocused()
   await page.keyboard.press('Enter')
   await page.keyboard.press('Tab')

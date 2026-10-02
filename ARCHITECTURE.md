@@ -8,13 +8,19 @@ Describe the browser-only naval game and its architectural boundaries, following
 
 Describe core, engine, render, input, ui, api, and mocks, with dependencies directed away from the pure simulation ([ADR 0002](docs/adr/0002-functional-core-imperative-shell.md)). TODO: map layers to actual modules and public interfaces.
 
+Implemented navigation modules: `src/core/simulation.ts` owns pure rules, `src/engine/game-engine.ts` schedules steps and HUD snapshots, `src/input/keyboard.ts` owns browser input, `src/render/arena-view.ts` owns PixiJS, and `src/ui/GameScreen.tsx` owns lifecycle and dialogs. API and mock layers remain pending.
+
 ## React ↔ PixiJS integration
 
 Explain PixiJS ownership of combat visuals and React subscriptions to changed HUD snapshots ([ADR 0004](docs/adr/0004-react-pixi-sync-strategy.md)). TODO: document snapshot fields, display precision, subscriptions, canvas resizing, and Strict Mode lifecycle behavior.
 
+Navigation uses useSyncExternalStore with stable health, score, ceil-rounded remaining seconds and status snapshots. PixiJS holds continuous visuals; CSS scales a 1000 × 700 arena proportionally and the backing canvas uses devicePixelRatio. Async initialization is guarded against disposal before completion, including StrictMode effect replay.
+
 ## Simulation loop
 
 Describe fixed 60 Hz stepping, the accumulator, frame clamping, pause/resume, and injected clocks ([ADR 0003](docs/adr/0003-fixed-timestep-simulation.md), [ADR 0007](docs/adr/0007-seeded-rng-and-test-hooks.md)). TODO: document the clamp value, update order, completion handling, and test clock interface.
+
+The implemented engine clamps deltas to 250 ms, steps at 60 Hz, and clips the final active step to session duration. Pause clears input/accumulator; explicit resume resets the clock baseline. `?e2e=1` exposes copied-state observation and manual clock advance through the same engine; random spawns and combat ordering remain pending.
 
 Related specification: [Gameplay](docs/specs/gameplay.md#match-rules).
 
@@ -24,11 +30,15 @@ Related validation: [Test plan](docs/testing/test-plan.md).
 
 Explain how core rules enforce arena limits, island blocking, single-hit projectiles, and removal of destroyed entities ([ADR 0002](docs/adr/0002-functional-core-imperative-shell.md)). TODO: document shapes, detection and resolution algorithms, ordering, and safeguards against missed collisions.
 
+Initial navigation clamps the player center inside a 40 lu boundary inset and rejects movement overlapping the island circle at (500, 350), radius 100 lu. Rotation remains available while blocked. The maximum configured player movement is less than 7 lu per step; projectile and enemy collision handling is pending.
+
 Related specification: [Gameplay](docs/specs/gameplay.md#combat-rules).
 
 ## Resource management
 
 Describe resource ownership, texture loading/reuse, failure recovery, and disposal on exit or restart ([ADR 0004](docs/adr/0004-react-pixi-sync-strategy.md)). TODO: document asset ownership, asynchronous cancellation, listener/ticker cleanup, and memory profiling evidence.
+
+Each session owns its PixiJS application and ticker. The supplied ship texture is cached by Assets and retained for reuse; display objects, canvas, ticker and input listeners are destroyed on exit. A disposed pending initialization destroys its completed candidate without attaching it; loading errors allow Retry or Main Menu. Memory profiling remains pending.
 
 Related validation: [Profiling template](docs/performance/profiling.md#memory).
 
@@ -53,5 +63,7 @@ Related specification: [Gameplay](docs/specs/gameplay.md#game-configuration).
 ## Known limitations
 
 Record observed constraints and evidence, including local mock data and behavior under clamped frame delays ([ADR 0006](docs/adr/0006-msw-in-production.md), [ADR 0003](docs/adr/0003-fixed-timestep-simulation.md)). TODO: document supported mobile orientation, reference hardware/browser, three-minute frame metrics, five-cycle memory results, and verified limitations.
+
+The current increment supports navigation in portrait and landscape, with touch movement/rotation. Weapons, enemies, persisted results, APIs and seeded randomness are pending. Excess frame delay above the clamp is discarded; no performance or memory targets have yet been measured.
 
 Related validation: [Profiling template](docs/performance/profiling.md).

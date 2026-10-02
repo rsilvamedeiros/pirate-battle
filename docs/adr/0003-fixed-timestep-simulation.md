@@ -18,7 +18,7 @@ Advance gameplay in steps of 1/60 second. The engine reads elapsed time from an 
 
 Pause clears the accumulator and pending input; no steps run while paused. Explicit player resume resets the clock baseline and accumulator so paused time cannot enter the next frame. Completion stops stepping, and restart creates fresh state. A manual clock drives the same stepping path in tests.
 
-The clamp value remains to be chosen and documented during implementation. The fixed rate and accumulator are proposed mechanisms, not challenge requirements.
+The initial implementation uses a proposed 250 ms frame clamp, bounding catch-up work to 15 full steps per frame. The fixed rate, accumulator and clamp are design choices, not challenge requirements; profiling may justify revisiting the bound.
 
 ## Alternatives considered
 

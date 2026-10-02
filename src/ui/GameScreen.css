@@ -1,0 +1,32 @@
+.game-screen { min-height: 100svh; padding: 16px; background: #123847; }
+.game-hud { max-width: 1000px; margin: 0 auto 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.game-hud h1 { font-size: 1.25rem; }
+.hud-values { display: flex; flex-wrap: wrap; gap: 16px; font-weight: bold; }
+.game-hud button { min-height: 44px; padding-block: 8px; }
+.arena-frame { position: relative; width: min(100%, 1000px, calc((100svh - 190px) * 10 / 7)); aspect-ratio: 10 / 7; margin: auto; background: #238598; border: 3px solid #c69e55; border-radius: 8px; overflow: hidden; }
+.arena-frame canvas { display: block; }
+.arena-message { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; background: #123847; text-align: center; }
+.movement-controls { display: flex; justify-content: center; gap: 12px; margin-top: 16px; }
+.movement-controls button { min-height: 52px; padding: 12px 18px; border: 2px solid #c69e55; border-radius: 8px; color: #fff0ce; background: #182f3d; font-weight: bold; touch-action: none; user-select: none; }
+.movement-controls button:active:not(:disabled) { background: #376269; }
+.movement-controls button:disabled { opacity: 0.6; }
+.navigation-hint { text-align: center; margin-top: 12px; font-size: 0.85rem; }
+.session-dialog { border: 2px solid #c69e55; border-radius: 12px; background: #182f3d; color: #fff0ce; padding: 28px; width: min(90vw, 400px); text-align: center; }
+.session-dialog::backdrop { background: #06151bcc; }
+.session-dialog h2 { margin: 0 0 16px; }
+.session-dialog p { margin-bottom: 20px; line-height: 1.5; }
+.session-dialog button { display: block; width: 100%; margin-top: 12px; }
+@media (max-width: 600px) {
+  .game-screen { padding: 8px; }
+  .game-hud { gap: 8px; }
+  .hud-values { order: 3; width: 100%; font-size: 0.85rem; justify-content: space-between; gap: 8px; }
+  .movement-controls { gap: 8px; }
+  .movement-controls button { padding-inline: 12px; font-size: 0.85rem; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .game-screen { padding: 8px; }
+  .game-hud { margin-bottom: 8px; }
+  .arena-frame { width: min(65vw, calc((100svh - 100px) * 10 / 7)); }
+  .movement-controls { position: fixed; right: 8px; bottom: 16px; flex-direction: column; max-width: 20vw; }
+  .navigation-hint { font-size: 0.7rem; }
+}

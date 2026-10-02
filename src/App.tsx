@@ -2,6 +2,8 @@ import { useRef, useState } from 'react'
 import { browserOptionsStorage, savePlayerOptions } from './persistence/options'
 import type { LoadedOptions, PlayerOptions } from './persistence/options'
 import { OptionsScreen } from './ui/OptionsScreen'
+import { GameScreen } from './ui/GameScreen'
+import { defaultGameplayConfig } from './core/config'
 import './App.css'
 
 const controls = [
@@ -15,7 +17,8 @@ const controls = [
 ]
 
 function App({ initialOptions }: { initialOptions: LoadedOptions }) {
-  const [screen, setScreen] = useState<'menu' | 'options'>('menu')
+  const [screen, setScreen] = useState<'menu' | 'options' | 'game'>('menu')
+  const [session, setSession] = useState(0)
   const [options, setOptions] = useState(initialOptions.options)
   const [notice, setNotice] = useState(initialOptions.notice)
   const optionsButton = useRef<HTMLButtonElement>(null)
@@ -26,6 +29,11 @@ function App({ initialOptions }: { initialOptions: LoadedOptions }) {
     setNotice(null)
     return true
   }
+
+  if (screen === 'game') return <GameScreen key={session}
+    config={{ ...defaultGameplayConfig, sessionTime: options.sessionTime, enemySpawnInterval: options.enemySpawnInterval }}
+    onExit={() => { setScreen('menu'); requestAnimationFrame(() => optionsButton.current?.focus()) }}
+    onRestart={() => setSession((value) => value + 1)} />
 
   return (
     <main className="app-shell">
@@ -47,10 +55,10 @@ function App({ initialOptions }: { initialOptions: LoadedOptions }) {
             </h1>
             <p className="tagline">Set sail. Take command.</p>
             <div className="menu-actions">
-              <button type="button" className="primary-button" disabled aria-describedby="combat-availability">Play</button>
+              <button type="button" className="primary-button" onClick={() => { setSession((value) => value + 1); setScreen('game') }}>Play</button>
               <button type="button" className="primary-button" ref={optionsButton} onClick={() => setScreen('options')}>Options</button>
             </div>
-            <p id="combat-availability" className="availability">Combat is coming soon.</p>
+            <p className="availability">Explore the arena. Combat is coming soon.</p>
             <p className="session-summary">{options.sessionTime}s voyage · Enemies every {options.enemySpawnInterval}s</p>
             <details className="controls">
               <summary>Controls</summary>

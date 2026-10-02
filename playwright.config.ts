@@ -13,6 +13,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     locale: 'en-US',
     timezoneId: 'UTC',
+    channel: 'chromium',
+    launchOptions: { args: ['--use-angle=swiftshader'] },
   },
   projects: [
     { name: 'chromium-desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 } },

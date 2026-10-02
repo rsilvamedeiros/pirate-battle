@@ -68,6 +68,8 @@ The chosen enemySpawnInterval bounds keep the exposed value positive and initial
 
 ## Player
 
+Initial navigation geometry (**proposed**, implemented): a 1000 × 700 lu arena, one circular island centered at (500, 350) with radius 100 lu, and a player collision radius of 40 lu enclosing the 44 × 64 lu hull. Clamp the ship center to arena bounds inset by its radius; reject movement overlapping the island, while allowing rotation. Combat collision geometry remains pending.
+
 The player moves forward along its heading and rotates left or right; there is no required reverse or strafe action. Front fire emits one projectile forward. Each side fire emits three parallel projectiles toward that side, rather than a fan; proposed: place their origins along the hull with non-overlapping initial positions outside the firing ship.
 
 Enemy projectiles and Chaser impact reduce player HP. Ships remain within the visible arena and cannot cross islands. Islands block projectiles as well as ships. The player loses when HP reaches zero.
@@ -147,4 +149,4 @@ Scenario selection and reset controls are specified in [Network scenarios](netwo
 
 ## Open questions
 
-The challenge does not specify movement/collision geometry, island layout, aiming tolerance, projectile spacing, player identification, or balance values. Validate the proposed tuning, mobile orientation, and safe-spawn policy with the implemented game; the fixed-step frame clamp is still unresolved in ADR 0003.
+The challenge does not specify movement/collision geometry, island layout, aiming tolerance, projectile spacing, player identification, or balance values. Initial navigation uses the proposed geometry above and the 250 ms clamp in ADR 0003. Validate combat geometry, tuning, mobile orientation, and safe-spawn policy with the implemented game.

@@ -196,7 +196,7 @@ The repeated-PUT case is an API integration assertion inside the browser suite a
 - `it('keeps terminal states unchanged')`: subsequent commands/time cannot mutate gameplay after completion.
 - `it('creates independent fresh match state')`: a new match resets all core fields without retaining previous entities.
 
-Accumulator, frame clamp, clock baseline, React subscriptions, storage, and HTTP are shell responsibilities, not Vitest core expectations. Verify their observable behavior through E2E cases and profiling; the frame-clamp threshold remains unresolved in ADR 0003.
+Accumulator, frame clamp, clock baseline, React subscriptions, storage, and HTTP are shell responsibilities, not Vitest core expectations. Navigation also has dedicated engine units in `src/engine/game-engine.test.ts` for the accumulator, proposed 250 ms clamp, clock baseline, input clearing and snapshot notifications. E2E verifies observable integration; profiling remains pending.
 
 ### src/core/collisions.test.ts
 
@@ -288,5 +288,5 @@ Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for 
 
 - [Gameplay match rules](../specs/gameplay.md#match-rules) check time exhaustion before combat but also give player-death precedence when both coincide. Clarify ordering before defining the coincident-end assertion; other completion cases remain independently testable.
 - [Gameplay enemies](../specs/gameplay.md#enemies) permit skipping unsafe spawns while claiming the first two intervals guarantee both types. That guarantee depends on safe points being available. Clarify whether type sequencing advances on successful spawns or scheduled attempts before fixing the blocked-spawn/type assertions.
-- ADR 0003 leaves the frame clamp unspecified; gameplay leaves collision geometry, aiming tolerance, and projectile spacing unresolved. Tests should use accepted values/policies, not silently introduce them.
+- Initial navigation implements the proposed 250 ms frame clamp and circular player/island geometry. Combat geometry, aiming tolerance and projectile spacing remain unresolved. Review proposed policies before extending combat assertions.
 - Browser scripts/configuration, configuration unit tests, and Options E2E are available. Remaining core/browser suites, the dedicated StrictMode development project, hook exposure, network scheduling, and published-worker readiness still need implementation or verification.
