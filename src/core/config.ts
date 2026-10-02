@@ -37,6 +37,11 @@ export type GameplayConfig = {
   -readonly [Field in keyof typeof parameters]: number
 }
 
+export const gameplayOptionLimits = Object.freeze({
+  sessionTime: Object.freeze({ min: parameters.sessionTime.min, max: parameters.sessionTime.max }),
+  enemySpawnInterval: Object.freeze({ min: parameters.enemySpawnInterval.min, max: parameters.enemySpawnInterval.max }),
+})
+
 export interface ConfigValidationIssue {
   field: keyof GameplayConfig | 'config'
   message: string

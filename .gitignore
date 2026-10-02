@@ -36,5 +36,9 @@ dist/
 .env.*
 !.env.example
 
+# Playwright run artifacts
+playwright-report/
+test-results/
+
 # Logs
 *.log

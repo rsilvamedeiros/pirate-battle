@@ -8,6 +8,8 @@ Implementation update: the configuration suite now runs with Vitest 4 and covers
 
 U1 remains unchecked until boundary cases for every balancing field are exercised; the first increment verifies the exposed Options boundaries and representative balancing limits.
 
+Increment 2 update: `tests/e2e/options.spec.ts` contains 13 cases, executed on Chromium desktop and Pixel 7 emulation (26 passing executions). It covers Options navigation, validation, persistence, identity, unsaved edits, keyboard focus, storage failures/recovery, and responsive layout. The active-match configuration-snapshot assertion remains pending until gameplay exists, so row 1 remains unchecked. Other E2E files and visual baselines are still planned.
+
 ## Traceability matrix
 
 Each numbered row maps directly to the corresponding item in §8. Status ☐ means planned and not verified. V1–V3 cover the separate visual requirement; U1–U5 group the proposed `src/core/**/*.test.ts` Vitest suite. §9 measurements belong to the [Profiling template](../performance/profiling.md), rather than timing assertions in E2E tests.
@@ -243,7 +245,7 @@ Refresh tests deliberately preserve storage within that one test. Retry/recovery
 
 ## Projects
 
-These project definitions are **proposed**, pending Playwright configuration. Use Chromium for both; mobile emulation is not evidence of performance on physical mobile hardware.
+Chromium desktop/mobile are configured for the implemented Options suite; remaining planned specs will run in those projects as they are added. The StrictMode development variant is still proposed. Mobile emulation is not evidence of performance on physical mobile hardware.
 
 | Project | Environment | Specs and input |
 | --- | --- | --- |
@@ -271,12 +273,12 @@ Open the report using `npm run test:e2e:report`; inspect a failed case's trace f
 
 ## Commands
 
-The three E2E scripts are **planned** and have not been added to package.json. Vitest 4 and `test:unit` are implemented for the configuration suite; `test:unit:watch` and `typecheck` are also available. Browser commands become runnable only after the corresponding implementation/configuration work.
+All four scripts below are implemented. E2E currently runs only the Options suite; the rest of the plan remains pending. Install Chromium with `npx playwright install chromium` before the first browser run. `test:unit:watch` and `typecheck` are also available.
 
 | npm script | Proposed script body | Purpose |
 | --- | --- | --- |
-| test:e2e | playwright test | Run configured Chromium desktop/mobile E2E and visual suites, produce HTML report and failure traces |
-| test:e2e:ui | playwright test --ui | Open Playwright UI for interactive investigation |
+| test:e2e | npm run build && playwright test | Build the app, then run implemented Chromium desktop/mobile suites with HTML reporting and failure traces |
+| test:e2e:ui | npm run build && playwright test --ui | Build the app, then open Playwright UI for interactive investigation |
 | test:e2e:report | playwright show-report playwright-report | Open the latest local HTML report |
 | test:unit | vitest run | Run src/core/**/*.test.ts once and fail on assertions |
 
@@ -287,4 +289,4 @@ Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for 
 - [Gameplay match rules](../specs/gameplay.md#match-rules) check time exhaustion before combat but also give player-death precedence when both coincide. Clarify ordering before defining the coincident-end assertion; other completion cases remain independently testable.
 - [Gameplay enemies](../specs/gameplay.md#enemies) permit skipping unsafe spawns while claiming the first two intervals guarantee both types. That guarantee depends on safe points being available. Clarify whether type sequencing advances on successful spawns or scheduled attempts before fixing the blocked-spawn/type assertions.
 - ADR 0003 leaves the frame clamp unspecified; gameplay leaves collision geometry, aiming tolerance, and projectile spacing unresolved. Tests should use accepted values/policies, not silently introduce them.
-- Browser test scripts/configuration and the remaining core suites are pending implementation. Vitest and configuration tests are available. StrictMode, hook exposure, network scheduling, and published-worker readiness need verification in the actual app.
+- Browser scripts/configuration, configuration unit tests, and Options E2E are available. Remaining core/browser suites, the dedicated StrictMode development project, hook exposure, network scheduling, and published-worker readiness still need implementation or verification.

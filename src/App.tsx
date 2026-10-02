@@ -1,121 +1,77 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import { useRef, useState } from 'react'
+import { browserOptionsStorage, savePlayerOptions } from './persistence/options'
+import type { LoadedOptions, PlayerOptions } from './persistence/options'
+import { OptionsScreen } from './ui/OptionsScreen'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const controls = [
+  ['Move forward', 'W / ↑', 'Hold Forward'],
+  ['Rotate left', 'A / ←', 'Hold Rotate Left'],
+  ['Rotate right', 'D / →', 'Hold Rotate Right'],
+  ['Front fire', 'Space', 'Hold Front Fire'],
+  ['Left side fire', 'Q', 'Hold Left Fire'],
+  ['Right side fire', 'E', 'Hold Right Fire'],
+  ['Pause', 'Esc / P', 'Tap Pause'],
+]
+
+function App({ initialOptions }: { initialOptions: LoadedOptions }) {
+  const [screen, setScreen] = useState<'menu' | 'options'>('menu')
+  const [options, setOptions] = useState(initialOptions.options)
+  const [notice, setNotice] = useState(initialOptions.notice)
+  const optionsButton = useRef<HTMLButtonElement>(null)
+
+  function saveOptions(nextOptions: Readonly<PlayerOptions>) {
+    if (!savePlayerOptions(browserOptionsStorage, nextOptions)) return false
+    setOptions(nextOptions)
+    setNotice(null)
+    return true
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <main className="app-shell">
+      <div className="menu-panel">
+        {notice && <p className="storage-notice" role="status">{notice}</p>}
+        {screen === 'options' ? (
+          <OptionsScreen
+            options={options}
+            onSave={saveOptions}
+            onBack={() => {
+              setScreen('menu')
+              requestAnimationFrame(() => optionsButton.current?.focus())
+            }}
+          />
+        ) : (
+          <section aria-labelledby="menu-heading">
+            <h1 id="menu-heading" className="game-title">
+              <img src={`${import.meta.env.BASE_URL}assets/png/retina/ui/menu/title_pirate_battle.png`} alt="Pirate Battle" />
+            </h1>
+            <p className="tagline">Set sail. Take command.</p>
+            <div className="menu-actions">
+              <button type="button" className="primary-button" disabled aria-describedby="combat-availability">Play</button>
+              <button type="button" className="primary-button" ref={optionsButton} onClick={() => setScreen('options')}>Options</button>
+            </div>
+            <p id="combat-availability" className="availability">Combat is coming soon.</p>
+            <p className="session-summary">{options.sessionTime}s voyage · Enemies every {options.enemySpawnInterval}s</p>
+            <details className="controls">
+              <summary>Controls</summary>
+              <p>Move, rotate, and fire together. Touch controls support simultaneous actions.</p>
+              <div className="table-scroll">
+                <table>
+                  <caption className="visually-hidden">Keyboard and touch controls</caption>
+                  <thead><tr><th>Action</th><th>Keyboard</th><th>Touch</th></tr></thead>
+                  <tbody>{controls.map(([action, keyboard, touch]) => <tr key={action}><th scope="row">{action}</th><td>{keyboard}</td><td>{touch}</td></tr>)}</tbody>
+                </table>
+              </div>
+            </details>
+            <nav className="ranking-actions" aria-label="Match records">
+              <button type="button" className="secondary-button" disabled aria-describedby="records-availability">Ranking</button>
+              <button type="button" className="secondary-button" disabled aria-describedby="records-availability">Match History</button>
+            </nav>
+            <p id="records-availability" className="availability">Match records are coming soon.</p>
+          </section>
+        )}
+      </div>
+    </main>
   )
 }
 
