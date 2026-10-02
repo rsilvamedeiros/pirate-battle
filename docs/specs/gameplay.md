@@ -116,6 +116,8 @@ Proposed, implemented: at a fixed-step boundary, time exhaustion takes precedenc
 
 An abandoned match does not replace the last completed result. A pending submission from an earlier completed match does not prevent a new match. API failures do not interrupt combat or block Options.
 
+Increment 6 implements completion capture and a proposed Last Result menu action. It restores completed details after refresh, preserves pending match IDs and allows new gameplay independently of the queue. Registration stays pending with an explicit availability message until HTTP integration; Retry Save addresses local write failure and does not send an API request.
+
 ## Visual feedback
 
 Provide perceptible firing effects, impact/damage feedback, destruction explosions, and ship deterioration as HP decreases. Keep the arena readable and show health above the player and every enemy ship using PixiJS.

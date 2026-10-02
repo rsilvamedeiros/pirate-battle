@@ -49,11 +49,16 @@ Open the URL printed by Vite. Start with a new browser profile/context for defau
 | Automatic pause | Switch browser tabs or move focus away; return | Session stays paused until explicit Resume; paused time is excluded |
 | Exit and restart | Pause, choose Main Menu, then Play again | Old canvas is removed; ship, health, score and timer reset |
 | Time completion | Save a 60-second session, Play, and let active time expire | Completion dialog appears; movement stops; Play Again starts fresh |
-| Feature availability | Inspect Ranking and Match History | Record tabs are disabled; completed-result persistence and registration are pending |
+| Result and refresh | Complete a match, return to Main Menu, refresh, select Last Result | Score, active duration, reason and date remain unchanged; registration is pending |
+| Pending matches | Complete two matches with Play Again between them | Distinct match IDs stay in the outbox; the second result is the latest; gameplay remains available |
+| Abandonment | Complete a match, start another, pause and leave or refresh before completion | Previous result and pending entries are unchanged; active combat is not restored |
+| Feature availability | Inspect Ranking and Match History | Tabs remain disabled; HTTP registration and confirmed records are pending |
 
 To repeat default-value checks in an existing profile, remove only `pirate-battle.options.v1` in browser DevTools and refresh. This also resets the local player identity. Do not clear unrelated site data.
 
 For invalid-data recovery, replace that key with malformed JSON or an unsupported version, then refresh. Defaults and visible feedback should appear; a subsequent valid Save should succeed. Automated tests also cover blocked storage, failed writes, and retry without overwriting previous values.
+
+Results use `pirate-battle.last-result.v1` and `pirate-battle.outbox.v1`. Inspect them in DevTools: every pending entry retains its matchId, frozen record and zero HTTP attempts. No registration request is made in this increment. A failed write shows Retry Save; restore storage access and retry to save the same payload. If the last-result write was interrupted after the outbox write, refresh recovers the queued result. Invalid/unreadable outbox data is preserved; inspect/export it before removing only the damaged owned key. Clearing the outbox discards pending records and is not a recovery test.
 
 ## Automated verification
 
@@ -70,7 +75,7 @@ npm run test:e2e
 
 | Command | Purpose |
 | --- | --- |
-| npm run test:unit | Run configuration, navigation, engine, geometry, weapons, enemies and damage suites with Vitest |
+| npm run test:unit | Run core, engine and result persistence suites with Vitest |
 | npm run test:unit:watch | Rerun unit tests while editing |
 | npm run typecheck | Check application, tooling, and E2E TypeScript |
 | npm run lint | Run ESLint |
@@ -87,6 +92,7 @@ npm run test:e2e -- tests/e2e/options.spec.ts
 npm run test:e2e -- tests/e2e/movement.spec.ts tests/e2e/pause.spec.ts
 npm run test:e2e -- tests/e2e/combat.spec.ts tests/e2e/assets.spec.ts
 npm run test:e2e -- tests/e2e/enemies.spec.ts tests/e2e/match-end.spec.ts
+npm run test:e2e -- tests/e2e/result.spec.ts tests/e2e/navigation.spec.ts
 npm run test:e2e -- --project=chromium-mobile
 ```
 
@@ -128,7 +134,7 @@ Record the actual failing command, browser project, values used, and visible err
 
 ## Current coverage
 
-The enemy/combat increment passes 115 unit tests and 94 E2E executions. Counts describe recorded checks, not a guarantee about future changes; rerun them on your checkout.
+The result increment contains 128 unit tests and 114 E2E executions. Execution results are recorded in the [construction guide](docs/README.md#increment-6-persisted-results-and-pending-outbox); rerun them on your checkout.
 
 | Suite | Cases | Execution |
 | --- | ---: | --- |
@@ -139,6 +145,7 @@ The enemy/combat increment passes 115 unit tests and 94 E2E executions. Counts d
 | src/core/combat.test.ts | 12 | Vitest / Node; weapon mechanics |
 | src/core/enemies.test.ts | 15 | Vitest / Node; seed, spawn safety, routes and behavior |
 | src/core/damage.test.ts | 7 | Vitest / Node; teams, damage, scoring and terminal ordering |
+| src/persistence/results.test.ts | 13 | Vitest / Node; snapshots, validation, durable queue and write recovery |
 | tests/e2e/options.spec.ts | 13 | Desktop and mobile: 26 executions |
 | tests/e2e/assets.spec.ts | 7 | Desktop and mobile: 14 executions |
 | tests/e2e/combat.spec.ts | 9 | Desktop and mobile: 18 executions |
@@ -146,7 +153,9 @@ The enemy/combat increment passes 115 unit tests and 94 E2E executions. Counts d
 | tests/e2e/match-end.spec.ts | 3 | Desktop and mobile: 6 executions |
 | tests/e2e/movement.spec.ts | 5 | Desktop and mobile: 10 executions |
 | tests/e2e/pause.spec.ts | 4 | Desktop and mobile: 8 executions |
+| tests/e2e/result.spec.ts | 7 | Desktop and mobile: 14 executions |
+| tests/e2e/navigation.spec.ts | 3 | Desktop and mobile: 6 executions |
 
-Lint, type checking and production build also pass. The latest HTML report contains the full desktop/mobile suite. Separate development StrictMode reviews check repeated entry/exit, one canvas, deleted hooks and no unhandled page errors. Portrait/landscape screenshots are review artifacts, not versioned visual baselines or memory measurements.
+All 128 units, lint, type checking and production build pass. The full browser run passed 112 of 114 executions and found two duplicate-status failures under blocked storage. After correction, all 46 Options/result/navigation revalidation executions passed, including both failures. The latest HTML report contains this targeted desktop/mobile run; remaining suites passed in the full run. Separate development StrictMode review checked five completion/exit cycles per layout, exactly one pending entry per match, one canvas, deleted hooks, refresh restoration and no unhandled page errors. Portrait/landscape screenshots are review artifacts, not versioned visual baselines or memory measurements.
 
-Persisted results, ranking/history, MSW scenarios, visual baselines and performance measurements remain pending. Unit tests cover blocked spawn recovery and both enemy routes; browser suites cover interval/seed, Chaser/Shooter interactions, real keyboard/touch kills, pause and time/death completion. Focus-loss pause is automated; hidden-tab behavior also needs manual browser verification. Remaining planned cases stay in the [test plan](docs/testing/test-plan.md); the [profiling template](docs/performance/profiling.md) requires real measurements.
+HTTP registration, ranking/history, MSW scenarios, visual baselines and performance measurements remain pending. Result/browser suites cover completed details, refresh, full configuration, consecutive pending matches, interrupted writes, storage retry and abandonment. Registration transitions beyond pending still require real HTTP integration. Focus-loss pause is automated; hidden-tab behavior also needs manual browser verification. Remaining planned cases stay in the [test plan](docs/testing/test-plan.md); the [profiling template](docs/performance/profiling.md) requires real measurements.

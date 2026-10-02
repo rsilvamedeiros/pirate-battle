@@ -10,7 +10,7 @@ The developer sets the scope and constraints. Proposed decisions and generated m
 
 The documentation preparation covered test cases, determinism, isolation, failure scenarios, and reporting, with changes limited to Markdown. The test plan enumerates 124 logical cases; it is not a claim that the full suite is implemented or passing. Profiling tables contain placeholders, not measured results.
 
-Implementation started at the developer's request. AI assisted with configuration and tests; menu/Options and persistence; navigation and PixiJS lifecycle; weapons and obstacle contacts; and now seeded enemies, damage/scoring, completion, feedback and corresponding tests. Completed-result persistence and remote data remain pending.
+Implementation started at the developer's request. AI assisted with configuration and tests; menu/Options and persistence; navigation and PixiJS lifecycle; weapons and obstacle contacts; seeded enemies, damage/scoring and feedback; and now completed-result persistence, a pending outbox and corresponding tests. HTTP registration and remote data remain pending.
 
 As testing is implemented, AI may also support writing tests, reviewing assertions, and investigating failures. Record that assistance here when it occurs, together with the commands actually executed and their results. Claims of coverage and performance must be supported by executable tests, reports, traces, and measurements.
 
@@ -23,9 +23,9 @@ As testing is implemented, AI may also support writing tests, reviewing assertio
 | 1 | Read the challenge and document architecture boundaries and alternatives | Drafted; ADRs remain Proposed | [ADR index](adr/README.md), [architecture skeleton](../ARCHITECTURE.md) |
 | 2 | Specify gameplay, configuration, screens, API contracts, and network scenarios | Drafted; design choices remain proposed | [Gameplay](specs/gameplay.md), [API contracts](specs/api-contracts.md), [network scenarios](specs/network-scenarios.md) |
 | 3 | Map requirements to tests and define profiling procedures | Drafted | [Test plan](testing/test-plan.md), [profiling template](performance/profiling.md) |
-| 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: local combat implemented; full result flow pending | [Simulation](../src/core/simulation.ts), [enemies](../src/core/enemies.ts), [game screen](../src/ui/GameScreen.tsx) |
-| 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | In progress: Options persistence implemented | [Options storage](../src/persistence/options.ts); remote contracts, outbox, and handlers remain pending |
-| 6 | Implement and execute core/E2E tests and review visual baselines | In progress: local combat and browser suites | [Enemy units](../src/core/enemies.test.ts), [damage units](../src/core/damage.test.ts), [enemy E2E](../tests/e2e/enemies.spec.ts); persistence/API suites and baselines remain pending |
+| 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: local combat and persisted result implemented | [Simulation](../src/core/simulation.ts), [game screen](../src/ui/GameScreen.tsx), [result details](../src/ui/ResultDetails.tsx) |
+| 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | In progress: Options/result/outbox persistence implemented | [Results store](../src/persistence/results.ts), [typed records](../src/api/contracts.ts); HTTP dispatch, handlers and scenarios remain pending |
+| 6 | Implement and execute core/E2E tests and review visual baselines | In progress: local combat and result/browser suites | [Persistence units](../src/persistence/results.test.ts), [result E2E](../tests/e2e/result.spec.ts), [navigation E2E](../tests/e2e/navigation.spec.ts); API suites and baselines remain pending |
 | 7 | Profile the optimized build, document limitations, and complete delivery | Planned | Filled profiling record, public deployment, and project setup/reproduction instructions |
 
 Steps may overlap. Update statuses and link evidence as work is completed; keep implementation details in the corresponding specifications and architecture documents.
@@ -78,11 +78,23 @@ Verification: 115 units pass across seven files, and 94 E2E executions pass (47 
 
 AI assisted with simulation/render implementation, enemy routing, seed and fixture design, real-input browser tests and documentation updates. For review, run `npm run dev`, survive two spawn intervals, observe both sail colors, fire at enemies, compare player/enemy HP changes, verify scoring and finish a match by time or death. Proposed balance still requires playtesting and profiling.
 
+## Increment 6: Persisted results and pending outbox
+
+Delivered: immutable completed MatchRecord with shell-generated UUID, UTC date, score, floor-rounded active duration, end reason, stable player identity and all 31 configuration values. The configuration group serializes validated fields in lexical order. The store captures each terminal state once, writes the outbox before the last result, retains multiple pending matches and recovers interrupted writes on boot. The completion dialog and Last Result menu view expose semantic details and pending registration. Play Again remains available; abandonment never overwrites an earlier result.
+
+Storage failures retain in-memory payloads and offer Retry Save with the same identifiers. Unreadable/invalid outbox data is preserved instead of overwritten; valid pending entries merge when reads recover. This increment performs no HTTP requests and does not claim registration confirmation, boot dispatch or server deduplication. Those depend on the next API/MSW increment.
+
+Verification: 128 units pass across eight files; lint, type checking and optimized build pass. The full 114-execution desktop/mobile browser run passed 112 and exposed two duplicate-status failures when storage was blocked. The menu was corrected to avoid overlapping notices. The affected Options/result/navigation suites were rebuilt and rerun: all 46 executions passed, including both previously failing cases. The latest HTML report contains this targeted revalidation; the other suites passed in the full run. No known failing case remains.
+
+Development StrictMode review completed five completion/exit cycles per layout with exactly five pending entries, one canvas per session, deleted hooks after exit, restored result after refresh and no unhandled page errors. Desktop/mobile portrait/landscape screenshots were reviewed; they are not versioned visual baselines or memory measurements. Original README challenge text remains intact and documentation links resolve. Executable counts and practical review instructions are maintained in [TESTING.md](../TESTING.md#current-coverage).
+
+AI assisted with typed records, persistence/recovery implementation, semantic result UI, unit/browser tests and documentation. For review, complete a match, return to the menu, refresh and open Last Result; start a new voyage while the previous result is pending, then abandon it and check that the old result remains.
+
 ## Decisions to validate during implementation
 
 - Time-first boundary ordering and successful-spawn type sequencing are implemented as proposed choices; validate their documented behavior.
 - Collision footprints, projectile spacing, aiming tolerance and island routes are implemented; validate balancing, mobile usability and safe-spawn availability.
-- Persisted result/outbox, remote scenarios, visual baselines, profiling and deployment remain required delivery work.
+- Pending result/outbox storage is implemented; HTTP dispatch/confirmation, remote scenarios, visual baselines, profiling and deployment remain required delivery work.
 
 These points are recorded in the [test plan](testing/test-plan.md#review-blockers-and-unresolved-details). Review the affected proposed decisions/specifications before setting final assertions.
 

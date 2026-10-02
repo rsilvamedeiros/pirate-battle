@@ -6,13 +6,13 @@ The root [README.md](README.md) preserves the original challenge. This document 
 
 | Area | Implemented | Pending |
 | --- | --- | --- |
-| Core / engine | Typed configuration, navigation, weapons, seeded safe spawns, Chaser/Shooter behavior, damage, score, pause/restart and time/death completion | Persisted completed-match data and network integration |
-| React / PixiJS | Menu, Options, arena/ships/projectiles, HUD, simultaneous controls, health/deterioration, damage/destruction feedback and completion dialogs | Full persisted result/registration flow and ranking/history views |
-| Local persistence | Versioned Options and local player identity; invalid-data recovery and storage errors | Last completed result, outbox, confirmed mock records |
-| Tests | Configuration, navigation, engine, geometry, weapons, enemies and damage units; gameplay/browser suites | Persistence/API suites, visual baselines |
+| Core / engine | Typed configuration, navigation, weapons, seeded safe spawns, Chaser/Shooter behavior, damage, score, pause/restart and time/death completion | Network integration in the shell |
+| React / PixiJS | Menu, Options, arena/ships/projectiles, HUD, simultaneous controls, health/deterioration, completion details and Last Result view | HTTP registration statuses and ranking/history views |
+| Local persistence | Versioned Options/identity, completed results and pending outbox; validation and write recovery | Confirmed mock records and HTTP replay |
+| Tests | Core/engine/persistence units; gameplay, result and abandonment browser suites | API suites and visual baselines |
 | Delivery | Production build verified locally | Public deployment and profiling evidence |
 
-Play starts combat with both enemy types, three weapons, HP and scoring. Ranking and Match History remain disabled; the completion dialog is not yet the full persisted result/registration flow. Installed packages alone do not mean their corresponding features are implemented.
+Play starts combat with both enemy types, three weapons, HP and scoring. Completed results survive refresh and are available through Last Result. Registration remains pending with an explicit availability message; no HTTP requests are made yet. Ranking and Match History remain disabled. Installed packages alone do not mean their corresponding features are implemented.
 
 ## Technology roles
 
@@ -21,7 +21,7 @@ Play starts combat with both enemy types, three weapons, HP and scoring. Ranking
 | Vite | Development server and production build |
 | React | Menus, Options, HUD snapshots and session dialogs; StrictMode at the entry point |
 | TypeScript | Strict checking for application, tooling, and E2E files |
-| Vitest 4 | Pure configuration, navigation, engine, geometry, weapons, enemy and damage tests in Node |
+| Vitest 4 | Core, engine and persistence tests in Node with injected storage |
 | Playwright | Browser tests against the optimized preview build |
 | PixiJS | Arena, supplied ship/projectile/effect sprites and ship health indicator |
 | Axios / TanStack Query | Installed; ranking/history integration pending |
@@ -43,12 +43,15 @@ Play starts combat with both enemy types, three weapons, HP and scoring. Ranking
 | [src/input/keyboard.ts](src/input/keyboard.ts) | Gameplay bindings, focus/visibility pause and listener cleanup |
 | [src/ui/GameScreen.tsx](src/ui/GameScreen.tsx) | Canvas lifecycle, touch pointers, semantic HUD, dialogs and gated test hooks |
 | [src/persistence/options.ts](src/persistence/options.ts) | Versioned storage envelope, local player identity, loading/saving/recovery |
+| [src/api/contracts.ts](src/api/contracts.ts) | Immutable MatchRecord, full configuration grouping and persisted-record validation |
+| [src/persistence/results.ts](src/persistence/results.ts) | Completion capture, versioned last result/outbox, restore and storage retry |
+| [src/ui/ResultDetails.tsx](src/ui/ResultDetails.tsx) | Semantic score, duration, reason, date, registration status and save retry |
 | [src/ui/OptionsScreen.tsx](src/ui/OptionsScreen.tsx) | Two-field form, associated errors, Save/Main Menu actions, focus |
-| [src/App.tsx](src/App.tsx) | Menu/Options/game navigation and saved Options state |
+| [src/App.tsx](src/App.tsx) | Menu/Options/game/result navigation and saved state subscriptions |
 | [src/main.tsx](src/main.tsx) | One-time storage bootstrap and React StrictMode mount |
 | [src/App.css](src/App.css) | Supplied menu assets and responsive screen styling |
 | [playwright.config.ts](playwright.config.ts) | Desktop/mobile projects, preview server, reports, failure traces |
-| [vitest.config.ts](vitest.config.ts) | Node-based core test discovery |
+| [vitest.config.ts](vitest.config.ts) | Node-based core, engine and persistence test discovery |
 
 The core has no React, PixiJS, browser time, storage, or network dependencies. Storage belongs to the imperative shell. Bootstrap runs outside StrictMode so its development mount cycle does not regenerate the local player identity.
 
@@ -59,6 +62,14 @@ Only sessionTime and enemySpawnInterval are exposed in Options. sessionTime defa
 The form reuses core validation without coercing persisted values. Only a successful explicit Save updates stored Options. Main Menu discards unsaved edits; a failed storage write preserves the previous saved state. Each session uses a validated immutable snapshot, independent of later edits.
 
 The `pirate-battle.options.v1` localStorage envelope contains version, playerId, playerName, sessionTime, and enemySpawnInterval. The local display name defaults to Player. Valid identity persists across refresh; malformed/unsupported data restores defaults with feedback. Storage failures are handled visibly, without claiming persistence succeeded.
+
+Completed-match capture runs in the shell on the engine's terminal transition. It generates one cryptographic UUID and UTC completion timestamp, freezes the full configuration and records floor(elapsedMs), score, player identity and end reason. Repeated notifications for the same terminal state reuse that record. `configKey` is `v1:` plus compact JSON of all validated configuration fields in lexical order; seed and presentation are excluded.
+
+The results store bootstraps outside StrictMode and exposes stable snapshots. It writes `pirate-battle.outbox.v1` first (`{ version: 1, entries }`, keyed by matchId, each entry holding record and attempts), then `pirate-battle.last-result.v1` (`{ version: 1, record, submissionStatus }`). New entries are pending with zero HTTP attempts. Recovery restores pending/sending/error states as pending; an outbox entry overrides stale confirmed status. A newer queued record recovers a missing or older last result after an interrupted write.
+
+Storage failure keeps records in memory and shows Retry Save without claiming refresh recovery. Retry preserves identifiers and merges readable existing pending records. Unreadable or invalid outbox data is preserved and blocks overwrite: inspect/export it in DevTools before removing only the corrupted owned key and retrying. Invalid last results have visible feedback and can be recovered from valid pending records. Automatic migration and simultaneous-tab coordination are not implemented.
+
+Refresh or leaving active combat abandons it without creating a record or replacing an earlier result. Completed pending matches never prevent starting another match. Last Result opens the most recent completed details from the menu and offers Play Again/Main Menu; loading the page returns to the menu rather than resuming combat. HTTP dispatch, confirmation, boot replay and manual submission retry remain pending.
 
 ## Assets and interface
 
@@ -90,7 +101,7 @@ Spawns follow active-time intervals, trying 32 seeded candidates and an 80 lu gr
 
 Enemy steering uses 16 waypoints on a 160 lu ring when the direct path is blocked. Rotation is bounded by configuration and movement waits until heading error is at most π/3. Chasers pursue and deal one configured impact before removal, with no score. Shooters approach, stop within attack range and fire toward their heading when aligned within 0.15 rad and their independent cooldown permits; the first shot waits a cooldown after spawn.
 
-Each active step checks time expiry first, then player movement, spawn, enemy movement, projectile damage, surviving Chaser contact and surviving Shooter fire. Every enemy killed by player shots earns one point. Lethal player damage stops remaining damage/contact/fire processing. Time expiry wins at the duration boundary; earlier death wins in its own step. This replaces the earlier conflicting proposed death-priority sentence. Completion shows score, active duration and reason; persistence and registration remain pending.
+Each active step checks time expiry first, then player movement, spawn, enemy movement, projectile damage, surviving Chaser contact and surviving Shooter fire. Every enemy killed by player shots earns one point. Lethal player damage stops remaining damage/contact/fire processing. Time expiry wins at the duration boundary; earlier death wins in its own step. Completion shows score, active duration, reason, date and pending registration, then captures the result and outbox in the shell.
 
 Ship tint deteriorates at HP ratios 0.65 and 0.3; each ship has a proportional health bar. Damage feedback lasts 180 ms and destruction feedback 400 ms of active time. Effects freeze with terminal simulation state. These thresholds, routing and collision geometry are proposed tuning, not additional challenge requirements.
 
@@ -104,7 +115,7 @@ Mobile emulation does not establish performance on a physical device. Review scr
 
 ADRs remain Proposed. Frame clamping, collision geometry, routing, aiming, successful-spawn sequencing and time-first terminal ordering are implemented as proposed choices. Validate tuning through gameplay and profiling. Ship-to-ship separation beyond spawn checks and Chaser impact is not modeled; routes assume the current circular island.
 
-Next work is the persisted result and ranking/history integration with idempotent recovery, then visual baselines, profiling and public deployment. See the [construction guide](docs/README.md) for incremental delivery and AI assistance.
+Next work is Axios/TanStack Query and MSW registration, ranking/history, idempotent replay and network scenarios, then visual baselines, profiling and public deployment. See the [construction guide](docs/README.md) for incremental delivery and AI assistance.
 
 ## Documentation references
 

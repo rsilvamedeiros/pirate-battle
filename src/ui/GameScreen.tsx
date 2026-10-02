@@ -8,9 +8,11 @@ import { fixedStepMs } from '../core/simulation'
 import type { GameHooks } from '../engine/test-hooks'
 import type { GameplayConfig } from '../core/config'
 import { prepareMatch } from '../engine/scenarios'
+import type { ResultsStore } from '../persistence/results'
+import { ResultDetails } from './ResultDetails'
 import './GameScreen.css'
 
-function SessionDialog({ engine, onExit, onRestart }: { engine: GameEngine; onExit(): void; onRestart(): void }) {
+function SessionDialog({ engine, resultsStore, onExit, onRestart }: { engine: GameEngine; resultsStore: ResultsStore; onExit(): void; onRestart(): void }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const completed = engine.getState().status === 'completed'
   const dead = engine.getState().endReason === 'player-death'
@@ -26,7 +28,7 @@ function SessionDialog({ engine, onExit, onRestart }: { engine: GameEngine; onEx
     }}>
       <h2 id="session-dialog-heading">{completed ? 'Voyage complete' : 'Paused'}</h2>
       <p>{completed ? dead ? 'Your ship was destroyed.' : 'Time expired. Your voyage has ended.' : 'Take a breath. Resume when you are ready.'}</p>
-      {completed && <p>Score: {engine.getState().score} · Active time: {(engine.getState().elapsedMs / 1000).toFixed(1)}s</p>}
+      {completed && resultsStore.getSnapshot().lastResult && <ResultDetails result={resultsStore.getSnapshot().lastResult!} store={resultsStore} />}
       {completed
         ? <button type="button" className="primary-button" onClick={onRestart}>Play Again</button>
         : <button type="button" className="primary-button" onClick={() => engine.resume()}>Resume</button>}
@@ -35,7 +37,7 @@ function SessionDialog({ engine, onExit, onRestart }: { engine: GameEngine; onEx
   )
 }
 
-export function GameScreen({ config, onExit, onRestart }: { config: GameplayConfig; onExit(): void; onRestart(): void }) {
+export function GameScreen({ config, resultsStore, onExit, onRestart }: { config: GameplayConfig; resultsStore: ResultsStore; onExit(): void; onRestart(): void }) {
   const host = useRef<HTMLDivElement>(null)
   const root = useRef<HTMLElement>(null)
   const [runtime] = useState(() => {
@@ -53,6 +55,14 @@ export function GameScreen({ config, onExit, onRestart }: { config: GameplayConf
   const snapshot = useSyncExternalStore(engine.subscribe, engine.getSnapshot)
   const [ready, setReady] = useState(false)
   const [error, setError] = useState(false)
+
+  useEffect(() => {
+    function captureCompletion() {
+      if (engine.getState().status === 'completed') resultsStore.complete(engine.getState())
+    }
+    captureCompletion()
+    return engine.subscribe(captureCompletion)
+  }, [engine, resultsStore])
 
   useEffect(() => {
     let disposed = false
@@ -133,7 +143,7 @@ export function GameScreen({ config, onExit, onRestart }: { config: GameplayConf
         ))}
       </nav>
       <p className="navigation-hint">W / ↑ to sail · A / ← and D / → to rotate · Space to fire · Q / E for broadsides · Esc / P to pause</p>
-      {ready && snapshot.status !== 'running' && <SessionDialog key={snapshot.status} engine={engine} onExit={onExit} onRestart={onRestart} />}
+      {ready && snapshot.status !== 'running' && <SessionDialog key={snapshot.status} engine={engine} resultsStore={resultsStore} onExit={onExit} onRestart={onRestart} />}
     </main>
   )
 }

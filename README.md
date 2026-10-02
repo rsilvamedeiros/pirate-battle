@@ -12,13 +12,15 @@ Projeto de um jogo naval 2D desenvolvido para o desafio técnico de React, TypeS
 - Disparo frontal e salvas laterais com três projéteis paralelos por lado, cooldowns independentes e efeitos de disparo/impacto.
 - Chaser e Shooter com spawns seguros por seed, navegação ao redor da ilha, dano, pontuação e encerramento por morte ou tempo.
 - Barras de vida, deterioração visual dos navios e explosões de destruição.
+- Resultado persistido com pontuação, duração ativa, motivo, data e identificação única; consulta pelo botão Last Result.
+- Fila persistente de registros pendentes, recuperação de gravação interrompida e nova tentativa de salvamento local.
 - Testes unitários e E2E dos fluxos implementados, incluindo inimigos, dano, pontuação e reinício em desktop e Pixel 7 emulado.
 
 Os resultados da verificação de cada etapa estão registrados no [guia de testes](TESTING.md#current-coverage).
 
 ## Estado atual
 
-É possível alterar as opções e selecionar Play para enfrentar Chasers e Shooters, acumular pontos e terminar por tempo ou perda de vida. Ranking e Match History continuam desabilitados. Resultado completo com persistência, APIs, baselines visuais, profiling e deploy ainda estão pendentes.
+É possível alterar as opções e selecionar Play para enfrentar Chasers e Shooters, acumular pontos e terminar por tempo ou perda de vida. O resultado fica salvo após refresh e pode ser consultado em Last Result. Partidas abandonadas não substituem o resultado anterior. Os registros ficam pendentes; o envio HTTP será implementado na próxima etapa. Ranking, Match History, APIs, baselines visuais, profiling e deploy ainda estão pendentes.
 
 ## Como executar
 

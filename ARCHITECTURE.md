@@ -52,6 +52,8 @@ Related validation: [Profiling template](docs/performance/profiling.md#memory).
 
 Describe persisted options, the last completed result, confirmed mock records, and the pending outbox ([ADR 0005](docs/adr/0005-idempotent-match-submission-outbox.md), [ADR 0006](docs/adr/0006-msw-in-production.md)). TODO: document schemas, validation, storage errors, reset scope, and abandonment behavior.
 
+`src/persistence/results.ts` captures completed states once, outside the core, using shell UUIDs/timestamps and immutable typed records from `src/api/contracts.ts`. It writes a versioned outbox before the last result, retains multiple pending records and restores the latest queued result after interrupted writes. Last Result is accessible from the menu after refresh; active combat is abandoned without writing a record. Storage failures keep in-memory payloads and allow Retry Save with the same IDs. Invalid/unreadable outbox data is preserved rather than overwritten. See [technical persistence details](TECHNICAL.md#configuration-and-persistence) for schemas and recovery limits.
+
 Related specification: [API contracts](docs/specs/api-contracts.md#local-persistence-proposed).
 
 ## Ranking & match history
@@ -70,6 +72,6 @@ Related specification: [Gameplay](docs/specs/gameplay.md#game-configuration).
 
 Record observed constraints and evidence, including local mock data and behavior under clamped frame delays ([ADR 0006](docs/adr/0006-msw-in-production.md), [ADR 0003](docs/adr/0003-fixed-timestep-simulation.md)). TODO: document supported mobile orientation, reference hardware/browser, three-minute frame metrics, five-cycle memory results, and verified limitations.
 
-The current increment supports movement, weapons, both enemy types, damage, scoring and time/death completion in portrait/landscape. The completion dialog still lacks persisted result/registration status; APIs, visual baselines, profiling and deployment remain pending. Routes are designed for the current single circular island and spawn attempts are bounded. Excess frame delay above the clamp is discarded; performance and memory targets are unmeasured.
+The current increment supports movement, weapons, both enemy types, damage, scoring and persisted time/death results in portrait/landscape. Registration is pending with no HTTP dispatch yet; APIs, visual baselines, profiling and deployment remain pending. Storage uses two ordered writes rather than a transaction, recovering from the durable outbox; simultaneous-tab coordination is not implemented. Routes are designed for the current single circular island and spawn attempts are bounded. Excess frame delay above the clamp is discarded; performance and memory targets are unmeasured.
 
 Related validation: [Profiling template](docs/performance/profiling.md).

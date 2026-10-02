@@ -11,7 +11,7 @@
 .movement-controls button:active:not(:disabled) { background: #376269; }
 .movement-controls button:disabled { opacity: 0.6; }
 .navigation-hint { text-align: center; margin-top: 12px; font-size: 0.85rem; }
-.session-dialog { border: 2px solid #c69e55; border-radius: 12px; background: #182f3d; color: #fff0ce; padding: 28px; width: min(90vw, 400px); text-align: center; }
+.session-dialog { border: 2px solid #c69e55; border-radius: 12px; background: #182f3d; color: #fff0ce; padding: 28px; width: min(90vw, 400px); max-height: 90svh; overflow-y: auto; text-align: center; }
 .session-dialog::backdrop { background: #06151bcc; }
 .session-dialog h2 { margin: 0 0 16px; }
 .session-dialog p { margin-bottom: 20px; line-height: 1.5; }

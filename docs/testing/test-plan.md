@@ -12,6 +12,8 @@ Increment 2 update: `tests/e2e/options.spec.ts` contains 13 cases, executed on C
 
 ## Traceability matrix
 
+Increment 6 update: `src/persistence/results.test.ts` adds 13 cases for immutable records, validation, single completion capture, multiple pending entries, blocked/invalid storage, retry and partial-write recovery including equal timestamps. `tests/e2e/result.spec.ts` adds 7 cases for details, refresh, configuration, consecutive matches, local write recovery and responsive result actions; `navigation.spec.ts` adds 3 abandonment/resource-cleanup cases. These run on both existing browser projects. Registration transitions and network recovery remain planned, so the complete planned result/API coverage stays unchecked. Current counts and execution evidence live in [TESTING.md](../../TESTING.md#current-coverage).
+
 Increment 5 update: `src/core/enemies.test.ts` adds 15 seeded spawn/safety/route/behavior cases and `src/core/damage.test.ts` adds 7 team/damage/scoring/end-order cases. Browser coverage adds 6 enemy cases, 3 match-end cases and 2 real-input kill cases; assets covers both enemy textures as well. Coincident completion now follows documented proposed time-first ordering, and the initial type sequence advances on successful spawns. The full challenge remains unchecked where planned variants, persistence, network, visuals or delivery evidence are pending. Current executable counts live in [TESTING.md](../../TESTING.md#current-coverage).
 
 Increment 4 update: navigation and engine units remain implemented; `src/core/collisions.test.ts` adds 9 swept obstacle/arena cases and `src/core/combat.test.ts` adds 12 player-weapon cases. `tests/e2e/combat.spec.ts` adds 7 cases driven by real keyboard/touch input for shot geometry, independent cooldowns, rendered feedback, obstacle removal, expiry, pause and restart. Assets now has 5 cases (four required texture failures/recovery plus abandoned loading). Damage, teams, kills and duplicate-free scoring are still pending, so requirement 4 and unit combat/collision groups are not fully verified. Current counts and execution evidence live in [TESTING.md](../../TESTING.md#current-coverage).
@@ -277,14 +279,14 @@ Open the report using `npm run test:e2e:report`; inspect a failed case's trace f
 
 ## Commands
 
-All four scripts below are implemented. E2E runs the available Options, assets, movement, weapons, enemies, match-end and pause suites; persistence/API/visual suites remain pending. Install Chromium with `npx playwright install chromium` before the first browser run. `test:unit:watch` and `typecheck` are also available.
+All four scripts below are implemented. E2E runs the available Options, assets, movement, weapons, enemies, match-end, pause, result and navigation suites; API/visual suites remain pending. Install Chromium with `npx playwright install chromium` before the first browser run. `test:unit:watch` and `typecheck` are also available.
 
 | npm script | Proposed script body | Purpose |
 | --- | --- | --- |
 | test:e2e | npm run build && playwright test | Build the app, then run implemented Chromium desktop/mobile suites with HTML reporting and failure traces |
 | test:e2e:ui | npm run build && playwright test --ui | Build the app, then open Playwright UI for interactive investigation |
 | test:e2e:report | playwright show-report playwright-report | Open the latest local HTML report |
-| test:unit | vitest run | Run src/core/**/*.test.ts once and fail on assertions |
+| test:unit | vitest run | Run core, engine and persistence units once and fail on assertions |
 
 Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for mobile and `npm run test:e2e -- tests/e2e/combat.spec.ts` for combat. The StrictMode variant requires its separate development server/project to be configured before use.
 
@@ -293,4 +295,4 @@ Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for 
 - Proposed time-first boundary ordering replaces the earlier conflicting death-priority sentence. An earlier-step death stops remaining damage/contact/fire immediately; unit coverage checks the coincident boundary.
 - Initial enemy type sequencing now advances only on successful spawns. Bounded candidate/grid attempts skip unsafe intervals; blocked recovery is covered by units.
 - Proposed collision radii, broadside spacing, 0.15 rad aim tolerance and ring routes are implemented. Ship-to-ship separation beyond spawn safety and Chaser contact is not modeled; validate balance through playtesting.
-- Persistence/API/visual suites, the dedicated StrictMode project, network scheduling, published-worker readiness and profiling still need implementation or verification. Development lifecycle reviews are recorded separately in the construction guide.
+- HTTP registration/API/visual suites, the dedicated StrictMode project, network scheduling, published-worker readiness and profiling still need implementation or verification. Local result/outbox persistence is implemented; simultaneous-tab storage coordination remains unresolved. Development lifecycle reviews are recorded separately in the construction guide.

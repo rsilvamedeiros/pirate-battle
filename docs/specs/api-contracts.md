@@ -161,6 +161,8 @@ Proposed: scenario changes clear only ranking/history query caches after cancell
 
 ## Local persistence (proposed)
 
+Increment 6 implements Options, immutable completed records, last-result and pending-outbox persistence. The last-result envelope is `{ version: 1, record: MatchRecord, submissionStatus }`; the outbox is `{ version: 1, entries: Record<string, { record: MatchRecord, attempts: number, lastError?: string }> }`. New entries are pending with attempts = 0. Writes order outbox before last result, allowing boot recovery of a newer queued result if the second write is interrupted. Invalid/unreadable outbox data is preserved and blocks overwrite. HTTP replay, confirmation, error status transitions and the MSW database remain pending; Retry Save retries local persistence only.
+
 Each value is a versioned, validated JSON envelope. Read only owned keys; invalid values fall back to defaults or an explicit recovery state. Do not clear unrelated localStorage data.
 
 | localStorage key | Value and lifetime |
