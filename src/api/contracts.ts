@@ -14,6 +14,23 @@ export interface MatchRecord {
   readonly configKey: string
 }
 
+export interface RankingEntry {
+  rank: number
+  matchId: string
+  playerId: string
+  playerName: string
+  playedAt: string
+  score: number
+  durationMs: number
+  configKey: string
+}
+
+export interface Paginated<T> { items: T[]; page: number; pageSize: number; total: number; totalPages: number }
+export interface ApiError {
+  code: 'validation-error' | 'not-found' | 'rate-limited' | 'internal-error' | 'unavailable' | 'timeout' | 'connection-failure'
+  message: string
+}
+
 export function configurationKey(config: Readonly<GameplayConfig>): string {
   const snapshot = createGameplayConfigSnapshot(config)
   return `v1:${JSON.stringify(Object.fromEntries(Object.entries(snapshot).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)))}`

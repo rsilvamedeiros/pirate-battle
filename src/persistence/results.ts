@@ -5,7 +5,7 @@ import type { OptionsStorage } from './options'
 
 export const lastResultStorageKey = 'pirate-battle.last-result.v1'
 export const outboxStorageKey = 'pirate-battle.outbox.v1'
-export interface LastResult { readonly record: MatchRecord; readonly submissionStatus: 'pending' | 'confirmed' }
+export interface LastResult { readonly record: MatchRecord; readonly submissionStatus: 'pending' | 'sending' | 'error' | 'confirmed'; readonly lastError?: string }
 export interface OutboxEntry { readonly record: MatchRecord; readonly attempts: number; readonly lastError?: string }
 export interface ResultsSnapshot {
   readonly lastResult: LastResult | null
@@ -41,6 +41,7 @@ function readLastResult(storage: OptionsStorage): LastResult | null {
   if (raw === null) return null
   const data: unknown = JSON.parse(raw)
   if (!object(data) || data.version !== 1) throw new Error('Invalid result.')
+  if (data.record === null) return null
   const record = parseMatchRecord(data.record)
   if (!record || !['pending', 'sending', 'confirmed', 'error'].includes(String(data.submissionStatus))) throw new Error('Invalid result.')
   return Object.freeze({ record, submissionStatus: data.submissionStatus === 'confirmed' ? 'confirmed' : 'pending' })
@@ -53,6 +54,8 @@ export function createResultsStore(storage: OptionsStorage, identity: { playerId
   let lastResult: LastResult | null = null
   let notice: string | null = null
   let unreadOutbox = false
+  const confirmedIds = new Set<string>()
+  let submit: (matchId: string) => void = () => {}
   try { entries = readOutbox(storage) } catch {
     unreadOutbox = true
     notice = 'Pending records could not be read. Existing storage has been preserved.'
@@ -75,14 +78,16 @@ export function createResultsStore(storage: OptionsStorage, identity: { playerId
     for (const listener of listeners) listener()
   }
 
-  function persist(): boolean {
+  function persist(lastFirst = false): boolean {
     try {
       // Never overwrite unseen pending matches following a read failure.
       const saved = readOutbox(storage)
       unreadOutbox = false
       entries = { ...saved, ...entries }
+      for (const id of confirmedIds) delete entries[id]
+      if (lastFirst && lastResult) storage.setItem(lastResultStorageKey, JSON.stringify({ version: 1, ...lastResult }))
       storage.setItem(outboxStorageKey, JSON.stringify({ version: 1, entries }))
-      if (lastResult) storage.setItem(lastResultStorageKey, JSON.stringify({ version: 1, ...lastResult }))
+      if (!lastFirst && lastResult) storage.setItem(lastResultStorageKey, JSON.stringify({ version: 1, ...lastResult }))
       notice = null
       publish(false)
       return true
@@ -109,7 +114,39 @@ export function createResultsStore(storage: OptionsStorage, identity: { playerId
       persist()
       return record
     },
-    retryPersistence: persist,
+    retryPersistence: () => persist(),
+    setSubmissionHandler(handler: (matchId: string) => void) { submit = handler },
+    retrySubmission(matchId: string) { submit(matchId) },
+    markSending(matchId: string): boolean {
+      const entry = entries[matchId]
+      if (!entry) return false
+      entries = { ...entries, [matchId]: Object.freeze({ record: entry.record, attempts: entry.attempts + 1 }) }
+      if (lastResult?.record.matchId === matchId) lastResult = Object.freeze({ record: entry.record, submissionStatus: 'sending' })
+      return persist()
+    },
+    markFailed(matchId: string, lastError: string) {
+      const entry = entries[matchId]
+      if (!entry) return
+      entries = { ...entries, [matchId]: Object.freeze({ ...entry, lastError }) }
+      if (lastResult?.record.matchId === matchId) lastResult = Object.freeze({ record: entry.record, submissionStatus: 'error', lastError })
+      persist()
+    },
+    confirm(record: MatchRecord) {
+      if (!entries[record.matchId]) return
+      confirmedIds.add(record.matchId)
+      entries = Object.fromEntries(Object.entries(entries).filter(([id]) => id !== record.matchId))
+      if (lastResult?.record.matchId === record.matchId) lastResult = Object.freeze({ record, submissionStatus: 'confirmed' })
+      persist(true)
+    },
+    reset(): boolean {
+      try {
+        storage.setItem(outboxStorageKey, JSON.stringify({ version: 1, entries: {} }))
+        storage.setItem(lastResultStorageKey, JSON.stringify({ version: 1, record: null, submissionStatus: 'pending' }))
+        entries = {}; lastResult = null; notice = null; unreadOutbox = false; confirmedIds.clear()
+        publish(false)
+        return true
+      } catch { notice = 'Demo records could not be reset. Browser storage is unavailable.'; publish(true); return false }
+    },
   }
 }
 
