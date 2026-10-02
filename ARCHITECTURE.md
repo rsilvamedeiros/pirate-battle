@@ -18,6 +18,8 @@ Describe fixed 60 Hz stepping, the accumulator, frame clamping, pause/resume, an
 
 Related specification: [Gameplay](docs/specs/gameplay.md#match-rules).
 
+Related validation: [Test plan](docs/testing/test-plan.md).
+
 ## Collisions
 
 Explain how core rules enforce arena limits, island blocking, single-hit projectiles, and removal of destroyed entities ([ADR 0002](docs/adr/0002-functional-core-imperative-shell.md)). TODO: document shapes, detection and resolution algorithms, ordering, and safeguards against missed collisions.
@@ -27,6 +29,8 @@ Related specification: [Gameplay](docs/specs/gameplay.md#combat-rules).
 ## Resource management
 
 Describe resource ownership, texture loading/reuse, failure recovery, and disposal on exit or restart ([ADR 0004](docs/adr/0004-react-pixi-sync-strategy.md)). TODO: document asset ownership, asynchronous cancellation, listener/ticker cleanup, and memory profiling evidence.
+
+Related validation: [Profiling template](docs/performance/profiling.md#memory).
 
 ## Local persistence
 
@@ -49,3 +53,5 @@ Related specification: [Gameplay](docs/specs/gameplay.md#game-configuration).
 ## Known limitations
 
 Record observed constraints and evidence, including local mock data and behavior under clamped frame delays ([ADR 0006](docs/adr/0006-msw-in-production.md), [ADR 0003](docs/adr/0003-fixed-timestep-simulation.md)). TODO: document supported mobile orientation, reference hardware/browser, three-minute frame metrics, five-cycle memory results, and verified limitations.
+
+Related validation: [Profiling template](docs/performance/profiling.md).
