@@ -10,13 +10,15 @@ Projeto de um jogo naval 2D desenvolvido para o desafio técnico de React, TypeS
 - Tela Options com validação, salvamento no localStorage, recuperação de dados inválidos e mensagens acessíveis.
 - Arena em PixiJS com navio navegável, colisão com ilha e limites, controles de teclado/toque, HUD, pausa e reinício.
 - Disparo frontal e salvas laterais com três projéteis paralelos por lado, cooldowns independentes e efeitos de disparo/impacto.
-- Testes unitários da configuração, simulação, engine, armas e colisões; testes E2E de Options, assets, movimento, disparos e pausa em desktop e Pixel 7 emulado.
+- Chaser e Shooter com spawns seguros por seed, navegação ao redor da ilha, dano, pontuação e encerramento por morte ou tempo.
+- Barras de vida, deterioração visual dos navios e explosões de destruição.
+- Testes unitários e E2E dos fluxos implementados, incluindo inimigos, dano, pontuação e reinício em desktop e Pixel 7 emulado.
 
 Os resultados da verificação de cada etapa estão registrados no [guia de testes](TESTING.md#current-coverage).
 
 ## Estado atual
 
-É possível alterar as opções e selecionar Play para navegar e disparar na arena. Ranking e Match History continuam desabilitados. Inimigos, dano, pontuação, resultado completo com persistência, APIs, baselines visuais, profiling e deploy ainda estão pendentes.
+É possível alterar as opções e selecionar Play para enfrentar Chasers e Shooters, acumular pontos e terminar por tempo ou perda de vida. Ranking e Match History continuam desabilitados. Resultado completo com persistência, APIs, baselines visuais, profiling e deploy ainda estão pendentes.
 
 ## Como executar
 

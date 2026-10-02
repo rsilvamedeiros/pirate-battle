@@ -6,13 +6,13 @@ The root [README.md](README.md) preserves the original challenge. This document 
 
 | Area | Implemented | Pending |
 | --- | --- | --- |
-| Core / engine | Typed configuration, navigation, fixed-step timer, pause/restart, front/broadside weapons, projectile lifetime/range and obstacle contacts | Enemies, target damage, scoring, death completion |
-| React / PixiJS | Menu, Options, arena/ship/projectiles, HUD, simultaneous keyboard/touch controls, firing/impact feedback, pause and time-completion dialogs | Full result screen, ranking/history views, damage/destruction feedback |
+| Core / engine | Typed configuration, navigation, weapons, seeded safe spawns, Chaser/Shooter behavior, damage, score, pause/restart and time/death completion | Persisted completed-match data and network integration |
+| React / PixiJS | Menu, Options, arena/ships/projectiles, HUD, simultaneous controls, health/deterioration, damage/destruction feedback and completion dialogs | Full persisted result/registration flow and ranking/history views |
 | Local persistence | Versioned Options and local player identity; invalid-data recovery and storage errors | Last completed result, outbox, confirmed mock records |
-| Tests | Configuration, navigation, engine, geometry and weapons units; Options, assets, movement, weapons and pause E2E | Damage/scoring, enemies/API suites, visual baselines |
+| Tests | Configuration, navigation, engine, geometry, weapons, enemies and damage units; gameplay/browser suites | Persistence/API suites, visual baselines |
 | Delivery | Production build verified locally | Public deployment and profiling evidence |
 
-Play starts a session with movement and three weapons. Ranking and Match History remain disabled. Enemies, damage and scoring are pending; the time-completion dialog is not yet the full persisted result flow. Installed packages alone do not mean their corresponding features are implemented.
+Play starts combat with both enemy types, three weapons, HP and scoring. Ranking and Match History remain disabled; the completion dialog is not yet the full persisted result/registration flow. Installed packages alone do not mean their corresponding features are implemented.
 
 ## Technology roles
 
@@ -21,7 +21,7 @@ Play starts a session with movement and three weapons. Ranking and Match History
 | Vite | Development server and production build |
 | React | Menus, Options, HUD snapshots and session dialogs; StrictMode at the entry point |
 | TypeScript | Strict checking for application, tooling, and E2E files |
-| Vitest 4 | Pure configuration, navigation, engine, geometry and weapons unit tests in Node |
+| Vitest 4 | Pure configuration, navigation, engine, geometry, weapons, enemy and damage tests in Node |
 | Playwright | Browser tests against the optimized preview build |
 | PixiJS | Arena, supplied ship/projectile/effect sprites and ship health indicator |
 | Axios / TanStack Query | Installed; ranking/history integration pending |
@@ -35,6 +35,9 @@ Play starts a session with movement and three weapons. Ranking and Match History
 | [src/core/simulation.ts](src/core/simulation.ts) | Pure navigation, geometry, active timer and time completion |
 | [src/core/geometry.ts](src/core/geometry.ts) | World dimensions, collision footprints and swept obstacle contacts |
 | [src/core/weapons.ts](src/core/weapons.ts) | Front/broadside shots, independent cooldowns, projectile removal and timed effects |
+| [src/core/enemies.ts](src/core/enemies.ts) | Safe scheduled spawns, enemy steering, island routes and aiming policy |
+| [src/core/random.ts](src/core/random.ts) | Pure xorshift32 transitions and seed normalization |
+| [src/engine/scenarios.ts](src/engine/scenarios.ts) | Pre-match deterministic fixture preparation |
 | [src/engine/game-engine.ts](src/engine/game-engine.ts) | Injectable clock, fixed-step accumulator, input state and stable HUD snapshots |
 | [src/render/arena-view.ts](src/render/arena-view.ts) | Async texture loading, private PixiJS application, drawing and teardown |
 | [src/input/keyboard.ts](src/input/keyboard.ts) | Gameplay bindings, focus/visibility pause and listener cleanup |
@@ -61,7 +64,7 @@ The `pirate-battle.options.v1` localStorage envelope contains version, playerId,
 
 Provided assets now live in `public/assets/`. The menu uses the supplied scene background, title, panel, and button images. The restored challenge keeps its original asset path references; implementation paths are documented here.
 
-The interface is in English and supports keyboard navigation, visible focus, labeled numeric fields, associated errors, status feedback, and mobile portrait/landscape layouts. Movement, fire and pause bindings are active; the menu identifies enemies as forthcoming.
+The interface is in English and supports keyboard navigation, visible focus, labeled fields, associated errors, status feedback and mobile portrait/landscape layouts. Movement, fire and pause bindings are active. Chasers use a dark sail and Shooters a red sail; health bars, reduced-health tints, impacts and explosions communicate combat state.
 
 ## Navigable session
 
@@ -71,15 +74,25 @@ The engine accumulates injected-clock deltas, clamps each frame to 250 ms, and a
 
 React subscribes through useSyncExternalStore to stable snapshots of health, score, remaining whole seconds and session status. PixiJS owns continuous positions. Async initialization has disposal guards; exit destroys the private ticker, display objects and canvas, removes input listeners and deletes owned hooks. Assets retains the shared ship texture for reuse.
 
-Only `?e2e=1` exposes `window.__game.getState()` (a detached copy) and `advance(milliseconds)` through the normal engine. Manual mode renders on controlled advances rather than running a display ticker. Navigation has no randomness; seeded spawn generation remains pending. Test hooks cannot move ships or award outcomes directly.
+Only `?e2e=1` exposes `window.__game.getState()` (a detached copy) and `advance(milliseconds)` through the normal engine. Manual mode renders on controlled advances rather than running a display ticker. `seed` controls pure xorshift32 state (zero maps to 1); normal gameplay gets a seed from browser crypto. An optional gated `fixture` prepares initial entities/configuration before the session. Hooks cannot move ships, apply damage or award outcomes during play.
 
 ## Player weapons
 
 Space holds front fire (one projectile); Q/E hold left/right fire (three parallel projectiles each). Touch buttons support independent pointers alongside movement/rotation. Front cooldown is 350 ms and each side cooldown is 1000 ms by default. Cooldowns store the next eligible active timestamp, start ready, and do not bank unused shots. New input after pause is required; keyboard repeats cannot reactivate a cleared action.
 
-Proposed geometry: projectiles have radius 4 lu; muzzle centers sit 46 lu from the player center; broadside origins are spaced 16 lu along the hull. Each projectile snapshots its heading, speed, damage, range and lifetime. Segment/circle contact against the expanded island and segment/arena exit are resolved before range/lifetime expiration at the reachable endpoint. Starting inside an obstacle or outside the arena removes the shot immediately. Target damage remains pending.
+Proposed geometry: projectiles have radius 4 lu; muzzle centers sit 46 lu from the firing ship center; broadside origins are spaced 16 lu along the hull. Each projectile snapshots heading, team, speed, damage, range and lifetime. Swept contacts select the earliest opposing target, island or arena exit along the reachable trajectory. Obstacles win contact ties, then stable target IDs; removing a hit projectile and dead targets prevents repeated damage/score. Range/lifetime limits still apply.
 
 Firing flashes last a proposed 120 ms and obstacle impacts 180 ms of active time. PixiJS loads the supplied cannon_ball, fire_1 and explosion_1 textures before starting. Sprite maps reuse live entity sprites and destroy removed sprites while preserving cached textures. Pause freezes projectiles, cooldowns and effects; completion freezes weapon state and restart restores empty entities/cooldowns.
+
+## Enemies and completion
+
+Spawns follow active-time intervals, trying 32 seeded candidates and an 80 lu grid fallback. Positions must contain the 40 lu enemy footprint, avoid islands/ships and satisfy minSpawnDistance. Failed attempts advance the schedule without weakening safety or consuming the initial Chaser/Shooter sequence; weighted selection starts after two successful spawns.
+
+Enemy steering uses 16 waypoints on a 160 lu ring when the direct path is blocked. Rotation is bounded by configuration and movement waits until heading error is at most π/3. Chasers pursue and deal one configured impact before removal, with no score. Shooters approach, stop within attack range and fire toward their heading when aligned within 0.15 rad and their independent cooldown permits; the first shot waits a cooldown after spawn.
+
+Each active step checks time expiry first, then player movement, spawn, enemy movement, projectile damage, surviving Chaser contact and surviving Shooter fire. Every enemy killed by player shots earns one point. Lethal player damage stops remaining damage/contact/fire processing. Time expiry wins at the duration boundary; earlier death wins in its own step. This replaces the earlier conflicting proposed death-priority sentence. Completion shows score, active duration and reason; persistence and registration remain pending.
+
+Ship tint deteriorates at HP ratios 0.65 and 0.3; each ship has a proportional health bar. Damage feedback lasts 180 ms and destruction feedback 400 ms of active time. Effects freeze with terminal simulation state. These thresholds, routing and collision geometry are proposed tuning, not additional challenge requirements.
 
 ## Verification and limitations
 
@@ -89,9 +102,9 @@ Mobile emulation does not establish performance on a physical device. Review scr
 
 ## Decisions and next work
 
-ADRs remain Proposed. Frame clamping, navigation/projectile geometry and broadside spacing are implemented as proposed choices. Resolve simultaneous time/death ordering, enemy type sequencing after skipped spawns, ship-target collision geometry and aiming tolerance before implementing affected rules. Validate tuning through gameplay and profiling.
+ADRs remain Proposed. Frame clamping, collision geometry, routing, aiming, successful-spawn sequencing and time-first terminal ordering are implemented as proposed choices. Validate tuning through gameplay and profiling. Ship-to-ship separation beyond spawn checks and Chaser impact is not modeled; routes assume the current circular island.
 
-Next implementation areas are seeded enemy spawns, Chaser/Shooter behavior, damage and scoring, followed by the persisted result and ranking/history integration with idempotent recovery. See the [construction guide](docs/README.md) for incremental delivery and AI assistance.
+Next work is the persisted result and ranking/history integration with idempotent recovery, then visual baselines, profiling and public deployment. See the [construction guide](docs/README.md) for incremental delivery and AI assistance.
 
 ## Documentation references
 

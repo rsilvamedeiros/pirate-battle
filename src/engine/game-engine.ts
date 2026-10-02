@@ -1,5 +1,5 @@
 import { createInitialState, fixedStepMs, stepSimulation } from '../core/simulation'
-import type { GameInput } from '../core/simulation'
+import type { GameInput, InitialSetup } from '../core/simulation'
 import type { GameplayConfig } from '../core/config'
 
 export interface GameClock { now(): number }
@@ -13,8 +13,8 @@ export interface HudSnapshot {
 export const maxFrameMs = 250
 export type GameAction = keyof GameInput
 
-export function createGameEngine(config: GameplayConfig, clock: GameClock) {
-  let state = createInitialState(config)
+export function createGameEngine(config: GameplayConfig, clock: GameClock, setup: InitialSetup = {}) {
+  let state = createInitialState(config, setup)
   let lastTime: number | null = null
   let accumulator = 0
   const actions = new Map<string, GameAction>()

@@ -59,7 +59,7 @@ test('returns to the menu with clean input and starts a new session', async ({ p
 })
 
 test('completes at active time and restarts with fresh state', async ({ page }) => {
-  await startGame(page)
+  await startGame(page, 'time-expiry')
   await advance(page, 120000)
   await expect(page.getByRole('heading', { name: 'Voyage complete' })).toBeVisible()
   const completed = await state(page)

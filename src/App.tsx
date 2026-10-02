@@ -58,7 +58,7 @@ function App({ initialOptions }: { initialOptions: LoadedOptions }) {
               <button type="button" className="primary-button" onClick={() => { setSession((value) => value + 1); setScreen('game') }}>Play</button>
               <button type="button" className="primary-button" ref={optionsButton} onClick={() => setScreen('options')}>Options</button>
             </div>
-            <p className="availability">Sail and fire your cannons. Enemies are coming soon.</p>
+            <p className="availability">Face Chasers and Shooters. Stay afloat and earn your score.</p>
             <p className="session-summary">{options.sessionTime}s voyage · Enemies every {options.enemySpawnInterval}s</p>
             <details className="controls">
               <summary>Controls</summary>

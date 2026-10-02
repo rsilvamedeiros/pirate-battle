@@ -12,6 +12,8 @@ Increment 2 update: `tests/e2e/options.spec.ts` contains 13 cases, executed on C
 
 ## Traceability matrix
 
+Increment 5 update: `src/core/enemies.test.ts` adds 15 seeded spawn/safety/route/behavior cases and `src/core/damage.test.ts` adds 7 team/damage/scoring/end-order cases. Browser coverage adds 6 enemy cases, 3 match-end cases and 2 real-input kill cases; assets covers both enemy textures as well. Coincident completion now follows documented proposed time-first ordering, and the initial type sequence advances on successful spawns. The full challenge remains unchecked where planned variants, persistence, network, visuals or delivery evidence are pending. Current executable counts live in [TESTING.md](../../TESTING.md#current-coverage).
+
 Increment 4 update: navigation and engine units remain implemented; `src/core/collisions.test.ts` adds 9 swept obstacle/arena cases and `src/core/combat.test.ts` adds 12 player-weapon cases. `tests/e2e/combat.spec.ts` adds 7 cases driven by real keyboard/touch input for shot geometry, independent cooldowns, rendered feedback, obstacle removal, expiry, pause and restart. Assets now has 5 cases (four required texture failures/recovery plus abandoned loading). Damage, teams, kills and duplicate-free scoring are still pending, so requirement 4 and unit combat/collision groups are not fully verified. Current counts and execution evidence live in [TESTING.md](../../TESTING.md#current-coverage).
 
 Each numbered row maps directly to the corresponding item in §8. Status ☐ means planned and not verified. V1–V3 cover the separate visual requirement; U1–U5 group the proposed `src/core/**/*.test.ts` Vitest suite. §9 measurements belong to the [Profiling template](../performance/profiling.md), rather than timing assertions in E2E tests.
@@ -36,7 +38,7 @@ Each numbered row maps directly to the corresponding item in §8. Status ☐ mea
 | U1 | Configuration validation and snapshots (§3) | src/core/config.test.ts | Unit / Vitest | ☐ |
 | U2 | Time-based transitions and terminal state (§§2, 4) | src/core/simulation.test.ts | Unit / Vitest | ☐ |
 | U3 | Arena, island, and projectile collisions (§2) | src/core/collisions.test.ts | Unit / Vitest | ☐ |
-| U4 | Weapons, damage, and scoring (§2) | src/core/combat.test.ts | Unit / Vitest | ☐ |
+| U4 | Weapons, damage, and scoring (§2) | src/core/combat.test.ts; src/core/damage.test.ts | Unit / Vitest | ☐ |
 | U5 | Enemy behavior and safe spawns (§2) | src/core/enemies.test.ts | Unit / Vitest | ☐ |
 
 ## Test cases
@@ -275,7 +277,7 @@ Open the report using `npm run test:e2e:report`; inspect a failed case's trace f
 
 ## Commands
 
-All four scripts below are implemented. E2E currently runs only the Options suite; the rest of the plan remains pending. Install Chromium with `npx playwright install chromium` before the first browser run. `test:unit:watch` and `typecheck` are also available.
+All four scripts below are implemented. E2E runs the available Options, assets, movement, weapons, enemies, match-end and pause suites; persistence/API/visual suites remain pending. Install Chromium with `npx playwright install chromium` before the first browser run. `test:unit:watch` and `typecheck` are also available.
 
 | npm script | Proposed script body | Purpose |
 | --- | --- | --- |
@@ -288,7 +290,7 @@ Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for 
 
 ## Review blockers and unresolved details
 
-- [Gameplay match rules](../specs/gameplay.md#match-rules) check time exhaustion before combat but also give player-death precedence when both coincide. Clarify ordering before defining the coincident-end assertion; other completion cases remain independently testable.
-- [Gameplay enemies](../specs/gameplay.md#enemies) permit skipping unsafe spawns while claiming the first two intervals guarantee both types. That guarantee depends on safe points being available. Clarify whether type sequencing advances on successful spawns or scheduled attempts before fixing the blocked-spawn/type assertions.
-- Navigation uses the proposed 250 ms frame clamp and circular player/island geometry. Player projectiles now use radius 4 lu and swept obstacle contacts; broadside spacing is proposed at 16 lu. Ship-target geometry and aiming tolerance remain unresolved. Review proposed policies before extending damage/scoring assertions.
-- Browser scripts/configuration, configuration unit tests, and Options E2E are available. Remaining core/browser suites, the dedicated StrictMode development project, hook exposure, network scheduling, and published-worker readiness still need implementation or verification.
+- Proposed time-first boundary ordering replaces the earlier conflicting death-priority sentence. An earlier-step death stops remaining damage/contact/fire immediately; unit coverage checks the coincident boundary.
+- Initial enemy type sequencing now advances only on successful spawns. Bounded candidate/grid attempts skip unsafe intervals; blocked recovery is covered by units.
+- Proposed collision radii, broadside spacing, 0.15 rad aim tolerance and ring routes are implemented. Ship-to-ship separation beyond spawn safety and Chaser contact is not modeled; validate balance through playtesting.
+- Persistence/API/visual suites, the dedicated StrictMode project, network scheduling, published-worker readiness and profiling still need implementation or verification. Development lifecycle reviews are recorded separately in the construction guide.

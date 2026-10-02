@@ -14,7 +14,7 @@ Proposed
 
 ## Decision
 
-Inject a seeded PRNG into the engine and supply its values explicitly to core transitions. Use an injected manual clock in E2E mode through the normal fixed-step loop. Keep simulation randomness and network-scenario randomness independently controlled so network activity does not change spawn sequences.
+Supply a seed through the engine and keep explicit PRNG state in pure core transitions. The initial implementation uses xorshift32 with zero normalized to 1; spawn selection advances that state without browser randomness. Use an injected manual clock in E2E mode through the normal fixed-step loop. Keep simulation randomness and network-scenario randomness independently controlled so network activity does not change spawn sequences.
 
 Expose window.__game only when the URL contains ?e2e=1. Limit hooks to read-only state observation, deterministic scenario setup before a match, and clock control; do not provide shortcuts that award score, apply damage, or bypass gameplay. Playwright combat tests operate keyboard or touch controls and observe the resulting state and rendering. Remove hooks on teardown and reset clock, seeds, input, and persisted scenario state between tests.
 
@@ -26,4 +26,4 @@ Expose window.__game only when the URL contains ?e2e=1. Limit hooks to read-only
 
 ## Consequences
 
-Tests can reproduce timing and random sequences while exercising the production rules. PRNG algorithm, seed configuration, hook signatures, and test reset procedure remain implementation details. The query flag is an activation mechanism, not an authentication boundary.
+Tests can reproduce timing and random sequences while exercising the production rules. `?e2e=1&seed=42` enables the manual clock and copied-state observation; an optional `fixture` selects setup before match start. Normal gameplay ignores fixtures and gets a seed from browser crypto. No hooks change running outcomes. Network seed scheduling remains pending. The query flag is an activation mechanism, not an authentication boundary.

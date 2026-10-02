@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-for (const asset of ['ships/ship_1.png', 'ship_parts/cannon_ball.png', 'effects/fire_1.png', 'effects/explosion_1.png']) {
+for (const asset of ['ships/ship_1.png', 'ships/ship_2.png', 'ships/ship_3.png', 'ship_parts/cannon_ball.png', 'effects/fire_1.png', 'effects/explosion_1.png']) {
 test(`shows an asset error and retries after recovery: ${asset}`, async ({ page }) => {
   await page.route(`**/${asset}`, (route) => route.abort())
   await page.goto('/?e2e=1')

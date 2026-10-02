@@ -1,6 +1,43 @@
 import { expect, test } from '@playwright/test'
 import { advance, startGame, state } from './game-fixture.js'
 
+test('applies real front hits once, destroys the target and scores once', async ({ page }) => {
+  await startGame(page, 'front-target')
+  const before = await page.locator('canvas').screenshot()
+  await page.keyboard.down('Space')
+  await advance(page, 300)
+  expect((await state(page)).enemies[0].hp).toBe(40)
+  expect((await page.locator('canvas').screenshot()).equals(before)).toBe(false)
+  await advance(page, 750)
+  await page.keyboard.up('Space')
+  const killed = await state(page)
+  expect(killed.enemies).toHaveLength(0)
+  expect(killed.score).toBe(1)
+  expect(killed.effects.some(({ kind }) => kind === 'destruction')).toBe(true)
+  await expect(page.getByText('Score: 1', { exact: true })).toBeVisible()
+  await advance(page, 500)
+  expect((await state(page)).score).toBe(1)
+})
+
+test('scores simultaneous broadside kills once through touch controls', async ({ page }) => {
+  await startGame(page, 'broadsides')
+  const points = await Promise.all(['Left Fire', 'Right Fire'].map(async (name, id) => {
+    const bounds = (await page.getByRole('button', { name, exact: true }).boundingBox())!
+    return { id, x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 }
+  }))
+  const protocol = await page.context().newCDPSession(page)
+  await protocol.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: points })
+  await advance(page, 300)
+  await protocol.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+  const killed = await state(page)
+  expect(killed.enemies).toHaveLength(0)
+  expect(killed.score).toBe(2)
+  expect(killed.player.hp).toBe(100)
+  await advance(page, 500)
+  expect((await state(page)).score).toBe(2)
+  await protocol.detach()
+})
+
 test('fires and renders one front projectile through the real keyboard control', async ({ page }) => {
   await startGame(page)
   const canvas = page.locator('canvas')
@@ -115,7 +152,7 @@ test('moves and fires with simultaneous touch contacts and releases on cancellat
 })
 
 test('stops weapons at completion and clears them on restart', async ({ page }) => {
-  await startGame(page)
+  await startGame(page, 'time-expiry')
   await advance(page, 119950)
   await page.keyboard.down('q')
   await advance(page, 50)

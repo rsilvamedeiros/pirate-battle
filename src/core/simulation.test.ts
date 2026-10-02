@@ -49,14 +49,14 @@ describe('navigation simulation', () => {
     expect(stepSimulation(state, { ...idle, forward: true })).toBe(state)
   })
   it('completes at the configured time without floating point drift', () => {
-    let state = createInitialState({ ...defaultGameplayConfig, sessionTime: 60 })
+    let state = createInitialState({ ...defaultGameplayConfig, sessionTime: 60, playerHp: 500, chaserCollisionDamage: 1, shooterProjectileDamage: 1 })
     for (let tick = 0; tick < 3600; tick++) state = stepSimulation(state, idle)
     expect(state.elapsedMs).toBe(60000)
     expect(state.status).toBe('completed')
     expect(stepSimulation(state, { ...idle, forward: true })).toBe(state)
   })
   it('clips the last timestep to a fractional session duration', () => {
-    let state = createInitialState({ ...defaultGameplayConfig, sessionTime: 60.001 })
+    let state = createInitialState({ ...defaultGameplayConfig, sessionTime: 60.001, playerHp: 500, chaserCollisionDamage: 1, shooterProjectileDamage: 1 })
     for (let tick = 0; tick < 3601; tick++) state = stepSimulation(state, idle)
     expect(state.elapsedMs).toBeCloseTo(60001)
     expect(state.status).toBe('completed')

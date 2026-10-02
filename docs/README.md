@@ -10,7 +10,7 @@ The developer sets the scope and constraints. Proposed decisions and generated m
 
 The documentation preparation covered test cases, determinism, isolation, failure scenarios, and reporting, with changes limited to Markdown. The test plan enumerates 124 logical cases; it is not a claim that the full suite is implemented or passing. Profiling tables contain placeholders, not measured results.
 
-Implementation has now started at the developer's request. AI assisted with configuration, validation, snapshots and tests; menu/Options and local persistence; navigation, engine and PixiJS lifecycle; and now player weapons, swept obstacle contacts, feedback and related tests. Enemies, damage/scoring and remote data remain pending.
+Implementation started at the developer's request. AI assisted with configuration and tests; menu/Options and persistence; navigation and PixiJS lifecycle; weapons and obstacle contacts; and now seeded enemies, damage/scoring, completion, feedback and corresponding tests. Completed-result persistence and remote data remain pending.
 
 As testing is implemented, AI may also support writing tests, reviewing assertions, and investigating failures. Record that assistance here when it occurs, together with the commands actually executed and their results. Claims of coverage and performance must be supported by executable tests, reports, traces, and measurements.
 
@@ -23,9 +23,9 @@ As testing is implemented, AI may also support writing tests, reviewing assertio
 | 1 | Read the challenge and document architecture boundaries and alternatives | Drafted; ADRs remain Proposed | [ADR index](adr/README.md), [architecture skeleton](../ARCHITECTURE.md) |
 | 2 | Specify gameplay, configuration, screens, API contracts, and network scenarios | Drafted; design choices remain proposed | [Gameplay](specs/gameplay.md), [API contracts](specs/api-contracts.md), [network scenarios](specs/network-scenarios.md) |
 | 3 | Map requirements to tests and define profiling procedures | Drafted | [Test plan](testing/test-plan.md), [profiling template](performance/profiling.md) |
-| 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: configuration, screens, navigation and player weapons | [Simulation](../src/core/simulation.ts), [weapons](../src/core/weapons.ts), [game screen](../src/ui/GameScreen.tsx); enemies and damage/scoring remain pending |
+| 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: local combat implemented; full result flow pending | [Simulation](../src/core/simulation.ts), [enemies](../src/core/enemies.ts), [game screen](../src/ui/GameScreen.tsx) |
 | 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | In progress: Options persistence implemented | [Options storage](../src/persistence/options.ts); remote contracts, outbox, and handlers remain pending |
-| 6 | Implement and execute core/E2E tests and review visual baselines | In progress: configuration, navigation, engine, geometry, weapons and browser suites | [Weapon units](../src/core/combat.test.ts), [weapons E2E](../tests/e2e/combat.spec.ts), [pause E2E](../tests/e2e/pause.spec.ts); damage/scoring, enemies/API and baselines remain pending |
+| 6 | Implement and execute core/E2E tests and review visual baselines | In progress: local combat and browser suites | [Enemy units](../src/core/enemies.test.ts), [damage units](../src/core/damage.test.ts), [enemy E2E](../tests/e2e/enemies.spec.ts); persistence/API suites and baselines remain pending |
 | 7 | Profile the optimized build, document limitations, and complete delivery | Planned | Filled profiling record, public deployment, and project setup/reproduction instructions |
 
 Steps may overlap. Update statuses and link evidence as work is completed; keep implementation details in the corresponding specifications and architecture documents.
@@ -68,11 +68,21 @@ Verification: 93 unit tests pass across five files. The desktop/mobile E2E suite
 
 AI assisted with pure weapon/geometry implementation, PixiJS sprite lifecycle and feedback, mobile controls, test design/execution and documentation updates. For review, run `npm run dev`, select Play, hold Space for front fire and Q/E for broadsides, fire at the island, pause while shots are active and retry with simultaneous touch controls.
 
-## Decisions to resolve before implementation
+## Increment 5: Seeded enemies, damage and scoring
 
-- Clarify simultaneous match-end ordering: the gameplay spec checks time exhaustion before combat but also gives death precedence when both coincide.
-- Clarify enemy type sequencing when unsafe spawn attempts are skipped; the first-two-interval guarantee depends on valid spawn positions.
-- Navigation uses a proposed 250 ms frame clamp and circular footprints; projectile geometry and broadside spacing are now implemented. Choose ship-target geometry and aiming tolerance; validate balancing and mobile layouts.
+Delivered: deterministic xorshift32 spawns with free/distant position validation, 32 attempts and a grid fallback; the first two successful spawns are Chaser and Shooter. Both steer/rotate and avoid the island using a conservative ring route. Chasers apply one impact and self-destruct without scoring. Shooters approach, aim within 0.15 rad and fire on individual cooldowns. Player kills score once; team filtering, swept contacts and immediate dead-target removal prevent repeated damage/scoring. HP bars, tint deterioration, damage and destruction effects expose combat state.
+
+Time expiry wins at the configured boundary before movement/combat; death in an earlier step stops remaining damage/contact/fire immediately. This resolves the previous contradictory proposed order. Completion now displays reason, score and active duration, but persisted results and registration remain pending. Normal matches use browser crypto for seeds; `?e2e=1` permits seeded clocks and startup fixtures without running-state mutation. Time-expiry fixtures keep combat/spawns enabled with validated high-HP/low-damage tuning.
+
+Verification: 115 units pass across seven files, and 94 E2E executions pass (47 cases per desktop/mobile project: 13 Options, 7 assets, 5 movement, 9 combat, 6 enemies, 3 match-end, 4 pause). Lint, type checking and production build pass. Development StrictMode review completed five seeded enemy/exit cycles per layout, with one canvas and no unhandled page errors. Combat, damage and death screenshots were reviewed; these are not visual baselines or memory measurements. The [testing guide](../TESTING.md) records fixture setup, commands and remaining coverage.
+
+AI assisted with simulation/render implementation, enemy routing, seed and fixture design, real-input browser tests and documentation updates. For review, run `npm run dev`, survive two spawn intervals, observe both sail colors, fire at enemies, compare player/enemy HP changes, verify scoring and finish a match by time or death. Proposed balance still requires playtesting and profiling.
+
+## Decisions to validate during implementation
+
+- Time-first boundary ordering and successful-spawn type sequencing are implemented as proposed choices; validate their documented behavior.
+- Collision footprints, projectile spacing, aiming tolerance and island routes are implemented; validate balancing, mobile usability and safe-spawn availability.
+- Persisted result/outbox, remote scenarios, visual baselines, profiling and deployment remain required delivery work.
 
 These points are recorded in the [test plan](testing/test-plan.md#review-blockers-and-unresolved-details). Review the affected proposed decisions/specifications before setting final assertions.
 

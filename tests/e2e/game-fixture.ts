@@ -1,9 +1,10 @@
 import { expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
 import type { GameHooks } from '../../src/engine/test-hooks.js'
+import type { CombatFixture } from '../../src/engine/scenarios'
 
-export async function startGame(page: Page) {
-  await page.goto('/?e2e=1&seed=42')
+export async function startGame(page: Page, fixture?: CombatFixture) {
+  await page.goto(`/?e2e=1&seed=42${fixture ? `&fixture=${fixture}` : ''}`)
   await page.getByRole('button', { name: 'Play', exact: true }).click()
   await expect(page.getByRole('img', { name: 'Naval arena with your ship and a blocking island' })).toBeVisible()
   await expect.poll(() => page.evaluate(() => Boolean(window.__game))).toBe(true)

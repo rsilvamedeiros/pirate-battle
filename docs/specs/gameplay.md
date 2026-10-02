@@ -68,7 +68,7 @@ The chosen enemySpawnInterval bounds keep the exposed value positive and initial
 
 ## Player
 
-Initial navigation geometry (**proposed**, implemented): a 1000 × 700 lu arena, one circular island centered at (500, 350) with radius 100 lu, and a player collision radius of 40 lu enclosing the 44 × 64 lu hull. Clamp the ship center to arena bounds inset by its radius; reject movement overlapping the island, while allowing rotation. Combat collision geometry remains pending.
+Initial geometry (**proposed**, implemented): a 1000 × 700 lu arena, one circular island centered at (500, 350) with radius 100 lu, and player/enemy collision radii of 40 lu enclosing 44 × 64 lu hulls. Clamp ship centers to arena bounds inset by their radius; reject movement overlapping the island, while allowing rotation.
 
 The player moves forward along its heading and rotates left or right; there is no required reverse or strafe action. Front fire emits one projectile forward. Each side fire emits three parallel projectiles toward that side, rather than a fan; proposed: place their origins along the hull with non-overlapping initial positions outside the firing ship.
 
@@ -81,23 +81,23 @@ Enemy projectiles and Chaser impact reduce player HP. Ships remain within the vi
 | Chaser | Rotates and advances toward the player while respecting islands | Applies chaserCollisionDamage once on player impact, then explodes and is removed; player attacks can destroy it when HP reaches zero |
 | Shooter | Rotates and approaches the player; fires when within shooterAttackRange and its cooldown permits | Proposed: emits one projectile toward its current heading when aligned with the player and stops advancing inside attack range; player attacks destroy it when HP reaches zero |
 
-Both types receive damage, advance, rotate, and obey island collisions. Proposed: each Shooter uses its own cooldown, and its first shot is subject to that cooldown after spawning; aiming tolerance and obstacle avoidance remain tuning details.
+Both types receive damage, advance, rotate, and obey island collisions. Proposed, implemented: each Shooter uses its own cooldown, and its first shot waits one cooldown after spawning. Aim within 0.15 rad of the player before firing. When outside attack range, steer toward the player or a route along 16 waypoints on a 160 lu radius ring around the island; only advance when heading error is at most π/3. Rotation speed stays configuration-driven. Ship movement remains blocked on island overlap.
 
 Spawns occur at the configured active-time interval until completion. Each spawn must fit completely inside the arena, avoid obstacles, and be sufficiently far from the player to prevent unavoidable immediate damage. Proposed: also avoid existing ships, check minSpawnDistance, and skip that interval if no valid point can be found rather than weakening safety checks.
 
-Both types must appear during a standard match. Proposed: spawn a Chaser at the first interval and a Shooter at the second, then use seeded weighted selection. This guarantees both types in a standard match that reaches the second interval; early player death can end it sooner. Spawn schedule, weights, and seed are reproducible without using Math.random in the core.
+Both types must appear during a standard match. Proposed, implemented: the first successful spawn is a Chaser and the second is a Shooter, then use seeded weighted selection. Skipped attempts advance the schedule without consuming this initial type sequence. Try 32 seeded free positions, then a bounded 80 lu grid fallback; skip the interval if all fail. Under available safe space, a standard match reaches both types at the first two intervals; early death or blocked space can delay this. Xorshift32 stores explicit uint32 state; zero seeds normalize to 1. The core does not use Math.random.
 
 ## Combat rules
 
-Initial weapons implementation (**proposed**): projectile circles have radius 4 lu; muzzle origins sit 46 lu from the player center. Broadside origins are spaced 16 lu along the hull at offsets −16, 0 and 16, with identical side headings. Swept segment contact uses the island expanded by projectile radius and arena bounds inset by that radius; remove the shot at the earliest contact along its reachable trajectory. Range/lifetime clip travel before contact checks, so obstacles beyond effective reach cannot produce impacts. Target damage is pending.
+Weapons geometry (**proposed**, implemented): projectile circles have radius 4 lu; muzzle origins sit 46 lu from the firing ship center. Broadside origins are spaced 16 lu along the hull at offsets −16, 0 and 16, with identical side headings. Swept segment contact uses the island/target expanded by projectile radius and arena bounds inset by that radius; remove the shot at the earliest contact along its reachable trajectory. Range/lifetime clip travel before contact checks, so obstacles beyond effective reach cannot produce impacts. Player shots target enemies; Shooter shots target the player.
 
-Cooldowns use the next eligible active-time timestamp for each weapon; player weapons start ready. Navigation/rotation is applied before spawning shots, which then advance during that fixed step. On time exhaustion, weapon state freezes without a new shot; simultaneous death/time arbitration remains unresolved until enemies are implemented. Proposed muzzle flash and obstacle impact durations are 120 ms and 180 ms of active time.
+Cooldowns use the next eligible active-time timestamp for each weapon; player weapons start ready. Proposed step order: time boundary, player movement, scheduled spawn, enemy movement, player fire/projectile hits, surviving Chaser impacts, then surviving Shooter fire. Newly created Shooter shots advance on the next step. Lethal player damage stops remaining damage/impact/fire processing immediately. Muzzle flash, impact/damage and destruction feedback last a proposed 120 ms, 180 ms and 400 ms of active time.
 
 - Player projectiles damage enemies; enemy projectiles damage the player.
 - A projectile applies damage at most once. Remove it on its first valid target or obstacle hit, range/lifetime exhaustion, or arena exit.
 - Each weapon respects its configured cooldown in active simulation time. Proposed: weapons start ready for the player, cooldown starts when firing, and unused cooldown time never accumulates extra shots.
 - Destroyed enemies cannot move, fire, deal damage, or participate in collisions. Destruction produces at most one scoring event.
-- Proposed: process boundary/island blocking before target damage, and resolve equal-time target hits using stable entity IDs. An explosion is visual feedback and does not add unspecified area damage.
+- Proposed, implemented: resolve the earliest trajectory contact, favoring boundary/island contact on ties, then stable target IDs for equal-distance targets. Projectiles process in creation order; dead enemies are removed before subsequent shots and Chaser/Shooter actions. An explosion is visual feedback and does not add area damage.
 
 ## Match rules
 
@@ -112,7 +112,7 @@ Cooldowns use the next eligible active-time timestamp for each weapon; player we
 | Resume | Require player action, reset clock baseline, and do not accumulate paused movement or attacks |
 | Refresh or leave active combat | Abandon the current match; do not submit it to history or ranking |
 
-Proposed: at a fixed-step boundary, check time exhaustion before further combat; if HP becomes zero during combat, complete immediately and stop remaining interactions. If both end conditions coincide, player-death takes precedence. Effective duration counts executed active simulation time, excluding pause and discarded frame delays, as in ADR 0003.
+Proposed, implemented: at a fixed-step boundary, time exhaustion takes precedence and stops that step before movement or combat. A death in an earlier active step completes immediately and stops remaining damage, impact and firing interactions. This replaces the earlier contradictory death-precedence sentence. Effective duration counts executed active simulation time, excluding pause and discarded frame delays, as in ADR 0003.
 
 An abandoned match does not replace the last completed result. A pending submission from an earlier completed match does not prevent a new match. API failures do not interrupt combat or block Options.
 
