@@ -3,10 +3,10 @@
 .game-hud h1 { font-size: 1.25rem; }
 .hud-values { display: flex; flex-wrap: wrap; gap: 16px; font-weight: bold; }
 .game-hud button { min-height: 44px; padding-block: 8px; }
-.arena-frame { position: relative; width: min(100%, 1000px, calc((100svh - 190px) * 10 / 7)); aspect-ratio: 10 / 7; margin: auto; background: #238598; border: 3px solid #c69e55; border-radius: 8px; overflow: hidden; }
+.arena-frame { position: relative; width: min(100%, 1000px, calc((100svh - 250px) * 10 / 7)); aspect-ratio: 10 / 7; margin: auto; background: #238598; border: 3px solid #c69e55; border-radius: 8px; overflow: hidden; }
 .arena-frame canvas { display: block; }
 .arena-message { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; background: #123847; text-align: center; }
-.movement-controls { display: flex; justify-content: center; gap: 12px; margin-top: 16px; }
+.movement-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: min(100%, 520px); margin: 16px auto 0; }
 .movement-controls button { min-height: 52px; padding: 12px 18px; border: 2px solid #c69e55; border-radius: 8px; color: #fff0ce; background: #182f3d; font-weight: bold; touch-action: none; user-select: none; }
 .movement-controls button:active:not(:disabled) { background: #376269; }
 .movement-controls button:disabled { opacity: 0.6; }
@@ -21,12 +21,13 @@
   .game-hud { gap: 8px; }
   .hud-values { order: 3; width: 100%; font-size: 0.85rem; justify-content: space-between; gap: 8px; }
   .movement-controls { gap: 8px; }
-  .movement-controls button { padding-inline: 12px; font-size: 0.85rem; }
+  .movement-controls button { padding-inline: 8px; font-size: 0.8rem; }
 }
 @media (max-height: 500px) and (orientation: landscape) {
   .game-screen { padding: 8px; }
   .game-hud { margin-bottom: 8px; }
-  .arena-frame { width: min(65vw, calc((100svh - 100px) * 10 / 7)); }
-  .movement-controls { position: fixed; right: 8px; bottom: 16px; flex-direction: column; max-width: 20vw; }
-  .navigation-hint { font-size: 0.7rem; }
+  .arena-frame { width: min(54vw, calc((100svh - 116px) * 10 / 7)); margin-left: 0; }
+  .movement-controls { position: fixed; right: 8px; bottom: 42px; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(40vw, 300px); }
+  .movement-controls button { min-height: 48px; padding: 8px; font-size: 0.8rem; }
+  .navigation-hint { font-size: 0.7rem; max-width: 54vw; }
 }

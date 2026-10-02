@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { defaultGameplayConfig } from './config'
-import { arena, createInitialState, fixedStepMs, island, playerRadius, stepSimulation } from './simulation'
+import { arena, createInitialState, fixedStepMs, idleInput, island, playerRadius, stepSimulation } from './simulation'
 
-const idle = { forward: false, left: false, right: false }
+const idle = idleInput
 
 describe('navigation simulation', () => {
   it('starts with a detached configuration and fresh player state', () => {

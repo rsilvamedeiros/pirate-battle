@@ -12,6 +12,8 @@ Increment 2 update: `tests/e2e/options.spec.ts` contains 13 cases, executed on C
 
 ## Traceability matrix
 
+Increment 4 update: navigation and engine units remain implemented; `src/core/collisions.test.ts` adds 9 swept obstacle/arena cases and `src/core/combat.test.ts` adds 12 player-weapon cases. `tests/e2e/combat.spec.ts` adds 7 cases driven by real keyboard/touch input for shot geometry, independent cooldowns, rendered feedback, obstacle removal, expiry, pause and restart. Assets now has 5 cases (four required texture failures/recovery plus abandoned loading). Damage, teams, kills and duplicate-free scoring are still pending, so requirement 4 and unit combat/collision groups are not fully verified. Current counts and execution evidence live in [TESTING.md](../../TESTING.md#current-coverage).
+
 Each numbered row maps directly to the corresponding item in §8. Status ☐ means planned and not verified. V1–V3 cover the separate visual requirement; U1–U5 group the proposed `src/core/**/*.test.ts` Vitest suite. §9 measurements belong to the [Profiling template](../performance/profiling.md), rather than timing assertions in E2E tests.
 
 | # | Requirement (section reference) | Test file | Type | Status |
@@ -288,5 +290,5 @@ Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for 
 
 - [Gameplay match rules](../specs/gameplay.md#match-rules) check time exhaustion before combat but also give player-death precedence when both coincide. Clarify ordering before defining the coincident-end assertion; other completion cases remain independently testable.
 - [Gameplay enemies](../specs/gameplay.md#enemies) permit skipping unsafe spawns while claiming the first two intervals guarantee both types. That guarantee depends on safe points being available. Clarify whether type sequencing advances on successful spawns or scheduled attempts before fixing the blocked-spawn/type assertions.
-- Initial navigation implements the proposed 250 ms frame clamp and circular player/island geometry. Combat geometry, aiming tolerance and projectile spacing remain unresolved. Review proposed policies before extending combat assertions.
+- Navigation uses the proposed 250 ms frame clamp and circular player/island geometry. Player projectiles now use radius 4 lu and swept obstacle contacts; broadside spacing is proposed at 16 lu. Ship-target geometry and aiming tolerance remain unresolved. Review proposed policies before extending damage/scoring assertions.
 - Browser scripts/configuration, configuration unit tests, and Options E2E are available. Remaining core/browser suites, the dedicated StrictMode development project, hook exposure, network scheduling, and published-worker readiness still need implementation or verification.

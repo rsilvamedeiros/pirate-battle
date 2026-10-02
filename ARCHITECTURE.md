@@ -30,7 +30,9 @@ Related validation: [Test plan](docs/testing/test-plan.md).
 
 Explain how core rules enforce arena limits, island blocking, single-hit projectiles, and removal of destroyed entities ([ADR 0002](docs/adr/0002-functional-core-imperative-shell.md)). TODO: document shapes, detection and resolution algorithms, ordering, and safeguards against missed collisions.
 
-Initial navigation clamps the player center inside a 40 lu boundary inset and rejects movement overlapping the island circle at (500, 350), radius 100 lu. Rotation remains available while blocked. The maximum configured player movement is less than 7 lu per step; projectile and enemy collision handling is pending.
+Initial navigation clamps the player center inside a 40 lu boundary inset and rejects movement overlapping the island circle at (500, 350), radius 100 lu. Rotation remains available while blocked. The maximum configured player movement is less than 7 lu per step; enemy and ship-target collision handling is pending.
+
+Player weapons now use `src/core/weapons.ts` and swept geometry in `src/core/geometry.ts`. A projectile radius of 4 lu expands the island and insets the arena bounds; the earliest segment contact removes the shot and emits one impact. Travel is clipped to remaining range/lifetime before contact checks. Ship-target damage and scoring remain pending.
 
 Related specification: [Gameplay](docs/specs/gameplay.md#combat-rules).
 
@@ -39,6 +41,8 @@ Related specification: [Gameplay](docs/specs/gameplay.md#combat-rules).
 Describe resource ownership, texture loading/reuse, failure recovery, and disposal on exit or restart ([ADR 0004](docs/adr/0004-react-pixi-sync-strategy.md)). TODO: document asset ownership, asynchronous cancellation, listener/ticker cleanup, and memory profiling evidence.
 
 Each session owns its PixiJS application and ticker. The supplied ship texture is cached by Assets and retained for reuse; display objects, canvas, ticker and input listeners are destroyed on exit. A disposed pending initialization destroys its completed candidate without attaching it; loading errors allow Retry or Main Menu. Memory profiling remains pending.
+
+Ship, cannonball, firing and impact textures must all load before gameplay starts. Projectile/effect sprite maps create each live sprite once and destroy it on entity removal, keeping shared textures cached. Effects follow active simulation time and freeze during pause; all session objects are destroyed on teardown.
 
 Related validation: [Profiling template](docs/performance/profiling.md#memory).
 
@@ -64,6 +68,6 @@ Related specification: [Gameplay](docs/specs/gameplay.md#game-configuration).
 
 Record observed constraints and evidence, including local mock data and behavior under clamped frame delays ([ADR 0006](docs/adr/0006-msw-in-production.md), [ADR 0003](docs/adr/0003-fixed-timestep-simulation.md)). TODO: document supported mobile orientation, reference hardware/browser, three-minute frame metrics, five-cycle memory results, and verified limitations.
 
-The current increment supports navigation in portrait and landscape, with touch movement/rotation. Weapons, enemies, persisted results, APIs and seeded randomness are pending. Excess frame delay above the clamp is discarded; no performance or memory targets have yet been measured.
+The current increment supports movement and three weapons in portrait/landscape with simultaneous touch controls. Enemies, target damage, scoring, persisted results, APIs and seeded randomness are pending. Excess frame delay above the clamp is discarded; no performance or memory targets have yet been measured.
 
 Related validation: [Profiling template](docs/performance/profiling.md).

@@ -9,13 +9,14 @@ Projeto de um jogo naval 2D desenvolvido para o desafio técnico de React, TypeS
 - Menu principal com os assets fornecidos, instruções de controle e layout adaptado para desktop e mobile.
 - Tela Options com validação, salvamento no localStorage, recuperação de dados inválidos e mensagens acessíveis.
 - Arena em PixiJS com navio navegável, colisão com ilha e limites, controles de teclado/toque, HUD, pausa e reinício.
-- Testes unitários da configuração, simulação e engine; testes E2E de Options, assets, movimento e pausa em desktop e Pixel 7 emulado.
+- Disparo frontal e salvas laterais com três projéteis paralelos por lado, cooldowns independentes e efeitos de disparo/impacto.
+- Testes unitários da configuração, simulação, engine, armas e colisões; testes E2E de Options, assets, movimento, disparos e pausa em desktop e Pixel 7 emulado.
 
 Os resultados da verificação de cada etapa estão registrados no [guia de testes](TESTING.md#current-coverage).
 
 ## Estado atual
 
-É possível alterar as opções e selecionar Play para navegar na arena. Ranking e Match History continuam desabilitados. Armas, inimigos, resultado completo com persistência, APIs, baselines visuais, profiling e deploy ainda estão pendentes.
+É possível alterar as opções e selecionar Play para navegar e disparar na arena. Ranking e Match History continuam desabilitados. Inimigos, dano, pontuação, resultado completo com persistência, APIs, baselines visuais, profiling e deploy ainda estão pendentes.
 
 ## Como executar
 
@@ -26,7 +27,7 @@ npm ci
 npm run dev
 ```
 
-Abra a URL indicada pelo Vite. A etapa atual não exige variáveis de ambiente nem serviços externos. Em Play, use W/seta para cima para avançar, A/D ou setas para girar e Esc/P para pausar; no mobile, use os botões de toque. Para testar opções, salve novos valores, recarregue e confira se foram mantidos.
+Abra a URL indicada pelo Vite. A etapa atual não exige variáveis de ambiente nem serviços externos. Em Play, use W/seta para cima para avançar, A/D ou setas para girar, Space para disparar à frente, Q/E para disparar pelos lados e Esc/P para pausar; no mobile, use os botões de toque. Para testar opções, salve novos valores, recarregue e confira se foram mantidos.
 
 ## Documentação do projeto
 

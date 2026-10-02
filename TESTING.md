@@ -35,12 +35,16 @@ Open the URL printed by Vite. Start with a new browser profile/context for defau
 | Mobile layout | Review portrait and landscape; open Options using touch | Fields/actions remain usable without horizontal page overflow |
 | Start and sail | Select Play; hold W/ArrowUp and A/ArrowLeft or D/ArrowRight | Ship advances and rotates; HUD shows health, score and active time |
 | Island and boundaries | Sail into the central island and arena edges | Ship stays outside the island and inside the arena; rotation still works |
-| Simultaneous touch | Hold Forward and either rotation button with separate fingers | Both actions run together; releasing stops the corresponding action |
-| Manual pause | Press Esc/P or select Pause; wait; select Resume | Simulation/time stop; held actions are cleared; fresh input is required |
+| Front fire | Hold Space or Front Fire | One forward shot per eligible fire step; default cooldown is 350 ms |
+| Broadsides | Hold Q/E or Left Fire/Right Fire | Each side emits three parallel shots; independent 1000 ms cooldowns |
+| Projectile blocking | Fire toward the island or outside an arena edge | Shots stop at the obstacle/edge with visible impact feedback |
+| Projectile expiry | Sail below the island and fire toward open water | Shots disappear at range or lifetime, whichever is reached first |
+| Simultaneous touch | Hold Forward/rotation and fire buttons with separate fingers | Actions run together; releasing/canceling stops the corresponding action |
+| Manual pause | Fire, press Esc/P or select Pause; wait; select Resume | Movement, shots, effects, time and cooldowns stop; fresh input is required |
 | Automatic pause | Switch browser tabs or move focus away; return | Session stays paused until explicit Resume; paused time is excluded |
 | Exit and restart | Pause, choose Main Menu, then Play again | Old canvas is removed; ship, health, score and timer reset |
 | Time completion | Save a 60-second session, Play, and let active time expire | Completion dialog appears; movement stops; Play Again starts fresh |
-| Feature availability | Inspect Ranking and Match History; try attack bindings | Record tabs are disabled; weapons/enemies and persisted results are pending |
+| Feature availability | Inspect Ranking and Match History; fire into open water | Record tabs are disabled; enemies, target damage, scoring and persisted results are pending |
 
 To repeat default-value checks in an existing profile, remove only `pirate-battle.options.v1` in browser DevTools and refresh. This also resets the local player identity. Do not clear unrelated site data.
 
@@ -61,7 +65,7 @@ npm run test:e2e
 
 | Command | Purpose |
 | --- | --- |
-| npm run test:unit | Run configuration, navigation and engine suites with Vitest |
+| npm run test:unit | Run configuration, navigation, engine, geometry and weapons suites with Vitest |
 | npm run test:unit:watch | Rerun unit tests while editing |
 | npm run typecheck | Check application, tooling, and E2E TypeScript |
 | npm run lint | Run ESLint |
@@ -76,6 +80,7 @@ Target a suite or a browser project:
 ```bash
 npm run test:e2e -- tests/e2e/options.spec.ts
 npm run test:e2e -- tests/e2e/movement.spec.ts tests/e2e/pause.spec.ts
+npm run test:e2e -- tests/e2e/combat.spec.ts tests/e2e/assets.spec.ts
 npm run test:e2e -- --project=chromium-mobile
 ```
 
@@ -101,18 +106,21 @@ Record the actual failing command, browser project, values used, and visible err
 
 ## Current coverage
 
-The navigation increment passes 72 unit tests and 48 E2E executions. Counts describe the recorded checks, not a guarantee about future changes; rerun them on your checkout.
+The weapons increment passes 93 unit tests and 68 E2E executions. Counts describe the recorded checks, not a guarantee about future changes; rerun them on your checkout.
 
 | Suite | Cases | Execution |
 | --- | ---: | --- |
 | src/core/config.test.ts | 52 | Vitest / Node |
 | src/core/simulation.test.ts | 11 | Vitest / Node |
 | src/engine/game-engine.test.ts | 9 | Vitest / Node |
+| src/core/collisions.test.ts | 9 | Vitest / Node |
+| src/core/combat.test.ts | 12 | Vitest / Node; weapons only, target damage pending |
 | tests/e2e/options.spec.ts | 13 | Desktop and mobile: 26 executions |
-| tests/e2e/assets.spec.ts | 2 | Desktop and mobile: 4 executions |
+| tests/e2e/assets.spec.ts | 5 | Desktop and mobile: 10 executions |
+| tests/e2e/combat.spec.ts | 7 | Desktop and mobile: 14 executions; target damage pending |
 | tests/e2e/movement.spec.ts | 5 | Desktop and mobile: 10 executions |
 | tests/e2e/pause.spec.ts | 4 | Desktop and mobile: 8 executions |
 
-Lint, type checking and production build also pass. After the final keyboard-repeat guard, the 8 pause executions were rerun against a fresh build and passed; the latest HTML report contains that focused run. A separate development review exercised five enter/move/exit cycles on desktop and five on mobile with StrictMode enabled, checking a single canvas, deleted hooks and no unhandled page errors. Portrait/landscape screenshots were reviewed; they are not versioned visual baselines or memory measurements.
+Lint, type checking and production build also pass. The latest HTML report contains the full desktop/mobile suite. Separate development StrictMode reviews check repeated entry/exit, one canvas, deleted hooks and no unhandled page errors. Portrait/landscape screenshots are review artifacts, not versioned visual baselines or memory measurements.
 
-Weapons, enemies, death completion, persisted results, ranking/history, MSW scenarios, visual baselines and performance measurements are pending. Focus-loss pause is automated; hidden-tab behavior also needs manual browser verification. The [test plan](docs/testing/test-plan.md) contains remaining proposed cases; the [profiling template](docs/performance/profiling.md) is filled only after real measurements.
+Enemy behavior, target damage, duplicate-free scoring, death completion, persisted results, ranking/history, MSW scenarios, visual baselines and performance measurements are pending. The weapons suite partially covers §8.4; its filename does not imply complete combat coverage. Focus-loss pause is automated; hidden-tab behavior also needs manual browser verification. The [test plan](docs/testing/test-plan.md) contains remaining proposed cases; the [profiling template](docs/performance/profiling.md) is filled only after real measurements.

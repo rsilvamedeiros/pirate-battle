@@ -89,6 +89,10 @@ Both types must appear during a standard match. Proposed: spawn a Chaser at the 
 
 ## Combat rules
 
+Initial weapons implementation (**proposed**): projectile circles have radius 4 lu; muzzle origins sit 46 lu from the player center. Broadside origins are spaced 16 lu along the hull at offsets −16, 0 and 16, with identical side headings. Swept segment contact uses the island expanded by projectile radius and arena bounds inset by that radius; remove the shot at the earliest contact along its reachable trajectory. Range/lifetime clip travel before contact checks, so obstacles beyond effective reach cannot produce impacts. Target damage is pending.
+
+Cooldowns use the next eligible active-time timestamp for each weapon; player weapons start ready. Navigation/rotation is applied before spawning shots, which then advance during that fixed step. On time exhaustion, weapon state freezes without a new shot; simultaneous death/time arbitration remains unresolved until enemies are implemented. Proposed muzzle flash and obstacle impact durations are 120 ms and 180 ms of active time.
+
 - Player projectiles damage enemies; enemy projectiles damage the player.
 - A projectile applies damage at most once. Remove it on its first valid target or obstacle hit, range/lifetime exhaustion, or arena exit.
 - Each weapon respects its configured cooldown in active simulation time. Proposed: weapons start ready for the player, cooldown starts when firing, and unused cooldown time never accumulates extra shots.

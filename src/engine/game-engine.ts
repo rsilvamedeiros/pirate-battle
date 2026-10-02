@@ -1,5 +1,5 @@
 import { createInitialState, fixedStepMs, stepSimulation } from '../core/simulation'
-import type { MovementInput } from '../core/simulation'
+import type { GameInput } from '../core/simulation'
 import type { GameplayConfig } from '../core/config'
 
 export interface GameClock { now(): number }
@@ -11,13 +11,13 @@ export interface HudSnapshot {
 }
 
 export const maxFrameMs = 250
-export type MovementAction = keyof MovementInput
+export type GameAction = keyof GameInput
 
 export function createGameEngine(config: GameplayConfig, clock: GameClock) {
   let state = createInitialState(config)
   let lastTime: number | null = null
   let accumulator = 0
-  const actions = new Map<string, MovementAction>()
+  const actions = new Map<string, GameAction>()
   const listeners = new Set<() => void>()
 
   function makeSnapshot(): Readonly<HudSnapshot> {
@@ -47,7 +47,7 @@ export function createGameEngine(config: GameplayConfig, clock: GameClock) {
       listeners.add(listener)
       return () => { listeners.delete(listener) }
     },
-    press(source: string, action: MovementAction) {
+    press(source: string, action: GameAction) {
       if (state.status === 'running') actions.set(source, action)
     },
     release(source: string) { actions.delete(source) },
@@ -75,7 +75,8 @@ export function createGameEngine(config: GameplayConfig, clock: GameClock) {
       accumulator += Math.min(maxFrameMs, Math.max(0, time - lastTime))
       lastTime = time
       const held = new Set(actions.values())
-      const input = { forward: held.has('forward'), left: held.has('left'), right: held.has('right') }
+      const input: GameInput = { forward: held.has('forward'), left: held.has('left'), right: held.has('right'),
+        frontFire: held.has('frontFire'), leftFire: held.has('leftFire'), rightFire: held.has('rightFire') }
       while (accumulator + 1e-8 >= fixedStepMs && state.status === 'running') {
         state = stepSimulation(state, input)
         accumulator = Math.max(0, accumulator - fixedStepMs)

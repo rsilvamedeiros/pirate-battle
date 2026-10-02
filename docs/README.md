@@ -10,7 +10,7 @@ The developer sets the scope and constraints. Proposed decisions and generated m
 
 The documentation preparation covered test cases, determinism, isolation, failure scenarios, and reporting, with changes limited to Markdown. The test plan enumerates 124 logical cases; it is not a claim that the full suite is implemented or passing. Profiling tables contain placeholders, not measured results.
 
-Implementation has now started at the developer's request. AI assisted with the pure TypeScript gameplay configuration module, validation, snapshots and Vitest tests. The second increment adds the React menu/Options interface, local persistence and browser tests. The third adds navigation, the fixed-step engine, PixiJS lifecycle, keyboard/touch input, pause and related tests. Combat and remote data remain pending.
+Implementation has now started at the developer's request. AI assisted with configuration, validation, snapshots and tests; menu/Options and local persistence; navigation, engine and PixiJS lifecycle; and now player weapons, swept obstacle contacts, feedback and related tests. Enemies, damage/scoring and remote data remain pending.
 
 As testing is implemented, AI may also support writing tests, reviewing assertions, and investigating failures. Record that assistance here when it occurs, together with the commands actually executed and their results. Claims of coverage and performance must be supported by executable tests, reports, traces, and measurements.
 
@@ -23,9 +23,9 @@ As testing is implemented, AI may also support writing tests, reviewing assertio
 | 1 | Read the challenge and document architecture boundaries and alternatives | Drafted; ADRs remain Proposed | [ADR index](adr/README.md), [architecture skeleton](../ARCHITECTURE.md) |
 | 2 | Specify gameplay, configuration, screens, API contracts, and network scenarios | Drafted; design choices remain proposed | [Gameplay](specs/gameplay.md), [API contracts](specs/api-contracts.md), [network scenarios](specs/network-scenarios.md) |
 | 3 | Map requirements to tests and define profiling procedures | Drafted | [Test plan](testing/test-plan.md), [profiling template](performance/profiling.md) |
-| 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: configuration, menu, Options and navigable arena implemented | [Simulation](../src/core/simulation.ts), [engine](../src/engine/game-engine.ts), [game screen](../src/ui/GameScreen.tsx); combat remains pending |
+| 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: configuration, screens, navigation and player weapons | [Simulation](../src/core/simulation.ts), [weapons](../src/core/weapons.ts), [game screen](../src/ui/GameScreen.tsx); enemies and damage/scoring remain pending |
 | 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | In progress: Options persistence implemented | [Options storage](../src/persistence/options.ts); remote contracts, outbox, and handlers remain pending |
-| 6 | Implement and execute core/E2E tests and review visual baselines | In progress: configuration, navigation, engine, Options, assets, movement and pause suites | [Simulation units](../src/core/simulation.test.ts), [movement E2E](../tests/e2e/movement.spec.ts), [pause E2E](../tests/e2e/pause.spec.ts); combat/API suites and baselines remain pending |
+| 6 | Implement and execute core/E2E tests and review visual baselines | In progress: configuration, navigation, engine, geometry, weapons and browser suites | [Weapon units](../src/core/combat.test.ts), [weapons E2E](../tests/e2e/combat.spec.ts), [pause E2E](../tests/e2e/pause.spec.ts); damage/scoring, enemies/API and baselines remain pending |
 | 7 | Profile the optimized build, document limitations, and complete delivery | Planned | Filled profiling record, public deployment, and project setup/reproduction instructions |
 
 Steps may overlap. Update statuses and link evidence as work is completed; keep implementation details in the corresponding specifications and architecture documents.
@@ -58,11 +58,21 @@ Verification: 72 units pass (52 configuration, 11 navigation, 9 engine) and 48 b
 
 AI assisted with implementation, test design/execution, lifecycle investigation and documentation updates. Headless WebGL stalls were resolved by forcing SwiftShader in Playwright. The full Chromium channel permits the focus-loss test to switch to another actual page. For review, run `npm run dev`, select Play, move with W/arrows and A/D, try the island/boundaries, pause with Esc/P, switch tabs, resume and return to the menu. Touch controls allow forward movement and rotation together.
 
+## Increment 4: Player weapons and obstacle contacts
+
+Delivered: one forward projectile and three parallel shots per side, held fire with independent cooldowns, simultaneous keyboard/touch navigation and attacks, fixed shot headings and configured speed/damage/range/lifetime. Projectiles use swept island/arena contacts and expire at the first range/lifetime limit. Proposed geometry is radius 4 lu, muzzle distance 46 lu and broadside spacing 16 lu. Ship, projectile and effect textures must all load before starting; each failure supports retry. Firing and obstacle impacts use supplied assets and active-time visual effects.
+
+Pause freezes shots, effects and cooldowns; cleared inputs require a fresh press after resume. Completion stops weapon state and restart clears entities/cooldowns. Enemies, target damage and scoring remain pending, so this increment does not fully satisfy challenge §8.4.
+
+Verification: 93 unit tests pass across five files. The desktop/mobile E2E suite passes 68 executions (34 cases per project: 13 Options, 5 assets, 5 movement, 7 weapons, 4 pause). Lint, type checking and production build pass. Development StrictMode review completed five movement/fire/exit cycles per layout without duplicate canvases or unhandled page errors; desktop, mobile portrait and landscape screenshots were reviewed. This is not memory profiling or versioned visual regression. Manual review instructions and suite counts are maintained in [TESTING.md](../TESTING.md).
+
+AI assisted with pure weapon/geometry implementation, PixiJS sprite lifecycle and feedback, mobile controls, test design/execution and documentation updates. For review, run `npm run dev`, select Play, hold Space for front fire and Q/E for broadsides, fire at the island, pause while shots are active and retry with simultaneous touch controls.
+
 ## Decisions to resolve before implementation
 
 - Clarify simultaneous match-end ordering: the gameplay spec checks time exhaustion before combat but also gives death precedence when both coincide.
 - Clarify enemy type sequencing when unsafe spawn attempts are skipped; the first-two-interval guarantee depends on valid spawn positions.
-- Initial navigation uses a proposed 250 ms frame clamp and circular collision footprints. Choose combat geometry, aiming tolerance and projectile spacing; validate balancing and mobile layouts.
+- Navigation uses a proposed 250 ms frame clamp and circular footprints; projectile geometry and broadside spacing are now implemented. Choose ship-target geometry and aiming tolerance; validate balancing and mobile layouts.
 
 These points are recorded in the [test plan](testing/test-plan.md#review-blockers-and-unresolved-details). Review the affected proposed decisions/specifications before setting final assertions.
 

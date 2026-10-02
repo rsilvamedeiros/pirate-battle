@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { PointerEvent } from 'react'
 import { createGameEngine } from '../engine/game-engine'
-import type { GameEngine, MovementAction } from '../engine/game-engine'
+import type { GameEngine, GameAction } from '../engine/game-engine'
 import { createArenaView } from '../render/arena-view'
 import { attachKeyboard } from '../input/keyboard'
 import { fixedStepMs } from '../core/simulation'
@@ -92,7 +92,7 @@ export function GameScreen({ config, onExit, onRestart }: { config: GameplayConf
     }
   }, [engine, runtime])
 
-  function press(event: PointerEvent<HTMLButtonElement>, action: MovementAction) {
+  function press(event: PointerEvent<HTMLButtonElement>, action: GameAction) {
     event.currentTarget.setPointerCapture(event.pointerId)
     engine.press(`pointer:${event.pointerId}`, action)
   }
@@ -118,12 +118,13 @@ export function GameScreen({ config, onExit, onRestart }: { config: GameplayConf
       </div>
       {!ready && !error && <button type="button" className="secondary-button" onClick={onExit}>Main Menu</button>}
       <nav className="movement-controls" aria-label="Ship controls">
-        {([['left', 'Rotate Left'], ['forward', 'Forward'], ['right', 'Rotate Right']] as const).map(([action, label]) => (
+        {([['left', 'Rotate Left'], ['forward', 'Forward'], ['right', 'Rotate Right'],
+          ['leftFire', 'Left Fire'], ['frontFire', 'Front Fire'], ['rightFire', 'Right Fire']] as const).map(([action, label]) => (
           <button key={action} type="button" disabled={!ready || snapshot.status !== 'running'}
             onPointerDown={(event) => press(event, action)} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release}>{label}</button>
         ))}
       </nav>
-      <p className="navigation-hint">W / ↑ to sail · A / ← and D / → to rotate · Esc / P to pause</p>
+      <p className="navigation-hint">W / ↑ to sail · A / ← and D / → to rotate · Space to fire · Q / E for broadsides · Esc / P to pause</p>
       {ready && snapshot.status !== 'running' && <SessionDialog key={snapshot.status} engine={engine} onExit={onExit} onRestart={onRestart} />}
     </main>
   )

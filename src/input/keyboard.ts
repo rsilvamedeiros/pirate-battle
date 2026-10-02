@@ -1,7 +1,8 @@
-import type { GameEngine, MovementAction } from '../engine/game-engine'
+import type { GameEngine, GameAction } from '../engine/game-engine'
 
-const bindings: Record<string, MovementAction> = {
+const bindings: Record<string, GameAction> = {
   KeyW: 'forward', ArrowUp: 'forward', KeyA: 'left', ArrowLeft: 'left', KeyD: 'right', ArrowRight: 'right',
+  Space: 'frontFire', KeyQ: 'leftFire', KeyE: 'rightFire',
 }
 
 export function attachKeyboard(engine: GameEngine) {
