@@ -8,11 +8,11 @@ Source: [CHALLENGE.md](../../CHALLENGE.md), especially Sections 4, 7, 8, 9 and 1
 | 2. Production browser regression | Full Chromium desktop/Pixel 7 inventory; real controls, HTTP scenarios and six unchanged visual baselines | Passed: all 174 executions, zero failures/skips/retries; 10.9 minutes |
 | 3. Lifecycle and documentation | Five session cycles, keyboard dialog focus, portrait/landscape; repeat against development StrictMode; English/default plus Portuguese README and completed architecture | Six StrictMode executions passed; English/default and Portuguese guides exist; architecture completed |
 | 4. Evidence package | Versioned HTML report, failure traces, unit summary, reproducible environment/build identity and profiling links | Delivered in [review artifacts](artifacts/2026-10-03-final/README.md), including intermediate failures |
-| 5. Public delivery | Deploy the exact reviewed source; validate HTTPS, worker startup, reload, records and pending recovery on public URL | Pending; no public URL available |
+| 5. Public delivery | Deploy the exact reviewed source; validate HTTPS, worker startup, reload, records and pending recovery on public URL | Published on [Vercel](https://game-pirate-battle.vercel.app/); see [deployed verification](public-verification.md) for executed checks and remaining limits |
 
 ## Pre-deployment handoff
 
-The developer will publish on Vercel after the final documentation commit. The [English README](../../README.md#publish-on-vercel) contains installation, build/output settings, environment requirements, evaluator steps and network-failure reproduction. The [latest verification archive](artifacts/2026-10-03-release/README.md) records the application after the subsequent Sass, formatting, lint, CI, CSS Modules and component-extraction stages. The original 174-case reports below remain historical evidence and are not overwritten.
+The developer has published on [Vercel](https://game-pirate-battle.vercel.app/). The original pre-deployment evidence remains historical; the [public verification record](public-verification.md) describes the subsequent deployed checks. The [English README](../../README.md#publish-on-vercel) contains installation, build/output settings, environment requirements, evaluator steps and network-failure reproduction. The [latest verification archive](artifacts/2026-10-03-release/README.md) records the application after the subsequent Sass, formatting, lint, CI, CSS Modules and component-extraction stages. The original 174-case reports below remain historical evidence and are not overwritten.
 
 The final commit changes documentation and delivery evidence only. Public acceptance still requires the deployed URL and exact commit SHA; hosted CI must be inspected after pushing. Existing profiling belongs to its original measured build, not this later application revision.
 
@@ -54,18 +54,18 @@ AI assistance is recorded honestly in the [construction guide](../README.md), in
 - [Measured profiling](../performance/profiling.md): headed/native-time three-minute match, five memory cycles and raw trace/heap evidence.
 - [Visual baseline record](../../tests/e2e/visual.spec.ts-snapshots/README.md): six platform-specific reference images.
 
-The entry-chunk warning remains; combat profiling does not measure download/startup cost. Mobile uses emulation, not physical hardware. Heap observations do not prove leak freedom. Concurrent tabs are not coordinated. Public-worker/reload behavior is still unverified until stage 5.
+The entry-chunk warning remains; combat profiling does not measure download/startup cost. Mobile uses emulation, not physical hardware. Heap observations do not prove leak freedom. Concurrent tabs are not coordinated. Public-worker/reload smoke checks are now recorded in [deployed verification](public-verification.md); physical/manual acceptance and final redeploy identity remain separate.
 
 ## Public acceptance checklist
 
 - [ ] Record a public HTTPS URL and the exact delivered source revision/build identity.
 - [ ] Open the URL in a fresh browser context and verify no unhandled console/page errors.
-- [ ] Confirm supplied assets, worker wrapper and generated MSW worker are accessible.
+- [x] Confirm the supplied player ship asset, worker wrapper and generated MSW worker are accessible.
 - [ ] Play with keyboard/touch; verify pause/resume and portrait/landscape.
-- [ ] Save Options, reload, and verify their values persist.
-- [ ] Complete a match; verify one confirmed entry in both paginated views after reload.
-- [ ] Reproduce post-commit timeout and offline-at-match-end recovery without duplicates.
-- [ ] Verify base-path/worker scope, direct loading and refresh on the public origin.
+- [x] Save Options, reload, and verify their values persist (Pixel 7 emulation).
+- [x] Complete a match; verify one confirmed entry in both views and a confirmed result after reload.
+- [x] Reproduce post-commit timeout and offline-at-match-end recovery without duplicates.
+- [x] Verify root worker control, direct loading and refresh on the public origin.
 - [ ] Review standard balance and physical touch usability where hardware is available.
 - [ ] Confirm the URL remains accessible for evaluation; provide the final reports and profiling evidence.
 

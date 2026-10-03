@@ -161,3 +161,7 @@ These points are recorded in the [test plan](testing/test-plan.md#review-blocker
 For each completed step, record what changed, which requirements it addresses, how it was verified, and any AI contribution. Distinguish documentation checks from executed application tests. Update ADR status only after review, and link actual reports or measurements when available.
 
 The root [README.md](../README.md) is the English solution guide; [README.pt-BR.md](../README.pt-BR.md) is supplementary Portuguese documentation and [CHALLENGE.md](../CHALLENGE.md) preserves the original challenge. [TECHNICAL.md](../TECHNICAL.md) describes the implementation, while [TESTING.md](../TESTING.md) contains setup and practical verification instructions. This guide tracks construction and AI assistance. Add the public URL and deployed verification evidence when publication is complete.
+
+## Published deployment update
+
+The developer published the game at [Pirate Battle](https://game-pirate-battle.vercel.app/). The [public verification record](delivery/public-verification.md) separates deployed smoke checks from local full-suite evidence. Startup/reload delay is documented as an observed limitation, without attributing its cause or claiming a fix. AI assisted deployed checks and documentation; the final commit also references an existing ship image as favicon to avoid the observed automatic favicon.ico 404. Redeploy that commit before final submission.

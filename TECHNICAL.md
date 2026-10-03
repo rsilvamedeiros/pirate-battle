@@ -4,6 +4,10 @@ The root [README.md](README.md) is the English solution and deployment guide; [C
 
 The preserved challenge uses original `assets/` relative links. In this Vite repository, the supplied files are in [public/assets/](public/assets/), including [the UI atlas](public/assets/spritesheet/ui_sheet.json), [the retina atlas](public/assets/spritesheet/ui_sheet_retina.json) and [sounds](public/assets/sounds/).
 
+## Public deployment
+
+The game is hosted on [Vercel](https://game-pirate-battle.vercel.app/). [Deployed verification](docs/delivery/public-verification.md) records smoke coverage and outstanding checks. Initial rendering/reload can be noticeably delayed; startup download/evaluation, worker readiness and combat resource initialization are distinct from simulation frame time. The large entry chunk remains a possible contributor, without measured attribution.
+
 ## Current implementation
 
 | Area | Implemented | Pending |
@@ -12,7 +16,7 @@ The preserved challenge uses original `assets/` relative links. In this Vite rep
 | React / PixiJS | Menus, Options, arena, controls/HUD/feedback, results, paginated Ranking/Match History and network panel | Final accessibility/visual review |
 | Local persistence / HTTP | Options/identity, last result, pending outbox, confirmed database, idempotent PUT and boot/manual replay | Simultaneous-tab coordination; deployment verification |
 | Tests | Core/engine/persistence/API/mock units and integration; all twelve functional browser flows; six menu/arena/result visual baselines; versioned HTML reports and prior failure traces | Expanded adversarial variants; hosted CI verification |
-| Delivery | Production build, local verification reports and headed desktop profiling with raw evidence | Public deployment and deployed acceptance checks |
+| Delivery | Production build, local verification reports and headed desktop profiling with raw evidence | Public deployment available; final redeploy identity and remaining acceptance checks |
 
 Play starts combat with both enemy types, three weapons, HP and scoring. Completed results survive refresh and are available through Last Result. Registration uses real mocked HTTP, with sending/confirmed/error states and retry. Ranking and Match History are active menu tabs; both derive from confirmed records. This remains a local browser demonstration, not a shared online leaderboard.
 

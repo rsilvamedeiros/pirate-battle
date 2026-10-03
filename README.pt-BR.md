@@ -13,13 +13,13 @@ Jogo naval 2D desenvolvido para o desafio de React, TypeScript e PixiJS. Navegue
 - Registro idempotente, fila persistente de envios pendentes, recuperação após refresh e 14 cenários de rede.
 - Testes unitários, E2E em desktop/mobile, baselines visuais e profiling medido com evidências.
 
-A publicação ainda está pendente. O projeto precisa de uma URL pública funcional e da validação do worker nesse ambiente antes da entrega. As etapas e os resultados verificáveis ficam na [revisão final](docs/delivery/final-review.md).
+**Jogue na Vercel: [Pirate Battle](https://game-pirate-battle.vercel.app/).** A publicação está acessível. A [verificação publicada](docs/delivery/public-verification.md) registra os checks de worker, refresh, persistência e recuperação, com seus limites.
 
 ## Publicação e entrega
 
-Após o último commit e o push, importe o repositório na Vercel: preset Vite, raiz do repositório, Node.js 24.x, instalação `npm ci`, build `npm run build` e saída `dist`. Não são necessárias variáveis de ambiente. O [README em inglês](README.md#publish-on-vercel) contém as instruções completas e referências da plataforma.
+A publicação na Vercel usa preset Vite, raiz do repositório, Node.js 24.x, instalação `npm ci`, build `npm run build` e saída `dist`. Não são necessárias variáveis de ambiente. O [README em inglês](README.md#publish-on-vercel) contém as instruções completas e referências da plataforma.
 
-Abra a URL HTTPS de produção sem exigir login, teste o worker do MSW, reload, persistência de Options, registro nas duas abas e recuperação dos envios pendentes. Confira também teclado e toque nas duas orientações. Envie a URL pública, a URL do repositório e o SHA do commit publicado. Esses passos continuam pendentes até a publicação; não são substituídos pelo preview local.
+Os checks publicados confirmaram worker, refresh, persistência de Options, registro nas duas abas e recuperação dos envios pendentes. Após este commit, faça o redeploy e confira o SHA na Vercel e a correção do ícone. A revisão manual em celular físico e nas duas orientações permanece separada. Envie a URL pública, a URL do repositório e o SHA do commit publicado.
 
 Os [relatórios da última verificação local](docs/delivery/artifacts/2026-10-03-release/README.md) ficam versionados junto às evidências anteriores e ao profiling. O enunciado original permanece em CHALLENGE.md; o README padrão e os documentos técnicos permanecem em inglês.
 
@@ -63,6 +63,10 @@ Apply troca o cenário preservando os dados. Reset demo data descarta resultados
 - [Registro da construção e apoio da IA](docs/README.md).
 
 Os testes mobile usam emulação; não comprovam desempenho num celular físico. O profiling usa um preset explícito de resistência e mede a cadência de renderização, sem comprovar frames apresentados no monitor ou ausência de vazamentos. Escritas simultâneas em várias abas não são coordenadas. O enunciado original permanece integral em CHALLENGE.md.
+
+## Carregamento inicial
+
+A primeira renderização e o refresh podem apresentar uma pequena demora, observada na revisão da entrega. O startup do aplicativo e do worker, além de PixiJS e texturas ao entrar na partida, tem custo separado do FPS durante o combate. A causa exata não foi medida; o bundle principal grande permanece uma possível contribuição. Esta atualização documenta a observação e não reivindica uma otimização do carregamento.
 
 ## Apoio da IA
 

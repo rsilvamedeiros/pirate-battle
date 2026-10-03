@@ -8,11 +8,11 @@ A browser-only naval shooter built with React, strict TypeScript and PixiJS. Sai
 
 The local implementation includes gameplay, persistent Options/results, paginated records, idempotent submission/recovery, 14 network scenarios, desktop/mobile E2E and versioned visual baselines. [Measured profiling](docs/performance/profiling.md) includes a three-minute match and five memory cycles with raw evidence.
 
-**Public deployment is pending.** A public URL and deployed-worker/reload validation are required by the challenge before submission. Follow the [final review stages](docs/delivery/final-review.md). Test counts and local preview are not evidence that publication is complete.
+**Play the published game: [Pirate Battle](https://game-pirate-battle.vercel.app/).** The Vercel deployment is publicly accessible. See the [deployed verification record](docs/delivery/public-verification.md) for worker, reload and recovery checks and their limits.
 
 ## Evaluator walkthrough
 
-1. Follow Setup below, or open the public production URL provided with the submission after deployment.
+1. Follow Setup below, or open the published game linked above.
 2. Open Options, save a session duration and spawn interval, reload, and verify the saved values.
 3. Select Play. Move, rotate and fire together; verify island blocking, health bars, score, pause and explicit resume. Finish a match and inspect its result.
 4. Return to Main Menu. Open Ranking and Match History, change pages, and verify the completed record after refresh. Use `multi-page` with Reset demo data to inspect fixture pagination.
@@ -114,7 +114,7 @@ The app navigates through React state at `/`; scenarios use query parameters, so
 
 Open the production HTTPS URL in a fresh browser profile without a Vercel login requirement. Confirm worker startup, Options persistence after reload, one completed record in both tabs, and recovery for `submit-timeout-after-commit` and `offline-at-match-end`. Check desktop and mobile portrait/landscape, plus the browser console. The complete [public acceptance checklist](docs/delivery/final-review.md#public-acceptance-checklist) records these checks.
 
-Provide the public URL, repository URL and deployed commit SHA in the submission message. Deployment is planned after this final documentation commit; no URL or hosted validation is claimed here. Keep the production site accessible throughout evaluation.
+Provide the public URL, repository URL and deployed commit SHA in the submission message. The public URL is linked above; after this final commit, redeploy and confirm that Vercel reports the same commit SHA as the delivered source. Keep the production site accessible throughout evaluation.
 
 ## Architecture, evidence and limitations
 
@@ -126,6 +126,8 @@ Provide the public URL, repository URL and deployed commit SHA in the submission
 - [Construction and AI-assistance record](docs/README.md).
 
 Known limits include one circular island/routing scheme, uncoordinated simultaneous-tab storage writes, no shared backend, a large entry chunk, Windows-specific visual baselines and no physical-mobile performance measurement. Profiling records post-render cadence rather than display presentation; five post-GC cycles do not prove leak freedom.
+
+Initial rendering and page reload can have a noticeable startup delay, as reported during delivery review. The browser must load/evaluate the application and initialize the local data worker; entering combat also initializes PixiJS and textures. These are startup costs, separate from in-match FPS. The existing large entry chunk is a possible contributor; no bottleneck attribution or loading optimization is claimed. See the [deployed observations](docs/delivery/public-verification.md).
 
 ## Assets and AI assistance
 
