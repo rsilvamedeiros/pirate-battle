@@ -1,0 +1,10 @@
+{
+  "e2e-report.json": {
+    "bytes": 197587,
+    "sha256": "8b54ce844ead2f57dfbc3d08dff5d9b2b53c2521ecf0d73915b8d170bbbdb967"
+  },
+  "html-report.zip": {
+    "bytes": 2839579,
+    "sha256": "a9f32dca6821837ec1d305669a2a435f5152b5d7aa246f94b20fc3735946cd80"
+  }
+}

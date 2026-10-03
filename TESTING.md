@@ -111,6 +111,7 @@ npm run test:e2e
 | npm run test:e2e | Build and run implemented desktop/mobile E2E suites |
 | npm run test:e2e:ui | Build and open Playwright UI |
 | npm run test:e2e:report | Open the latest HTML report |
+| npx playwright test --config=playwright.strict.config.ts | Run three lifecycle/focus/orientation cases in both development StrictMode projects, using port 4174 |
 
 Target a suite or a browser project:
 
@@ -162,7 +163,7 @@ Record the actual failing command, browser project, values used, and visible err
 
 ## Current coverage
 
-The current unit/integration suite passes all 161 cases across 14 files. The latest browser validation passes 34 targeted executions; the earlier full functional run passed 158 executions and the visual increment passed 18 repeated comparisons. Lint and the optimized build also pass; the build checks TypeScript and retains a large-chunk warning. Execution details are recorded in the [construction guide](docs/README.md#increment-9-real-time-profiling). Browser-test counts alone do not establish measured performance.
+Final review: all 161 unit/integration cases across 14 files and all 174 optimized-browser executions passed. Six additional development StrictMode executions passed. The final full run includes all six visual comparisons without snapshot updates; there were zero failures, skips, flaky cases or automatic retries. Lint, strict types and optimized build pass; the large-chunk warning remains. [Final review](docs/delivery/final-review.md) and [versioned reports](docs/delivery/artifacts/2026-10-03-final/README.md) preserve results and earlier failures. Browser-test counts do not establish measured performance.
 
 | Suite | Cases | Execution |
 | --- | ---: | --- |
@@ -194,8 +195,9 @@ The current unit/integration suite passes all 161 cases across 14 files. The lat
 | tests/e2e/resilience.spec.ts | 10 | Desktop and mobile: 20 executions |
 | tests/e2e/visual.spec.ts | 3 | Desktop and mobile: 6 visual executions; baseline comparison |
 | tests/e2e/profiling.spec.ts | 2 | Desktop and mobile: 4 behavior checks; not performance measurements |
+| tests/e2e/lifecycle.spec.ts | 3 | Desktop and mobile: 6 optimized-preview executions; 6 additional development StrictMode executions |
 
-The functional execution record is maintained in [increment 7](docs/README.md#increment-7-http-records-and-recovery), visual execution in [increment 8](docs/README.md#increment-8-visual-regression), and profiling validation in [increment 9](docs/README.md#increment-9-real-time-profiling). The complete browser inventory is now 168 executions (84 cases per project). Playwright reports describe the latest actual run, and failures retain traces. Development StrictMode/lifecycle review and real-time performance measurements are recorded separately.
+The complete optimized-browser inventory is 174 executions (87 per project); development StrictMode adds six separately executed cases. Earlier functional/visual/profiling records remain historical in construction increments 7–9. [Increment 10](docs/README.md#increment-10-final-regression-and-delivery-review) records corrections, the full final run and evidence packaging. Development checks and real-time performance measurements are reported separately.
 
 Public deployment remains pending. HTTP coverage includes pagination, loading/empty/errors, cache refresh, boot/manual recovery, bounded retries, post-commit timeout and reset/obsolete-response protection. Unit schedules accept controlled waits; native HTTP timeout tests use the documented timeout boundary and observable states. Gameplay time stays independent. Expanded planned variants, variable-latency browser repetition and hidden-tab manual verification remain in the [test plan](docs/testing/test-plan.md). The [profiling record](docs/performance/profiling.md) now includes actual measurements; its limits are explicit. Review the [challenge audit](docs/delivery/challenge-audit.md) before submission.
 

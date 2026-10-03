@@ -13,7 +13,7 @@ import type { ResultsStore } from '../persistence/results'
 import { ResultDetails } from './ResultDetails'
 import './GameScreen.css'
 
-function SessionDialog({ engine, resultsStore, onExit, onRestart }: { engine: GameEngine; resultsStore: ResultsStore; onExit(): void; onRestart(): void }) {
+function SessionDialog({ engine, resultsStore, onExit, onRestart, onResume }: { engine: GameEngine; resultsStore: ResultsStore; onExit(): void; onRestart(): void; onResume(): void }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const completed = engine.getState().status === 'completed'
   const dead = engine.getState().endReason === 'player-death'
@@ -23,16 +23,30 @@ function SessionDialog({ engine, resultsStore, onExit, onRestart }: { engine: Ga
     return () => { element.close() }
   }, [])
   return (
-    <dialog ref={dialog} className="session-dialog" aria-labelledby="session-dialog-heading" onCancel={(event) => {
+    <dialog ref={dialog} className="session-dialog" aria-labelledby="session-dialog-heading" onKeyDown={(event) => {
+      if (event.key !== 'Tab') return
+      const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>(
+        'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
+      )).filter((element) => element.getClientRects().length > 0)
+      const first = controls[0], last = controls.at(-1)
+      if (!first || !last) return
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }} onCancel={(event) => {
       event.preventDefault()
-      if (!completed) engine.resume()
+      if (!completed) onResume()
     }}>
       <h2 id="session-dialog-heading">{completed ? 'Voyage complete' : 'Paused'}</h2>
       <p>{completed ? dead ? 'Your ship was destroyed.' : 'Time expired. Your voyage has ended.' : 'Take a breath. Resume when you are ready.'}</p>
       {completed && resultsStore.getSnapshot().lastResult && <ResultDetails result={resultsStore.getSnapshot().lastResult!} store={resultsStore} />}
       {completed
         ? <button type="button" className="primary-button" onClick={onRestart}>Play Again</button>
-        : <button type="button" className="primary-button" onClick={() => engine.resume()}>Resume</button>}
+        : <button type="button" className="primary-button" onClick={onResume}>Resume</button>}
       <button type="button" className="secondary-button" onClick={onExit}>Main Menu</button>
     </dialog>
   )
@@ -41,6 +55,7 @@ function SessionDialog({ engine, resultsStore, onExit, onRestart }: { engine: Ga
 export function GameScreen({ config, resultsStore, onExit, onRestart }: { config: GameplayConfig; resultsStore: ResultsStore; onExit(): void; onRestart(): void }) {
   const host = useRef<HTMLDivElement>(null)
   const root = useRef<HTMLElement>(null)
+  const pauseButton = useRef<HTMLButtonElement>(null)
   const [runtime] = useState(() => {
     const parameters = new URLSearchParams(location.search)
     const manual = parameters.get('e2e') === '1'
@@ -58,8 +73,15 @@ export function GameScreen({ config, resultsStore, onExit, onRestart }: { config
   })
   const { engine } = runtime
   const snapshot = useSyncExternalStore(engine.subscribe, engine.getSnapshot)
+  const previousStatus = useRef(snapshot.status)
   const [ready, setReady] = useState(false)
   const [error, setError] = useState(false)
+
+  // Restore after the dialog's effect cleanup, which can change native focus.
+  useEffect(() => {
+    if (previousStatus.current === 'paused' && snapshot.status === 'running') pauseButton.current?.focus()
+    previousStatus.current = snapshot.status
+  }, [snapshot.status])
 
   useEffect(() => {
     function captureCompletion() {
@@ -132,7 +154,7 @@ export function GameScreen({ config, resultsStore, onExit, onRestart }: { config
           <span data-testid="remaining-time">Time: {snapshot.remainingSeconds}s</span>
           <span className="visually-hidden">{snapshot.status}</span>
         </div>
-        <button type="button" className="secondary-button" disabled={!ready || snapshot.status !== 'running'} onClick={() => engine.pause()}>Pause</button>
+        <button ref={pauseButton} type="button" className="secondary-button" disabled={!ready || snapshot.status !== 'running'} onClick={() => engine.pause()}>Pause</button>
       </header>
       <div className="arena-frame" ref={host}>
         {!ready && !error && <p role="status" className="arena-message">Loading your ship…</p>}
@@ -151,7 +173,7 @@ export function GameScreen({ config, resultsStore, onExit, onRestart }: { config
       </nav>
       <p className="navigation-hint">W / ↑ to sail · A / ← and D / → to rotate · Space to fire · Q / E for broadsides · Esc / P to pause</p>
       {runtime.profiler && <p className="navigation-hint">Profiling enabled · real clock · seed {new URLSearchParams(location.search).get('seed') ?? '1'}{new URLSearchParams(location.search).get('preset') === 'endurance' && ' · endurance preset: 500 HP, 1 damage, 180s'}</p>}
-      {ready && snapshot.status !== 'running' && <SessionDialog key={snapshot.status} engine={engine} resultsStore={resultsStore} onExit={onExit} onRestart={onRestart} />}
+      {ready && snapshot.status !== 'running' && <SessionDialog key={snapshot.status} engine={engine} resultsStore={resultsStore} onExit={onExit} onRestart={onRestart} onResume={() => engine.resume()} />}
     </main>
   )
 }

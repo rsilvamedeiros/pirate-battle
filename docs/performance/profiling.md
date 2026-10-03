@@ -4,6 +4,8 @@ Sources: [CHALLENGE.md](../../CHALLENGE.md) Sections 9/11, [ADR 0003](../adr/000
 
 Status: measured on 2026-10-03. The reference match completed 180 active seconds without pause; five subsequent start/play/exit memory cycles completed in the same browser session. This is a scoped desktop measurement, not proof of physical-mobile performance or leak freedom.
 
+Source scope: this recorded build predates the final-review dialog focus loop and arena border-box correction. Raw measurements and the recorded entry hash are preserved; they are not measurements of the later corrected build. The [final review](../delivery/final-review.md) records subsequent behavior validation and delivery identity.
+
 ## Reference environment
 
 | Field | Recorded value |

@@ -2,6 +2,8 @@
 
 These PNGs cover Main Menu with expanded Controls, a stable arena after real front/left-fire keyboard input, and a completed result confirmed through Axios/TanStack Query/MSW. Each state has separate Chromium desktop and Pixel 7 emulation baselines, as required by CHALLENGE.md §8.
 
+Final review update (2026-10-03): the arena content-box correction preserves 10:7 canvas proportions independently of its border. Reviewed regeneration changed desktop arena/result and mobile arena; both menu images and mobile result remained unchanged. This is an intentional geometry correction, not a relaxed comparison threshold. Subsequent comparison outcomes are recorded in the [final review](../../../docs/delivery/final-review.md).
+
 ## Reference environment
 
 | Setting | Value |

@@ -1,0 +1,204 @@
+{
+  "recordedAt": "2026-10-03T17:59:14.411Z",
+  "sourceHead": "2a6f912600dedd3c79c4f6a5d4e8a4b8b26e6f20",
+  "sourceScope": "Working tree including final-review changes; SHA-256 identities below are the executed source/build snapshot, not a new commit.",
+  "node": "v20.19.0",
+  "os": {
+    "platform": "win32",
+    "release": "10.0.19045",
+    "arch": "x64"
+  },
+  "playwright": "1.63.0",
+  "unit": {
+    "passed": 161,
+    "failed": 0,
+    "files": 14,
+    "startTime": 1791047115505
+  },
+  "optimizedE2E": {
+    "startTime": "2026-10-03T17:43:20.473Z",
+    "duration": 654073.069,
+    "expected": 174,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "developmentStrictMode": {
+    "startTime": "2026-10-03T17:24:05.465Z",
+    "duration": 43741.954000000005,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "automaticRetries": 0,
+  "casesByFileAndProject": {
+    "assets.spec.ts": {
+      "chromium-desktop": 7,
+      "chromium-mobile": 7
+    },
+    "combat.spec.ts": {
+      "chromium-desktop": 9,
+      "chromium-mobile": 9
+    },
+    "enemies.spec.ts": {
+      "chromium-desktop": 6,
+      "chromium-mobile": 6
+    },
+    "leaderboard.spec.ts": {
+      "chromium-desktop": 8,
+      "chromium-mobile": 8
+    },
+    "lifecycle.spec.ts": {
+      "chromium-desktop": 3,
+      "chromium-mobile": 3
+    },
+    "match-end.spec.ts": {
+      "chromium-desktop": 3,
+      "chromium-mobile": 3
+    },
+    "movement.spec.ts": {
+      "chromium-desktop": 5,
+      "chromium-mobile": 5
+    },
+    "navigation.spec.ts": {
+      "chromium-desktop": 3,
+      "chromium-mobile": 3
+    },
+    "options.spec.ts": {
+      "chromium-desktop": 13,
+      "chromium-mobile": 13
+    },
+    "pause.spec.ts": {
+      "chromium-desktop": 4,
+      "chromium-mobile": 4
+    },
+    "profiling.spec.ts": {
+      "chromium-desktop": 2,
+      "chromium-mobile": 2
+    },
+    "resilience.spec.ts": {
+      "chromium-desktop": 10,
+      "chromium-mobile": 10
+    },
+    "result.spec.ts": {
+      "chromium-desktop": 7,
+      "chromium-mobile": 7
+    },
+    "submission.spec.ts": {
+      "chromium-desktop": 4,
+      "chromium-mobile": 4
+    },
+    "visual.spec.ts": {
+      "chromium-desktop": 3,
+      "chromium-mobile": 3
+    }
+  },
+  "sourceHashes": {
+    "CHALLENGE.md": "15f28ff1404bb25651503bca922223b9f74ece0aacd79a2a2253078c33fcf7e9",
+    "eslint.config.js": "dfa65fbdc1419afccab7d8922e4501fad21075e8c392000f47244032bdd61d80",
+    "package-lock.json": "93f57ad8bccd523c0884c7c3e007c71387d151d9243a487ae55358c8cb88bd70",
+    "package.json": "758cc981f89dde182afd3f20d92774f55c236a10ef5b24d3796da407344673ad",
+    "playwright.config.ts": "33e3f59e1df2ce7c2ee7b55539cd09a7151ec36796a2dd45918edf61d8343afa",
+    "playwright.strict.config.ts": "9a2c969a96a809b387c3efbee2664fcbf3c36e0f756ff8b21e19c01b9dc553d3",
+    "public/mockServiceWorker.js": "26171599d94d5445297303f3a1f1cedec26835ea3d0057dcfa92ec520cb35cca",
+    "public/pirate-battle-worker.js": "99aef334d749ea324519a10da5e2a10b95ebbada9e3c905221270c7c25c45005",
+    "src/App.css": "7345af0d298c8e71cc188f65096d18f2743f59330dcc1f9c6fd05a01f52f59d1",
+    "src/App.tsx": "a1ae40288739f3a9eee2326703e3566f1add2fc01aa77a9eea2214febe5f289c",
+    "src/api/client.ts": "6c49487670d7ee3abb54da5edea49f4e0ac4fdae6d4a05ab7e7b0b4e6603cc66",
+    "src/api/contracts.ts": "b07a8cccf3f763bd10e2094f88cc058c7fe8d3fd865ea205b5f5676bb786acc7",
+    "src/api/integration.test.ts": "39aa79c637df0d35995191df352e1f16ff024dc039688028a33e64ef0e4037af",
+    "src/api/runtime.test.ts": "b81fede22de53ac717468a0ed5567247c8d9aaa3e2821f6124bb1a030dbc5fa7",
+    "src/api/runtime.ts": "82d4950e311e94891c26b1d24d5bd358883c0b7d7bd46fafde06d2e3f254d02f",
+    "src/api/submissions.test.ts": "7e7624cbffb78958fd1faa7c3af6b039f87128a9e5c928fa97cd1729481fdad5",
+    "src/api/submissions.ts": "1c9c2b308df95ffcbd67bc8070343484307cde44a9fe358e20fc38ba07e66c00",
+    "src/assets/hero.png": "881ffbcaafc212e49addad08846a5b82761355fa20624253af3477ba33262c5c",
+    "src/assets/react.svg": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5",
+    "src/assets/vite.svg": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f",
+    "src/core/collisions.test.ts": "56e881de939bb13f162ead8a9cce9b8201a8f54afd9e12f9d6cde23135e3cff0",
+    "src/core/combat.test.ts": "5b7b8a59b3776ec224866e3e41cf33df36bc7bf1b746e824fe4e697a7540b8b8",
+    "src/core/config.test.ts": "a4b6c585e70f81ff9d1c69a4a8d1b62d7618f169ca2af5472017353f179989eb",
+    "src/core/config.ts": "c38bac680897666b737d5002300ee9e434a9c24fdc563b5d0e207c49e44c4f93",
+    "src/core/damage.test.ts": "2fb5e5bdbf741cf76d64e5002a2b57e38675596a4b16f3aacc3b90244f8018e2",
+    "src/core/enemies.test.ts": "11a65b56c1cb19ca506cca4585d0b310f87371c7545808c55c3ce9ce600beadf",
+    "src/core/enemies.ts": "2b786b1072e94e06606ac1b9a072dc2d3fc8a96296fac097c823832d9145f8af",
+    "src/core/geometry.ts": "8e34c7eb3eb6a0881ce6e81ff900d1468de9b2fd9b693bb5a881ced4dc8fb3f9",
+    "src/core/random.ts": "867ef655d7f7c52744833f9ac3c686b43f574688cdf6e07569a6c4e7b551f6d9",
+    "src/core/simulation.test.ts": "63724ca05477bccbb34326c650bfcbd4a378673d332581477f0e1f185275b874",
+    "src/core/simulation.ts": "e442f308dd4ad2811539aa8bc472a10d16c9cb8628acf70c879ea1598b2c61d4",
+    "src/core/weapons.ts": "b85c09663bb6c11ec80fbc67786a701e9844071f8ea6ae4db7ebf8a45d1123cc",
+    "src/engine/game-engine.test.ts": "367e6c8ce60bdaef522d9ecd2ac7488eb4cf718d044d0d73e492a1db7df0a085",
+    "src/engine/game-engine.ts": "07b8647ef57c5ffac6d55f2914aaca5b126ac3d1a75a8d5771a3fe12f4e1fe1c",
+    "src/engine/profiling.test.ts": "59cf3fc186f4c6f58044b8b502181860f934c6acbd509e1075053be89975fb25",
+    "src/engine/profiling.ts": "fd7fcc3a7a24d0ffe01760b49a87e830b61c6ab8e4bf5632331f4447ff8f8c5f",
+    "src/engine/scenarios.ts": "139c0726d86e8881b966cbe5f6a19ebfebc36830db1cc0c4b771345d6bde8a63",
+    "src/engine/test-hooks.ts": "f9908897fc2a169bdd05f65589249a9abd723772ac7237bb54890109e6431f96",
+    "src/index.css": "7a8c8a5b8bb1f730b82b52b0f0c2145c7b793719aa4faf2a029cb57f2db67c0e",
+    "src/input/keyboard.ts": "cdc91e31ecefc42f6c337a368fc01748cc230ad31eb1e950332a8618f52fa5cb",
+    "src/main.tsx": "f9192f9944076c0ef06dd73cb42a240db932d8c9185f4dd57eac46c7b8677dba",
+    "src/mocks/activate-worker.ts": "bfe77e709e4e93975247c2a8cc94a1ad1b182a2ac975f91b5af1d26e02c3d6ba",
+    "src/mocks/database.test.ts": "7fce1ed4c521b2b9f8cddd363db6d5747cc2944318b7c3d6e0950ea84ec99412",
+    "src/mocks/database.ts": "cdfd9bd2d2878cf7c2aaea09f04f31ae19f94c385126fa4cf51a3120b84bcda6",
+    "src/mocks/handlers.ts": "2611ff256fc127648d03973e0c17608906e145b1fadf0a2fc43c3d6b6ab02ea3",
+    "src/mocks/scenarios.test.ts": "c3b68f6577314bc1cf5222dfc6094ef708dcdbec9b8ad58fd47fe05b16bdf7df",
+    "src/mocks/scenarios.ts": "88d89ef9b5392d7ab70b078d9ec360f6389ee788a02487f7b39dab35c3ef2d9f",
+    "src/persistence/options.ts": "f1ddc73c524341c5d4627f222d2388cddd6769be239cc277d3408f75c2d174a0",
+    "src/persistence/results.test.ts": "b8d3ebc902a56c4cd8cc2ab250b06cb5ab3fbfc6540e0e4c181b8e2b747ab41d",
+    "src/persistence/results.ts": "ccf2c4c6b2c504680ece26bf48cadaa6c84311c531fced3d447a87d1042810a2",
+    "src/render/arena-view.ts": "26bca8243c982ea4b2003e38e3b7188a208dd406565b5a961ca70b55a6b874e7",
+    "src/ui/GameScreen.css": "2b00e3bf07cd9ce4396fbf7b8a50b07613e2be2357ad3ca8edbc1d2ff240049c",
+    "src/ui/GameScreen.tsx": "0701db04d3974dbec649615b252267e532a1c09ad8f259fba6b37d7be63c81f7",
+    "src/ui/NetworkPanel.tsx": "4f0fac4c82ba9d9b47b16d2709676f042ec3182b32c12f4af4d6a2e26cc63e88",
+    "src/ui/OptionsScreen.tsx": "ae8b93a077fe9f08927647a9d4f337d5aafe87e238d3584a1e17da4c48ee0315",
+    "src/ui/RecordsPanel.tsx": "ff7f62e771b5c9e786e99718c6a5283701536504e3c06353b1d2ac7d1f16705a",
+    "src/ui/ResultDetails.tsx": "2d03223d6a8cf430b544e2541e38e6c83a20e14fc221f6337cfe34aa752f0f15",
+    "tests/e2e/assets.spec.ts": "0203c82a3f481774128e0c4ace5605dbdf16a7e1f310202ce49960b294ca62d1",
+    "tests/e2e/combat.spec.ts": "88cf5c1a201c68c69e2dcddcbf5f48fb21207038922aa2b6434d87ffcffa3f58",
+    "tests/e2e/enemies.spec.ts": "03442977eac05306fa191002e74e4d06eb0b9d07364ab0a4652e1f154ea36a68",
+    "tests/e2e/game-fixture.ts": "b5d8d8fde8e2e9ea4e29ce04f65ba9996970f25826211fc09cb248169d6df51c",
+    "tests/e2e/leaderboard.spec.ts": "f62048eff4b42b5c21bb5827bbbdc4305b0b291173a811c6843686e0af2a090b",
+    "tests/e2e/lifecycle.spec.ts": "eb73e0d4a9986f7e844efa750e5395d70951bf1b7a55348a1c7bda8e9ee7125c",
+    "tests/e2e/match-end.spec.ts": "fd50d67f7a0b450c9ea79ec3bd4ec96884ec6d8c1f93a2107152b9b56ab3e215",
+    "tests/e2e/movement.spec.ts": "b449ea54550a8b4ec14fb7a9a88cfa814d539a8760cfb385376d0bc56f6309c8",
+    "tests/e2e/navigation.spec.ts": "6c2ad8e49de5fe9704fac9367b9bdc6a6d1b2724a6a7ebcbefb837fb26101e49",
+    "tests/e2e/options.spec.ts": "9c48c8ea27664e84b4d44bc4ae4e0d3588d04767e445ed93ac9da327dd43a8ca",
+    "tests/e2e/pause.spec.ts": "1c4b670d52a0c24edd7eb7d10489d7bafe7f88c68f0d96f7f30d3e3d8f1e0272",
+    "tests/e2e/profiling.spec.ts": "0d44e3e6c546c0b2a225629fb80180e63c9082866733da7a20b4103c63028750",
+    "tests/e2e/resilience.spec.ts": "3cf23772f2624ad6fca3406211591d9f90d626d6878e6597cca5fd07671425b9",
+    "tests/e2e/result.spec.ts": "f51ad2773b0eebfc36ee2c94d538b630b92872ef680e69342e7f029610e3decc",
+    "tests/e2e/submission.spec.ts": "1fd2d373599e4fcfd19630847e72c61529f010953d3df2e683e5c1674fc7d677",
+    "tests/e2e/visual.spec.ts": "c7cea5702884b4b5a4e3485b52580c484e0346fc4f28cfef461a129fd5501c9e",
+    "tests/e2e/visual.spec.ts-snapshots/README.md": "0bcdae55c76b9b741ffd8fa8ce55eb014dcc3d194e47da042ab215b3706efc8f",
+    "tests/e2e/visual.spec.ts-snapshots/arena-chromium-desktop-win32.png": "b1cf68dd03c1ae1a9ed16429caf557c2bfbe136b110f9716481558c1a4b87818",
+    "tests/e2e/visual.spec.ts-snapshots/arena-chromium-mobile-win32.png": "4ce2586ed6d2551fd35042b6d3b97ff9c7336d4dcd8bb1251838eb1d2e6765ab",
+    "tests/e2e/visual.spec.ts-snapshots/menu-chromium-desktop-win32.png": "20aeedf2a84de71798088cdce66cfa25e5f9d3a24d1e6f0d221382d13839e4f8",
+    "tests/e2e/visual.spec.ts-snapshots/menu-chromium-mobile-win32.png": "a3cbfb9810b5943758aaf831953e316778886eb17e7b49e5cdce15c68ca37eb7",
+    "tests/e2e/visual.spec.ts-snapshots/result-chromium-desktop-win32.png": "8181d8d2cfd7a629774848b3d7d6b3b3a224f6eefc3df84d144a8ea4d6a7119b",
+    "tests/e2e/visual.spec.ts-snapshots/result-chromium-mobile-win32.png": "70b5c0e63dcb4e63dc902e605ce5af3242f5901cbbbf10bb7d125bdb23269e3a",
+    "tsconfig.app.json": "1b246d31e9698193a0876e8c2522c7956253374b6be831ba24f42f5480711749",
+    "tsconfig.e2e.json": "331fd4c7083e644be266a8fea1b1b60359e084edecaaa22197146f9569004e7a",
+    "tsconfig.json": "eb83452aaca155485e1483a41eb65d4efb667da5030e891928a3304b323613d1",
+    "tsconfig.node.json": "6fc5b2e9fb98f24049f49fe973b52000b1fbc289090f0fc5c87cdcccaeb82837",
+    "vite.config.ts": "e1eefd0ed1639c88d1213884ef760516884db9e168190e223fee6b063ad3e088",
+    "vitest.config.ts": "1f358b96cb53e6547538a26729fb5d05a62ba7be5270abc26ebf7d5ea637b79a"
+  },
+  "buildHashes": {
+    "Cache-Bnm4gRX_.js": "bc6b9f566dd80177da6db0e12b6cba2c3ff746974161f958a02718cd3dec7d43",
+    "CanvasPool-CRBt3_b8.js": "24ec2306fc8212a36d6a5884b7f18dbe55abbf71a75752d91fb5346d2c1882c9",
+    "Filter-Drwjmcsu.js": "442947a96f2c94819f8b86101450d0413570e63eaeebf88f2c66dbc6d166ba5a",
+    "GCManagedHash-bzRcdMCg.js": "598353f550473c41860eec11fc5c5e183b67adc705a06172c5cf1931c9b24bdc",
+    "GraphicsContext-DzeOPP_Y.js": "13e5a3a557e83dcd7379f7927c67e9024d43dce4a34ec84dc4841cad7963cf62",
+    "RenderTargetSystem-_NvNkJfE.js": "998ee0103301461db2dbb3a7ac3ac016ea0cc1ccea77b1c06ae6cbcbe9d80cf8",
+    "browser-YpNTKi9K.js": "0a642ce0383b955a90fac8ccf00d904009c5918d39d03dcb7af29b6863d1a570",
+    "browserAll-WpahK8VV.js": "d3e39a6991077d3fd006c4fc003720653ce9f5faaf127cc83f37e43f8f99fc5c",
+    "canvasUtils-J0zhdlif.js": "eec700174d3476ce0dc48df28a2a742fc582e6d60ee351133b120d64e329165c",
+    "getTexelRangeRects-Dd59rHAP.js": "1530e8597c078c3e89ff3163e759b1120a95c9dc040d41ec6b44dccd3a9785d9",
+    "getTextureBatchBindGroup-BRrdq9JM.js": "1128bb070efdeefd52cb1afa069a645645585b881779ac0da9c4943c2515ce2e",
+    "handlers-BMNOAUUL.js": "786755c03ee1d4fe3abe97fe7821d89546737884407b59df0305b65aa432f250",
+    "index-BVTJHvuK.js": "1a6db536b2bb5fd1efd0a3afda58681fd4c23b0a5607be07c1ec689f869e6fe7",
+    "index-Nnhd6wtw.css": "b144c9d32f6c23c084b6938f4b5caf09785a5415f7627506429d3ebc41de3bce",
+    "init-RFVhxS14.js": "02fe809e57a67fdc4f1cd34478daf9ffbe6a433ee2cf0a73f70fc1090b1a947b",
+    "isObject-KcfF6gEE.js": "1bdb6fd64af865161b254f7e478cfecbbbadb4db87bc99db76214874109e9f05",
+    "webworkerAll-C7T55irV.js": "c5cd39029039c97b599d94eb84b11d6d4786b45d5bce12f2e214e848281d81ba"
+  }
+}

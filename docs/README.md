@@ -20,9 +20,9 @@ As testing is implemented, AI may also support writing tests, reviewing assertio
 
 | Step | Work | Current status | Reference / completion evidence |
 | --- | --- | --- | --- |
-| 1 | Read the challenge and document architecture boundaries and alternatives | Drafted; ADRs remain Proposed | [ADR index](adr/README.md), [architecture skeleton](../ARCHITECTURE.md) |
+| 1 | Read the challenge and document architecture boundaries and alternatives | Implemented architecture documented; ADRs remain Proposed | [ADR index](adr/README.md), [architecture](../ARCHITECTURE.md) |
 | 2 | Specify gameplay, configuration, screens, API contracts, and network scenarios | Drafted; design choices remain proposed | [Gameplay](specs/gameplay.md), [API contracts](specs/api-contracts.md), [network scenarios](specs/network-scenarios.md) |
-| 3 | Map requirements to tests and define profiling procedures | Drafted | [Test plan](testing/test-plan.md), [profiling template](performance/profiling.md) |
+| 3 | Map requirements to tests and define profiling procedures | Drafted plan with implementation updates | [Test plan](testing/test-plan.md), [profiling template](performance/profiling-template.md) |
 | 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: local combat and persisted result implemented | [Simulation](../src/core/simulation.ts), [game screen](../src/ui/GameScreen.tsx), [result details](../src/ui/ResultDetails.tsx) |
 | 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | Implemented locally; public worker verification pending | [Runtime](../src/api/runtime.ts), [coordinator](../src/api/submissions.ts), [handlers](../src/mocks/handlers.ts), [database](../src/mocks/database.ts) |
 | 6 | Implement and execute core/E2E tests and review visual baselines | Functional and visual suites implemented; six baseline PNGs added for versioning | [Visual E2E](../tests/e2e/visual.spec.ts), [baseline record](../tests/e2e/visual.spec.ts-snapshots/README.md); execution records below |
@@ -128,9 +128,21 @@ Initial validation caught a missing global type import in the new browser spec, 
 
 AI assisted with instrumentation, scripts, collection, calculations, heap/trace investigation, test debugging and documentation. The profiler measures without changing core transitions; the full endurance preset is explicit, validated and reproducible. Public deployment, final English/default and Portuguese README versions, architecture cleanup and test-report packaging remain pending.
 
+## Increment 10: Final regression and delivery review
+
+This increment separates lockfile/static/unit verification, optimized-browser regression, development StrictMode checks, evidence packaging and public publication. The [final review](delivery/final-review.md) records executed outcomes and outstanding checks.
+
+Added three lifecycle cases per layout and dedicated development projects. The first complete run passed 170 of 174 executions; four new assertions exposed dialog focus escape and slight canvas stretching from border-box sizing. The explicit Tab/Shift+Tab cycle, post-cleanup focus restoration and content-box arena layout address those findings. Two development runs exposed a restoration race; the final six StrictMode executions passed without retries. Reviewed visual regeneration changed three PNGs while leaving both menus and mobile result unchanged; pixel criteria were retained.
+
+The second complete run passed 173 and failed one Shooter case at the five-second arena-readiness timeout before combat assertions. Its trace is preserved. The shared fixture now waits up to 15 seconds for initialized game hooks and confirms visible canvas/enabled Pause. Three explicit repetitions per layout passed, followed by the complete final run: all 174 executions passed in 10.9 minutes, with zero failures/skips/flaky cases/automatic retries and all six unchanged visual comparisons. Unit verification passed all 161 cases across 14 files; lint, strict types and optimized build passed. Reports and source/build identity are versioned in the final-review artifacts.
+
+README.md is now the English solution guide, with a supplementary README.pt-BR.md and mutual links. The original CHALLENGE.md is preserved. Architecture skeleton text is replaced with implementation details; ADRs remain Proposed. HTML reports, traces, JSON summaries and reproducible build/source identity accompany the review; public deployment remains outstanding.
+
+AI assisted requirement review, regression design/execution, diagnosis and correction of focus/scaling defects, visual review, final documentation and evidence packaging. The developer remains responsible for understanding the changes, validating balance and completing public delivery.
+
 ## Decisions to validate during implementation
 
-Latest delivery update: visual baselines are implemented in increment 8 and desktop profiling is measured in increment 9. The final documentation stage will create an English default README.md and a separate README.pt-BR.md with mutual links, keeping the original challenge in CHALLENGE.md.
+Latest delivery update: visual baselines are implemented in increment 8, desktop profiling is measured in increment 9, and final regression/documentation is recorded in increment 10. English README.md and Portuguese README.pt-BR.md now exist with mutual links; the original challenge remains in CHALLENGE.md.
 
 - Time-first boundary ordering and successful-spawn type sequencing are implemented as proposed choices; validate their documented behavior.
 - Collision footprints, projectile spacing, aiming tolerance and island routes are implemented; validate balancing, mobile usability and safe-spawn availability.
@@ -142,4 +154,4 @@ These points are recorded in the [test plan](testing/test-plan.md#review-blocker
 
 For each completed step, record what changed, which requirements it addresses, how it was verified, and any AI contribution. Distinguish documentation checks from executed application tests. Update ADR status only after review, and link actual reports or measurements when available.
 
-The root [README.md](../README.md) preserves the original challenge. [TECHNICAL.md](../TECHNICAL.md) describes the current implementation, while [TESTING.md](../TESTING.md) contains setup and practical verification instructions. This guide tracks the construction process and the use of AI during that work. Expand the solution guides with remaining scenario and deployment instructions as those features are delivered.
+The root [README.md](../README.md) is the English solution guide; [README.pt-BR.md](../README.pt-BR.md) is supplementary Portuguese documentation and [CHALLENGE.md](../CHALLENGE.md) preserves the original challenge. [TECHNICAL.md](../TECHNICAL.md) describes the implementation, while [TESTING.md](../TESTING.md) contains setup and practical verification instructions. This guide tracks construction and AI assistance. Add the public URL and deployed verification evidence when publication is complete.

@@ -136,17 +136,17 @@ Ship tint deteriorates at HP ratios 0.65 and 0.3; each ship has a proportional h
 
 Verification results for this increment are recorded in [TESTING.md](TESTING.md#current-coverage). This evidence covers the implemented features, not the complete challenge. Browser tests use SwiftShader to avoid headless GPU-driver stalls; this does not establish hardware performance.
 
-Mobile emulation does not establish performance on a physical device. Review screenshots are not versioned visual baselines. The [profiling record](docs/performance/profiling.md) now contains measured headed desktop render intervals/entities and five post-exit memory cycles, with compressed raw evidence. Public deployment remains unverified.
+Mobile emulation does not establish performance on a physical device. The six versioned visual baselines are distinct from ad hoc review screenshots. The [profiling record](docs/performance/profiling.md) contains measured headed desktop render intervals/entities and five post-exit memory cycles, with compressed raw evidence and the exact measured build identity. Public deployment remains unverified.
 
 ## Decisions and next work
 
 ADRs remain Proposed. Frame clamping, collision geometry, routing, aiming, successful-spawn sequencing and time-first terminal ordering are implemented as proposed choices. Validate tuning through gameplay and profiling. Ship-to-ship separation beyond spawn checks and Chaser impact is not modeled; routes assume the current circular island.
 
-Visual regression now uses six [baseline PNGs and an environment record](tests/e2e/visual.spec.ts-snapshots/README.md). Captures use real rules and input, seed 42, stopped simulation time, fixed dates, completed assets/fonts and confirmed HTTP results. Application code is unchanged in this increment.
+Visual regression uses six [baseline PNGs and an environment record](tests/e2e/visual.spec.ts-snapshots/README.md). Captures use real rules and input, seed 42, stopped simulation time, fixed dates, completed assets/fonts and confirmed HTTP results. Final review corrects dialog focus cycling and the arena content-box proportion, with matching lifecycle checks and reviewed visual updates.
 
 Profiling is opt-in with `?profile=1&seed=42`; `preset=endurance` explicitly selects validated 180 s, 500 HP and damage 1. Ordinary gameplay and manual E2E mode retain their existing behavior. The diagnostic bridge observes/exports numeric frame samples without changing simulation time. `node scripts/profile.mjs` drives actual input in headed Chromium with native time; short E2E behavior checks instead control the browser RAF clock and must not be used as FPS evidence. Cleanup removes the bridge and post-render ticker listener.
 
-Next work is public deployment, followed by final English/default and Portuguese README versions and report packaging. The build's large entry chunk remains a startup/download concern; the scoped combat profile does not assess startup loading or prove physical display presentation cadence. See the [challenge audit](docs/delivery/challenge-audit.md) for remaining delivery work and the [construction guide](docs/README.md) for AI assistance and verification history.
+Final README versions and report packaging are tracked in the [staged review](docs/delivery/final-review.md). Public deployment and validation on its HTTPS origin remain required. The build's large entry chunk remains a startup/download concern; the scoped combat profile does not assess startup loading or prove physical display presentation cadence. See the [challenge audit](docs/delivery/challenge-audit.md) for remaining delivery work and the [construction guide](docs/README.md) for AI assistance and verification history.
 
 ## Documentation references
 

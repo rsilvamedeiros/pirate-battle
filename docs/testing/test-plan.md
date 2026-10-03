@@ -6,11 +6,13 @@ This is a plan, not evidence that the full suite is implemented or passing. File
 
 Implementation update: the configuration suite now runs with Vitest 4 and covers defaults, Options boundaries, invalid numbers/containers, integer HP, spawn weights, Shooter reach, and immutable snapshots. It passes 52 parameterized tests in `src/core/config.test.ts`; browser suites and other core files remain planned. See the [construction guide](../README.md#increment-1-configuration-and-unit-test-foundation) for the delivered increment and local verification commands.
 
-U1 remains unchecked until boundary cases for every balancing field are exercised; the first increment verifies the exposed Options boundaries and representative balancing limits.
+The initial increment covered exposed Options boundaries and representative balancing limits. Final requirement-level coverage below is verified; expanded per-field variants remain planned where not implemented.
 
 Increment 2 update: `tests/e2e/options.spec.ts` contains 13 cases, executed on Chromium desktop and Pixel 7 emulation (26 passing executions). It covers Options navigation, validation, persistence, identity, unsaved edits, keyboard focus, storage failures/recovery, and responsive layout. The active-match configuration-snapshot assertion remains pending until gameplay exists, so row 1 remains unchecked. Other E2E files and visual baselines are still planned.
 
 ## Traceability matrix
+
+Final review update: [lifecycle.spec.ts](../../tests/e2e/lifecycle.spec.ts) adds three cases for five-session cleanup/one-shot input, keyboard dialog containment/restoration, and unchanged state/proportions through portrait/landscape resize. They run in both optimized-preview projects and separately in development via [playwright.strict.config.ts](../../playwright.strict.config.ts). The six development executions passed after focus and content-box corrections. The [final review](../delivery/final-review.md) separates full browser results, unit evidence and remaining public-delivery checks.
 
 Increment 9 update: opt-in diagnostics have three shell units and two browser behavior cases per project. The [profiling record](../performance/profiling.md) delivers native-time desktop measurements and five real memory cycles; the profiling E2E uses a controlled browser clock and is not FPS evidence. Current totals and final targeted execution are recorded in [TESTING.md](../../TESTING.md#current-coverage). Expanded historical planned variants below remain distinct from executed coverage.
 
@@ -24,30 +26,30 @@ Increment 5 update: `src/core/enemies.test.ts` adds 15 seeded spawn/safety/route
 
 Increment 4 update: navigation and engine units remain implemented; `src/core/collisions.test.ts` adds 9 swept obstacle/arena cases and `src/core/combat.test.ts` adds 12 player-weapon cases. `tests/e2e/combat.spec.ts` adds 7 cases driven by real keyboard/touch input for shot geometry, independent cooldowns, rendered feedback, obstacle removal, expiry, pause and restart. Assets now has 5 cases (four required texture failures/recovery plus abandoned loading). Damage, teams, kills and duplicate-free scoring are still pending, so requirement 4 and unit combat/collision groups are not fully verified. Current counts and execution evidence live in [TESTING.md](../../TESTING.md#current-coverage).
 
-Each numbered row maps directly to the corresponding item in §8. Status ☐ means planned and not verified. V1–V3 cover the separate visual requirement; U1–U5 group the proposed `src/core/**/*.test.ts` Vitest suite. §9 measurements belong to the [Profiling template](../performance/profiling.md), rather than timing assertions in E2E tests.
+Each numbered row maps directly to the corresponding item in §8. Status ☑ means executed requirement-level coverage, linked to the final reports; it does not claim every expanded planned variant below is implemented. V1–V3 cover the separate visual requirement; U1–U5 group the proposed `src/core/**/*.test.ts` Vitest suite. §9 measurements belong to the [Profiling template](../performance/profiling.md), rather than timing assertions in E2E tests.
 
 | # | Requirement (section reference) | Test file | Type | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Options navigation, validation, and persistence (§8.1; §3) | tests/e2e/options.spec.ts | E2E | ☐ |
-| 2 | Asset loading, failures, and retry (§8.2; §4; §7) | tests/e2e/assets.spec.ts | E2E | ☐ |
-| 3 | Match start, movement, rotation, arena limits, and islands (§8.3; §2) | tests/e2e/movement.spec.ts | E2E | ☐ |
-| 4 | Front/side fire, damage, cooldowns, and duplicate-free scoring (§8.4; §2) | tests/e2e/combat.spec.ts | E2E | ☐ |
-| 5 | Chaser/Shooter behavior and spawn interval (§8.5; §2) | tests/e2e/enemies.spec.ts | E2E | ☐ |
-| 6 | Time/death completion, stopped simulation, and clean restart (§8.6; §2) | tests/e2e/match-end.spec.ts | E2E | ☐ |
-| 7 | Pause, focus loss, and resume without timer jumps (§8.7; §2) | tests/e2e/pause.spec.ts | E2E | ☐ |
-| 8 | Result display and persistence after refresh (§8.8; §3) | tests/e2e/result.spec.ts | E2E | ☐ |
-| 9 | Abandonment, repeated navigation, and touch controls (§8.9; §3; §4; §7) | tests/e2e/navigation.spec.ts | E2E | ☐ |
-| 10 | Ranking/history queries, pagination, loading, empty, and errors (§8.10; §§5–6) | tests/e2e/leaderboard.spec.ts | E2E | ☐ |
-| 11 | Registration, both-tab updates, and pending recovery after refresh (§8.11; §§5–6) | tests/e2e/submission.spec.ts | E2E | ☐ |
-| 12 | Post-timeout deduplication and stale-response protection (§8.12; §§5–6) | tests/e2e/resilience.spec.ts | E2E | ☐ |
+| 1 | Options navigation, validation, and persistence (§8.1; §3) | tests/e2e/options.spec.ts | E2E | ☑ |
+| 2 | Asset loading, failures, and retry (§8.2; §4; §7) | tests/e2e/assets.spec.ts | E2E | ☑ |
+| 3 | Match start, movement, rotation, arena limits, and islands (§8.3; §2) | tests/e2e/movement.spec.ts | E2E | ☑ |
+| 4 | Front/side fire, damage, cooldowns, and duplicate-free scoring (§8.4; §2) | tests/e2e/combat.spec.ts | E2E | ☑ |
+| 5 | Chaser/Shooter behavior and spawn interval (§8.5; §2) | tests/e2e/enemies.spec.ts | E2E | ☑ |
+| 6 | Time/death completion, stopped simulation, and clean restart (§8.6; §2) | tests/e2e/match-end.spec.ts | E2E | ☑ |
+| 7 | Pause, focus loss, and resume without timer jumps (§8.7; §2) | tests/e2e/pause.spec.ts | E2E | ☑ |
+| 8 | Result display and persistence after refresh (§8.8; §3) | tests/e2e/result.spec.ts | E2E | ☑ |
+| 9 | Abandonment, repeated navigation, and touch controls (§8.9; §3; §4; §7) | tests/e2e/navigation.spec.ts | E2E | ☑ |
+| 10 | Ranking/history queries, pagination, loading, empty, and errors (§8.10; §§5–6) | tests/e2e/leaderboard.spec.ts | E2E | ☑ |
+| 11 | Registration, both-tab updates, and pending recovery after refresh (§8.11; §§5–6) | tests/e2e/submission.spec.ts | E2E | ☑ |
+| 12 | Post-timeout deduplication and stale-response protection (§8.12; §§5–6) | tests/e2e/resilience.spec.ts | E2E | ☑ |
 | V1 | Main Menu visual baseline (§8, visual regression) | tests/e2e/visual.spec.ts | Visual / Playwright | ☑ |
 | V2 | Stable arena visual baseline (§8, visual regression) | tests/e2e/visual.spec.ts | Visual / Playwright | ☑ |
 | V3 | Result visual baseline (§8, visual regression) | tests/e2e/visual.spec.ts | Visual / Playwright | ☑ |
-| U1 | Configuration validation and snapshots (§3) | src/core/config.test.ts | Unit / Vitest | ☐ |
-| U2 | Time-based transitions and terminal state (§§2, 4) | src/core/simulation.test.ts | Unit / Vitest | ☐ |
-| U3 | Arena, island, and projectile collisions (§2) | src/core/collisions.test.ts | Unit / Vitest | ☐ |
-| U4 | Weapons, damage, and scoring (§2) | src/core/combat.test.ts; src/core/damage.test.ts | Unit / Vitest | ☐ |
-| U5 | Enemy behavior and safe spawns (§2) | src/core/enemies.test.ts | Unit / Vitest | ☐ |
+| U1 | Configuration validation and snapshots (§3) | src/core/config.test.ts | Unit / Vitest | ☑ |
+| U2 | Time-based transitions and terminal state (§§2, 4) | src/core/simulation.test.ts | Unit / Vitest | ☑ |
+| U3 | Arena, island, and projectile collisions (§2) | src/core/collisions.test.ts | Unit / Vitest | ☑ |
+| U4 | Weapons, damage, and scoring (§2) | src/core/combat.test.ts; src/core/damage.test.ts | Unit / Vitest | ☑ |
+| U5 | Enemy behavior and safe spawns (§2) | src/core/enemies.test.ts | Unit / Vitest | ☑ |
 
 ## Test cases
 
@@ -237,6 +239,16 @@ Accumulator, frame clamp, clock baseline, React subscriptions, storage, and HTTP
 - `it('selects enemy types from normalized weights')`: supplied draws reproduce the proposed first-two-spawn policy and later weighted selection.
 - `it('skips spawning without weakening safety checks')`: no valid location yields no new entity, not an unsafe fallback.
 
+## Additional lifecycle cases
+
+The three implemented cases in tests/e2e/lifecycle.spec.ts supplement rows 3, 7 and 9 and Sections 4/7 of the challenge:
+
+- `it('cleans five session lifecycles without duplicate shots or abandoned records')`: use real front fire in each new match; observe one shot, one canvas, reset time and no persisted abandoned result after exit.
+- `it('contains dialog focus and resumes or exits using keyboard controls')`: open with Enter, cycle Tab/Shift+Tab, resume with Escape, verify focus restoration and exit with keyboard.
+- `it('keeps arena proportions, HUD and controls usable across orientation changes')`: switch portrait/landscape, inspect content bounds and 44 px minimum touch targets, and verify simulation state is unchanged.
+
+Run all three per production project and repeat in the dedicated development StrictMode projects. Page errors fail these cases. These checks do not count heap memory, prove leak freedom or replace physical-device testing.
+
 ## Determinism
 
 Follow [ADR 0007](../adr/0007-seeded-rng-and-test-hooks.md). Proposed default seed: 42, supplied with `?e2e=1&seed=42&scenario=<id>`. Keep gameplay and network PRNG streams independent; configure initial scenarios before the match. Use fixed UTC fixture dates and stable identities for comparisons/screenshots; generated matchIds are observed and reused rather than regenerated by tests.
@@ -279,7 +291,7 @@ Generate baselines with `npm run test:e2e -- tests/e2e/visual.spec.ts --update-s
 
 ## Reports
 
-Proposed: generate the Playwright HTML report in `playwright-report/` and per-test artifacts in `test-results/`, with traces retained on failures (`retain-on-failure`) and failure screenshots. Attach seed, scenario, project, configuration, and relevant matchId to failed cases. These files are future run artifacts; none are generated by this documentation task.
+Proposed: generate the Playwright HTML report in `playwright-report/` and per-test artifacts in `test-results/`, with traces retained on failures (`retain-on-failure`) and failure screenshots. Attach seed, scenario, project, configuration, and relevant matchId to failed cases. Selected actual HTML reports, JSON summaries and failure traces are now versioned in the [final review evidence](../delivery/artifacts/2026-10-03-final/README.md); local working reports remain ignored.
 
 Open the report using `npm run test:e2e:report`; inspect a failed case's trace from its report link, or use `npx playwright show-trace test-results/<case>/trace.zip`. Preserve the HTML report and failure traces in delivery artifacts (§8/§11). Proposed Vitest output is its console summary, with CI exit status indicating failures; an HTML unit report is not a challenge requirement.
 
@@ -294,11 +306,11 @@ All four scripts below are implemented. E2E runs all twelve functional files, in
 | test:e2e:report | playwright show-report playwright-report | Open the latest local HTML report |
 | test:unit | vitest run | Run core, engine, persistence, API and mock units/integration once and fail on assertions |
 
-Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for mobile and `npm run test:e2e -- tests/e2e/combat.spec.ts` for combat. The StrictMode variant requires its separate development server/project to be configured before use.
+Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for mobile and `npm run test:e2e -- tests/e2e/combat.spec.ts` for combat. The dedicated StrictMode configuration owns port 4174 and runs the three lifecycle cases in both layouts.
 
 ## Review blockers and unresolved details
 
 - Proposed time-first boundary ordering replaces the earlier conflicting death-priority sentence. An earlier-step death stops remaining damage/contact/fire immediately; unit coverage checks the coincident boundary.
 - Initial enemy type sequencing now advances only on successful spawns. Bounded candidate/grid attempts skip unsafe intervals; blocked recovery is covered by units.
 - Proposed collision radii, broadside spacing, 0.15 rad aim tolerance and ring routes are implemented. Ship-to-ship separation beyond spawn safety and Chaser contact is not modeled; validate balance through playtesting.
-- Functional HTTP/API suites, shared seeded network schedules and visual baselines are implemented. Desktop profiling is measured with scoped limitations. A dedicated StrictMode project and public-worker readiness still need implementation or verification. Simultaneous-tab storage coordination remains unresolved. Development lifecycle reviews are recorded separately in the construction guide; the challenge audit records delivery blockers.
+- Functional HTTP/API suites, shared seeded network schedules and visual baselines are implemented. Desktop profiling is measured with scoped limitations. Dedicated development StrictMode projects now validate lifecycle/focus/orientation; public-worker readiness remains unverified. Simultaneous-tab storage coordination remains unresolved. Development lifecycle reviews are recorded separately in the construction guide; the challenge audit records delivery blockers.
