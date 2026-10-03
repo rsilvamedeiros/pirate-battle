@@ -10,6 +10,14 @@ The local implementation includes gameplay, persistent Options/results, paginate
 
 **Public deployment is pending.** A public URL and deployed-worker/reload validation are required by the challenge before submission. Follow the [final review stages](docs/delivery/final-review.md). Test counts and local preview are not evidence that publication is complete.
 
+## Evaluator walkthrough
+
+1. Follow Setup below, or open the public production URL provided with the submission after deployment.
+2. Open Options, save a session duration and spawn interval, reload, and verify the saved values.
+3. Select Play. Move, rotate and fire together; verify island blocking, health bars, score, pause and explicit resume. Finish a match and inspect its result.
+4. Return to Main Menu. Open Ranking and Match History, change pages, and verify the completed record after refresh. Use `multi-page` with Reset demo data to inspect fixture pagination.
+5. Follow the failure-recovery steps below. Review [test reports](docs/delivery/artifacts/2026-10-03-release/README.md), [profiling evidence](docs/performance/profiling.md) and [architecture](ARCHITECTURE.md).
+
 ## Setup and environment
 
 Use Node.js 20.19+ in the 20.x line, 22.12+ in the 22.x line, or 24+. Install from the committed lockfile:
@@ -21,6 +29,8 @@ npm run dev
 ~~~
 
 Open the URL printed by Vite. No environment variables, credentials or private services are required. Match records and pending submissions belong to this browser/origin; this is a local API demonstration, not a shared online leaderboard. Service Workers require HTTPS or localhost. If npm ci reports a Windows native-binding file lock, stop this repository's Vite server and retry.
+
+No `.env` file or API URL override is needed: the application uses same-origin `/api` routes intercepted by its production MSW worker. Opening `dist/index.html` through `file://` does not provide the required origin/worker environment; use preview or the deployed HTTPS site.
 
 ## Commands
 
@@ -86,10 +96,31 @@ Queries use bounded retries, background-refresh states and cancellation; network
 
 Only ?e2e=1 exposes copied-state/manual-clock test hooks; tests still use real rules and controls. Separate ?profile=1 diagnostics observe native-time render frames. The explicit preset=endurance profiling option changes survival parameters and must not be confused with default balance or ordinary E2E.
 
+## Publish on Vercel
+
+After committing and pushing this reviewed source, import the repository into Vercel. Use these project settings, following [Vercel's Vite guide](https://vercel.com/docs/frameworks/frontend/vite) and [build settings](https://vercel.com/docs/builds/configure-a-build):
+
+| Setting | Value |
+| --- | --- |
+| Framework preset | Vite |
+| Root directory | Repository root |
+| Node.js version | 24.x, matching CI |
+| Install command | `npm ci` |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| Environment variables | None required |
+
+The app navigates through React state at `/`; scenarios use query parameters, so it has no pathname routes requiring an SPA fallback. Keep `/pirate-battle-worker.js`, `/mockServiceWorker.js` and `/assets/` available as static files. Do not add a server API for the mocked `/api` resources or disable MSW in production.
+
+Open the production HTTPS URL in a fresh browser profile without a Vercel login requirement. Confirm worker startup, Options persistence after reload, one completed record in both tabs, and recovery for `submit-timeout-after-commit` and `offline-at-match-end`. Check desktop and mobile portrait/landscape, plus the browser console. The complete [public acceptance checklist](docs/delivery/final-review.md#public-acceptance-checklist) records these checks.
+
+Provide the public URL, repository URL and deployed commit SHA in the submission message. Deployment is planned after this final documentation commit; no URL or hosted validation is claimed here. Keep the production site accessible throughout evaluation.
+
 ## Architecture, evidence and limitations
 
 - [Architecture](ARCHITECTURE.md), [technical guide](TECHNICAL.md) and [ADR index](docs/adr/README.md).
 - [Test plan](docs/testing/test-plan.md), [practical testing](TESTING.md) and [final review](docs/delivery/final-review.md).
+- [Latest delivery verification and archived HTML reports](docs/delivery/artifacts/2026-10-03-release/README.md); earlier failure reports remain preserved in the [previous review archive](docs/delivery/artifacts/2026-10-03-final/README.md).
 - [API contracts](docs/specs/api-contracts.md), [network scenarios](docs/specs/network-scenarios.md) and [challenge audit](docs/delivery/challenge-audit.md).
 - [Measured profiling](docs/performance/profiling.md), [raw artifacts](docs/performance/artifacts/2026-10-03T16-17-54-458Z/) and [reusable template](docs/performance/profiling-template.md).
 - [Construction and AI-assistance record](docs/README.md).

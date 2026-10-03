@@ -15,6 +15,14 @@ Jogo naval 2D desenvolvido para o desafio de React, TypeScript e PixiJS. Navegue
 
 A publicação ainda está pendente. O projeto precisa de uma URL pública funcional e da validação do worker nesse ambiente antes da entrega. As etapas e os resultados verificáveis ficam na [revisão final](docs/delivery/final-review.md).
 
+## Publicação e entrega
+
+Após o último commit e o push, importe o repositório na Vercel: preset Vite, raiz do repositório, Node.js 24.x, instalação `npm ci`, build `npm run build` e saída `dist`. Não são necessárias variáveis de ambiente. O [README em inglês](README.md#publish-on-vercel) contém as instruções completas e referências da plataforma.
+
+Abra a URL HTTPS de produção sem exigir login, teste o worker do MSW, reload, persistência de Options, registro nas duas abas e recuperação dos envios pendentes. Confira também teclado e toque nas duas orientações. Envie a URL pública, a URL do repositório e o SHA do commit publicado. Esses passos continuam pendentes até a publicação; não são substituídos pelo preview local.
+
+Os [relatórios da última verificação local](docs/delivery/artifacts/2026-10-03-release/README.md) ficam versionados junto às evidências anteriores e ao profiling. O enunciado original permanece em CHALLENGE.md; o README padrão e os documentos técnicos permanecem em inglês.
+
 ## Como executar
 
 Use Node.js 20.19+ na linha 20.x, 22.12+ na linha 22.x ou 24+.

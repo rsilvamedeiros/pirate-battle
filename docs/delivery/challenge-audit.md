@@ -50,6 +50,8 @@ The challenge requires the candidate to implement and explain gameplay rules (§
 
 ## Verification record
 
+The subsequent pre-deployment handoff is recorded in the [latest verification archive](artifacts/2026-10-03-release/README.md). The README now includes an evaluator walkthrough, Vercel build settings, explicit environment requirements and public acceptance steps. The developer plans to publish after the final commit; deployment and hosted CI remain unverified. The figures below describe the earlier review, before the additional menu-preservation regression.
+
 Final review: all 161 units/integration cases, all 174 optimized-browser executions and six dedicated development StrictMode executions passed. Lint, strict types and build passed. Final comparisons used zero automatic retries and no snapshot updates. Three earlier visual images were intentionally corrected for content-box sizing. HTML reports, initial failure traces, JSON summaries and source/build SHA-256 identities are versioned in the [review evidence](artifacts/2026-10-03-final/README.md). Public publication remains pending.
 
 Increment 9: all 161 unit/integration cases passed, with lint/build/type checking passing. The final targeted browser run passed all 34 executions, including diagnostics, movement, pause, navigation and six unchanged visual comparisons; the complete current inventory is 168, not all rerun here. The [profiling record](../performance/profiling.md) documents the completed three-minute match and five memory cycles with raw evidence. Earlier increment figures below are historical.

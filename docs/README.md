@@ -140,6 +140,12 @@ README.md is now the English solution guide, with a supplementary README.pt-BR.m
 
 AI assisted requirement review, regression design/execution, diagnosis and correction of focus/scaling defects, visual review, final documentation and evidence packaging. The developer remains responsible for understanding the changes, validating balance and completing public delivery.
 
+## Final documentation and publication handoff
+
+After the implementation review, the repository gained Sass modules, shared formatting and stylesheet linting, a GitHub Actions workflow, and separate MainMenu/SessionDialog components. A real-navigation regression verifies that retained menu tabs/pages and focus survive Options and gameplay navigation. These changes preserve the existing gameplay and visual baselines.
+
+The final documentation stage reviews the complete challenge, keeps the default README in English and the requested supplementary guide in Portuguese, and adds evaluator/deployment instructions. The [pre-deployment archive](delivery/artifacts/2026-10-03-release/README.md) records current verification separately from older full runs and the original profiling build. AI assisted documentation review, test execution and evidence packaging; the developer will commit, push and publish on Vercel, then validate the public URL before submission.
+
 ## Decisions to validate during implementation
 
 Latest delivery update: visual baselines are implemented in increment 8, desktop profiling is measured in increment 9, and final regression/documentation is recorded in increment 10. English README.md and Portuguese README.pt-BR.md now exist with mutual links; the original challenge remains in CHALLENGE.md.

@@ -10,6 +10,12 @@ Source: [CHALLENGE.md](../../CHALLENGE.md), especially Sections 4, 7, 8, 9 and 1
 | 4. Evidence package | Versioned HTML report, failure traces, unit summary, reproducible environment/build identity and profiling links | Delivered in [review artifacts](artifacts/2026-10-03-final/README.md), including intermediate failures |
 | 5. Public delivery | Deploy the exact reviewed source; validate HTTPS, worker startup, reload, records and pending recovery on public URL | Pending; no public URL available |
 
+## Pre-deployment handoff
+
+The developer will publish on Vercel after the final documentation commit. The [English README](../../README.md#publish-on-vercel) contains installation, build/output settings, environment requirements, evaluator steps and network-failure reproduction. The [latest verification archive](artifacts/2026-10-03-release/README.md) records the application after the subsequent Sass, formatting, lint, CI, CSS Modules and component-extraction stages. The original 174-case reports below remain historical evidence and are not overwritten.
+
+The final commit changes documentation and delivery evidence only. Public acceptance still requires the deployed URL and exact commit SHA; hosted CI must be inspected after pushing. Existing profiling belongs to its original measured build, not this later application revision.
+
 ## Reproduction
 
 ```sh
