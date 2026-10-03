@@ -79,6 +79,10 @@ Run `npm run format` to format application source, SCSS, tests, scripts and root
 
 Keep selectors shallow and preserve stylesheet order and responsive breakpoints. Add shared tokens when a value has a common visual role; keep one-off layout values next to their component. Vite compiles SCSS using the development dependency installed by `npm ci`; no additional plugin or runtime dependency is required.
 
+[stylelint.config.js](stylelint.config.js) extends `stylelint-config-standard-scss` to check CSS/SCSS correctness and conventions, including unknown properties, duplicate declarations and class naming. Nesting is limited to two levels. Media queries retain the existing `max-width`/`max-height` syntax for browser compatibility. Prettier handles formatting; both tools must pass. Run `npm run lint:styles` for SCSS alone or `npm run lint` for ESLint and Stylelint together. Review `npm run lint:styles:fix` changes, then run `npm run format` and lint again.
+
+Dependency audit on October 3, 2026 reports ten high-severity package entries stemming from one unpatched [braces denial-of-service advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) in Stylelint's development-only glob dependencies. The supplied lint commands use a fixed repository glob rather than user-provided patterns. This limits exposure in the documented workflow; it does not fix the dependency. `npm audit --omit=dev` reports zero vulnerabilities. Recheck upstream releases before updating the pinned lint dependencies; retain this limitation until a patched dependency chain is available.
+
 ## Configuration and persistence
 
 Only sessionTime and enemySpawnInterval are exposed in Options. sessionTime defaults to 120 seconds and accepts the required 60–180 range. enemySpawnInterval defaults to 3 seconds and accepts the proposed 1–10 range. Decimal values are accepted. Other proposed defaults/bounds are listed in the [gameplay specification](docs/specs/gameplay.md#game-configuration).

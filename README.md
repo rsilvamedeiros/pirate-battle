@@ -29,7 +29,10 @@ Open the URL printed by Vite. No environment variables, credentials or private s
 | npm run dev | Run the development server with React StrictMode |
 | npm run build | Type-check and generate dist/ |
 | npm run preview | Serve the optimized build locally |
-| npm run lint | Check source/tooling lint rules |
+| npm run lint | Run ESLint and Stylelint checks |
+| npm run lint:code | Check TypeScript source/tooling with ESLint |
+| npm run lint:styles | Check application SCSS with Stylelint |
+| npm run lint:styles:fix | Apply supported SCSS lint fixes; review the diff and run format afterward |
 | npm run format | Format source, SCSS, tests, scripts and root configuration/HTML files |
 | npm run format:check | Verify formatting without changing files |
 | npm run typecheck | Check application, tooling and browser-test types |

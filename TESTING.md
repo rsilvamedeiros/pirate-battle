@@ -106,7 +106,10 @@ npm run test:e2e
 | npm run test:unit | Run core, engine, persistence, API/coordinator and shared MSW/database suites with Vitest |
 | npm run test:unit:watch | Rerun unit tests while editing |
 | npm run typecheck | Check application, tooling, and E2E TypeScript |
-| npm run lint | Run ESLint |
+| npm run lint | Run both ESLint and Stylelint |
+| npm run lint:code | Check TypeScript source/tooling with ESLint |
+| npm run lint:styles | Check every application SCSS file with Stylelint, failing on warnings |
+| npm run lint:styles:fix | Apply supported SCSS lint fixes; review changes and run npm run format afterward |
 | npm run format | Apply the shared Prettier formatting rules to source, SCSS, tests, scripts and root configuration/HTML files |
 | npm run format:check | Check formatting without writing files; documentation, supplied assets, generated files and archived evidence are excluded |
 | npm run build | Type-check and produce the optimized build |

@@ -25,6 +25,7 @@
   height: auto;
   margin: 0 auto;
 }
+
 .tagline {
   margin: 12px 0 28px;
   letter-spacing: 0.16em;
@@ -32,11 +33,13 @@
   font-size: 0.85rem;
   font-weight: bold;
 }
+
 .menu-actions {
   display: grid;
   justify-content: center;
   gap: 12px;
 }
+
 .primary-button,
 .secondary-button {
   border: 0;
@@ -48,108 +51,134 @@
   font-size: 1.15rem;
   font-weight: bold;
 }
+
 .primary-button {
   width: 260px;
   max-width: 100%;
 }
+
 .primary-button:hover:not(:disabled) {
   background-image: url('/assets/png/retina/ui/menu/button_primary_hover.png');
 }
+
 .primary-button:active:not(:disabled) {
   background-image: url('/assets/png/retina/ui/menu/button_primary_pressed.png');
 }
+
 .primary-button:disabled {
   background-image: url('/assets/png/retina/ui/menu/button_primary_disabled.png');
   color: #211e1a;
 }
+
 .secondary-button {
   background-image: url('/assets/png/retina/ui/menu/button_secondary_normal.png');
   color: tokens.$text-primary;
   font-size: 1rem;
 }
+
 .secondary-button:active:not(:disabled) {
   background-image: url('/assets/png/retina/ui/menu/button_secondary_pressed.png');
 }
+
 .secondary-button:disabled {
   opacity: 0.7;
 }
+
 .availability {
   margin-top: 10px;
   color: tokens.$text-muted;
   font-size: 0.85rem;
 }
+
 .session-summary {
   margin: 24px 0 20px;
   font-size: 0.95rem;
 }
+
 .ranking-actions {
   display: flex;
   justify-content: center;
   gap: 8px;
   margin-top: 22px;
 }
+
 .ranking-actions button {
   flex: 1;
   padding-inline: 16px;
 }
+
 .controls {
   text-align: left;
   border-block: 1px solid #eec47755;
   padding: 14px 0;
 }
+
 .controls summary {
   font-weight: bold;
   text-align: center;
   min-height: 28px;
 }
+
 .controls p {
   font-size: 0.85rem;
   line-height: 1.5;
   margin: 12px 0;
 }
+
 .table-scroll {
   overflow-x: auto;
 }
+
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.8rem;
 }
+
 th,
 td {
   padding: 8px 4px;
   text-align: left;
 }
+
 thead {
   color: #ffe2a1;
 }
+
 tbody th {
   font-weight: normal;
 }
+
 tbody tr + tr {
   border-top: 1px solid #ffffff15;
 }
+
 .intro {
   margin-top: 12px;
   color: tokens.$text-muted;
 }
+
 .options-screen form {
   margin-top: 28px;
 }
+
 .option-field {
   margin-block: 24px;
   text-align: left;
 }
+
 .option-field label {
   display: block;
   font-weight: bold;
   margin-bottom: 10px;
 }
+
 .number-control {
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
 .number-control input {
   width: 100%;
   min-width: 0;
@@ -161,39 +190,47 @@ tbody tr + tr {
   color: tokens.$text-primary;
   font-size: 1.25rem;
 }
+
 .number-control input[aria-invalid='true'] {
   border-color: #ffa79f;
 }
+
 .number-control span {
   color: tokens.$text-muted;
   font-size: 0.85rem;
 }
+
 .field-hint {
   color: tokens.$text-muted;
   font-size: 0.85rem;
   line-height: 1.5;
   margin-top: 8px;
 }
+
 .field-error {
   color: #ffb9af;
   font-size: 0.9rem;
   line-height: 1.5;
   margin-top: 8px;
 }
+
 .save-feedback {
   min-height: 46px;
   font-size: 0.9rem;
   line-height: 1.5;
 }
+
 .form-actions {
   display: grid;
   justify-content: center;
   gap: 10px;
   margin-top: 16px;
 }
+
 .footer-hint {
   margin-top: 22px;
 }
+
 .storage-notice {
   background: tokens.$surface-input;
   border: 1px solid #eec477;
@@ -202,11 +239,13 @@ tbody tr + tr {
   font-size: 0.9rem;
   line-height: 1.5;
 }
+
 .result-details dl {
   display: grid;
   gap: 12px;
   margin: 20px 0;
 }
+
 .result-details dl div {
   display: flex;
   flex-wrap: wrap;
@@ -214,28 +253,35 @@ tbody tr + tr {
   gap: 8px;
   text-align: left;
 }
+
 .result-details dt {
   font-weight: bold;
 }
+
 .result-details dd {
   margin: 0;
   overflow-wrap: anywhere;
 }
+
 .result-details .availability {
   line-height: 1.5;
 }
+
 .records-panel {
   margin-top: 20px;
   text-align: left;
 }
+
 .records-panel caption {
   padding-bottom: 12px;
   text-align: left;
   font-weight: bold;
 }
+
 .records-panel td {
   overflow-wrap: anywhere;
 }
+
 .pagination {
   display: flex;
   flex-wrap: wrap;
@@ -245,10 +291,12 @@ tbody tr + tr {
   margin-top: 16px;
   font-size: 0.85rem;
 }
+
 .pagination button {
   min-height: 44px;
   padding: 10px 14px;
 }
+
 .network-panel {
   margin-top: 24px;
   border-top: 1px solid #eec47755;
@@ -256,28 +304,34 @@ tbody tr + tr {
   text-align: left;
   font-size: 0.85rem;
 }
+
 .network-panel summary {
   font-weight: bold;
   min-height: 28px;
 }
+
 .network-panel p {
   line-height: 1.5;
   margin-block: 12px;
 }
+
 .network-panel button {
   margin-top: 8px;
   padding: 12px 16px;
 }
+
 .configuration-group {
   margin-top: 20px;
   text-align: left;
 }
+
 .configuration-group label,
 .network-panel label {
   display: block;
   font-weight: bold;
   margin-block: 12px;
 }
+
 .configuration-group select,
 .network-panel select {
   width: 100%;
@@ -288,6 +342,7 @@ tbody tr + tr {
   background: tokens.$surface-input;
   color: tokens.$text-primary;
 }
+
 .pending-records {
   border-top: 1px solid #eec47755;
   margin-top: 16px;
@@ -298,14 +353,17 @@ tbody tr + tr {
     padding: 16px 8px;
     background-attachment: scroll;
   }
+
   .menu-panel {
     padding: 24px 12px;
     border-width: 18px;
     border-image-width: 18px;
   }
+
   .ranking-actions {
     flex-direction: column;
   }
+
   .tagline {
     font-size: 0.75rem;
   }
