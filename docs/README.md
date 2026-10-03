@@ -8,9 +8,9 @@ AI has supported the preparation of architecture records, functional specificati
 
 The developer sets the scope and constraints. Proposed decisions and generated material require developer review before adoption; implementation, correctness, and delivery remain the developer's responsibility. AI suggestions do not establish new challenge requirements.
 
-The documentation preparation covered test cases, determinism, isolation, failure scenarios, and reporting, with changes limited to Markdown. The test plan enumerates 124 logical cases; it is not a claim that the full suite is implemented or passing. Profiling tables contain placeholders, not measured results.
+The documentation preparation covered test cases, determinism, isolation, failure scenarios, and reporting, with changes limited to Markdown. The test plan enumerates 124 logical cases; it is not a claim that the full suite is implemented or passing. The reusable profiling template contains placeholders; increment 9 records actual measurements separately.
 
-Implementation started at the developer's request. AI assisted with configuration, menus/persistence, navigation/PixiJS, weapons, seeded enemies/damage, completed results, HTTP integration, shared MSW scenarios, registration recovery, tests, a requirement audit and now visual regression. Measured profiling and public deployment remain pending.
+Implementation started at the developer's request. AI assisted with configuration, menus/persistence, navigation/PixiJS, weapons, seeded enemies/damage, completed results, HTTP integration, shared MSW scenarios, registration recovery, tests, requirement audits, visual regression and now measured real-time profiling. Public deployment remains pending.
 
 As testing is implemented, AI may also support writing tests, reviewing assertions, and investigating failures. Record that assistance here when it occurs, together with the commands actually executed and their results. Claims of coverage and performance must be supported by executable tests, reports, traces, and measurements.
 
@@ -26,7 +26,7 @@ As testing is implemented, AI may also support writing tests, reviewing assertio
 | 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: local combat and persisted result implemented | [Simulation](../src/core/simulation.ts), [game screen](../src/ui/GameScreen.tsx), [result details](../src/ui/ResultDetails.tsx) |
 | 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | Implemented locally; public worker verification pending | [Runtime](../src/api/runtime.ts), [coordinator](../src/api/submissions.ts), [handlers](../src/mocks/handlers.ts), [database](../src/mocks/database.ts) |
 | 6 | Implement and execute core/E2E tests and review visual baselines | Functional and visual suites implemented; six baseline PNGs added for versioning | [Visual E2E](../tests/e2e/visual.spec.ts), [baseline record](../tests/e2e/visual.spec.ts-snapshots/README.md); execution records below |
-| 7 | Profile the optimized build, document limitations, and complete delivery | Planned | Filled profiling record, public deployment, and project setup/reproduction instructions |
+| 7 | Profile the optimized build, document limitations, and complete delivery | Desktop profiling measured; public deployment/final packaging pending | [Measured record](performance/profiling.md), raw frame/trace/heap evidence, public deployment and final guides |
 
 Steps may overlap. Update statuses and link evidence as work is completed; keep implementation details in the corresponding specifications and architecture documents.
 
@@ -116,13 +116,25 @@ Early cold-start runs exceeded screenshot or total-test deadlines; the suite now
 
 AI assisted with test design, implementation, execution, timeout investigation, image review and documentation. Existing increment 7 functional/unit results remain historical; this increment adds six executions to the browser inventory (164 total), and revalidates the changed visual subset. Performance measurements, public deployment and final English/default plus Portuguese README/report packaging remain pending.
 
+## Increment 9: Real-time profiling
+
+Delivered: opt-in post-render diagnostics, bounded numeric samples and validated proposed endurance tuning; headed Chromium/native-time reproduction and analysis scripts; a [measured record](performance/profiling.md), [reusable template](performance/profiling-template.md) and compressed raw frame, Performance/heap evidence. Ordinary gameplay, manual E2E mode, defaults, package dependencies and visual baselines remain unchanged.
+
+Reference collection completed a 180-active-second match and five additional 60-second start/play/exit cycles without refreshing the page. The real hardware GPU is Intel HD Graphics 620 on an i5-7200U laptop. Observed post-render cadence is 74.933/s, p95 interval 14.700 ms and peak total entities 44. Memory after explicit collection ranges from baseline 6.957 MiB to cycle 5 at 7.323 MiB, with a decrease at cycle 3, stable 266 DOM nodes/180 listeners and no attached canvases or diagnostic hooks after exit. Heap-property signatures show no retained session objects; the largest shallow-byte increase is V8 code. These are scoped observations, not proof of leak freedom or physical display FPS. The report explicitly records the proposed 500 HP/damage 1 preset and instrumentation overhead.
+
+Verification: all 161 unit/integration cases across 14 files pass; lint, optimized build and type checking pass. The final 34-execution desktop/mobile run passes diagnostics, visual, movement, pause and navigation suites, including all six unchanged baseline comparisons. The complete browser inventory is 168 executions; other functional suites retain their earlier full-run evidence.
+
+Initial validation caught a missing global type import in the new browser spec, then six failures in the first 34-case run, including long headless continuous-render timeouts and a cold asset-start wait. The diagnostics behavior test now controls browser RAF/time, keeping real engine rules and input while avoiding an unbounded headless SwiftShader loop; this test is not a benchmark. The final complete targeted rerun passes all 34 cases without automatic retries or changes to prior test timeouts/baselines. Real performance collection separately used a visible hardware-accelerated browser and native time.
+
+AI assisted with instrumentation, scripts, collection, calculations, heap/trace investigation, test debugging and documentation. The profiler measures without changing core transitions; the full endurance preset is explicit, validated and reproducible. Public deployment, final English/default and Portuguese README versions, architecture cleanup and test-report packaging remain pending.
+
 ## Decisions to validate during implementation
 
-Latest delivery update: visual baselines are implemented in increment 8. The final documentation stage will create an English default README.md and a separate README.pt-BR.md with mutual links, keeping the original challenge in CHALLENGE.md.
+Latest delivery update: visual baselines are implemented in increment 8 and desktop profiling is measured in increment 9. The final documentation stage will create an English default README.md and a separate README.pt-BR.md with mutual links, keeping the original challenge in CHALLENGE.md.
 
 - Time-first boundary ordering and successful-spawn type sequencing are implemented as proposed choices; validate their documented behavior.
 - Collision footprints, projectile spacing, aiming tolerance and island routes are implemented; validate balancing, mobile usability and safe-spawn availability.
-- HTTP dispatch/confirmation and remote scenarios are implemented locally; visual baselines, measured profiling, public deployment and final documentation/report packaging remain required delivery work.
+- HTTP dispatch/confirmation and remote scenarios are implemented locally; public deployment and final documentation/report packaging remain required delivery work.
 
 These points are recorded in the [test plan](testing/test-plan.md#review-blockers-and-unresolved-details). Review the affected proposed decisions/specifications before setting final assertions.
 

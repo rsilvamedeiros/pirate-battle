@@ -162,13 +162,14 @@ Record the actual failing command, browser project, values used, and visible err
 
 ## Current coverage
 
-The data-integration increment passed all 158 unit/integration cases and all 158 E2E executions (79 cases per project). Lint and the optimized build also passed; the build checks TypeScript and retains a large-chunk warning. Execution details are recorded in the [construction guide](docs/README.md#increment-7-http-records-and-recovery); rerun them on your checkout. Counts do not establish visual regression or measured performance.
+The current unit/integration suite passes all 161 cases across 14 files. The latest browser validation passes 34 targeted executions; the earlier full functional run passed 158 executions and the visual increment passed 18 repeated comparisons. Lint and the optimized build also pass; the build checks TypeScript and retains a large-chunk warning. Execution details are recorded in the [construction guide](docs/README.md#increment-9-real-time-profiling). Browser-test counts alone do not establish measured performance.
 
 | Suite | Cases | Execution |
 | --- | ---: | --- |
 | src/core/config.test.ts | 52 | Vitest / Node |
 | src/core/simulation.test.ts | 11 | Vitest / Node |
 | src/engine/game-engine.test.ts | 9 | Vitest / Node |
+| src/engine/profiling.test.ts | 3 | Vitest / Node; detached observations, unclamped intervals, pause gaps and validated preset |
 | src/core/collisions.test.ts | 9 | Vitest / Node |
 | src/core/combat.test.ts | 12 | Vitest / Node; weapon mechanics |
 | src/core/enemies.test.ts | 15 | Vitest / Node; seed, spawn safety, routes and behavior |
@@ -192,10 +193,27 @@ The data-integration increment passed all 158 unit/integration cases and all 158
 | tests/e2e/submission.spec.ts | 4 | Desktop and mobile: 8 executions |
 | tests/e2e/resilience.spec.ts | 10 | Desktop and mobile: 20 executions |
 | tests/e2e/visual.spec.ts | 3 | Desktop and mobile: 6 visual executions; baseline comparison |
+| tests/e2e/profiling.spec.ts | 2 | Desktop and mobile: 4 behavior checks; not performance measurements |
 
-The functional execution record is maintained in [increment 7](docs/README.md#increment-7-http-records-and-recovery); visual execution is recorded in [increment 8](docs/README.md#increment-8-visual-regression). The complete browser inventory is now 164 executions (82 cases per project); this increment runs the visual subset, not another full functional run. Playwright reports describe the latest actual run, and failures retain traces. Development StrictMode/lifecycle review is recorded separately. Lifecycle assertions are not memory measurements.
+The functional execution record is maintained in [increment 7](docs/README.md#increment-7-http-records-and-recovery), visual execution in [increment 8](docs/README.md#increment-8-visual-regression), and profiling validation in [increment 9](docs/README.md#increment-9-real-time-profiling). The complete browser inventory is now 168 executions (84 cases per project). Playwright reports describe the latest actual run, and failures retain traces. Development StrictMode/lifecycle review and real-time performance measurements are recorded separately.
 
-Measured profiling and public deployment remain pending. HTTP coverage includes pagination, loading/empty/errors, cache refresh, boot/manual recovery, bounded retries, post-commit timeout and reset/obsolete-response protection. Unit schedules accept controlled waits; native HTTP timeout tests use the documented timeout boundary and observable states. Gameplay time stays independent. Expanded planned variants, variable-latency browser repetition and hidden-tab manual verification remain in the [test plan](docs/testing/test-plan.md). The [profiling template](docs/performance/profiling.md) requires actual measurements. Review the [challenge audit](docs/delivery/challenge-audit.md) before submission.
+Public deployment remains pending. HTTP coverage includes pagination, loading/empty/errors, cache refresh, boot/manual recovery, bounded retries, post-commit timeout and reset/obsolete-response protection. Unit schedules accept controlled waits; native HTTP timeout tests use the documented timeout boundary and observable states. Gameplay time stays independent. Expanded planned variants, variable-latency browser repetition and hidden-tab manual verification remain in the [test plan](docs/testing/test-plan.md). The [profiling record](docs/performance/profiling.md) now includes actual measurements; its limits are explicit. Review the [challenge audit](docs/delivery/challenge-audit.md) before submission.
+
+Increment 9: all 161 unit/integration cases across 14 files passed. All 34 targeted browser executions passed (profiling, visual, movement, pause and navigation), including all six unchanged baseline comparisons. The complete browser inventory is now 168 executions; this is not a claim that all 168 were rerun in this increment. See the [construction record](docs/README.md#increment-9-real-time-profiling) for earlier failures and final validation.
+
+## Performance reproduction
+
+```sh
+npm run build
+node scripts/profile.mjs
+node scripts/summarize-profile.mjs docs/performance/artifacts/<run-id>
+node scripts/inspect-profile-heaps.mjs docs/performance/artifacts/<run-id>
+node scripts/unpack-profile.mjs docs/performance/artifacts/<run-id>
+```
+
+The benchmark opens headed Chromium on the local optimized preview, uses native time and hardware acceleration, and takes about nine minutes. Keep that browser visible/focused and avoid concurrent E2E/analysis work during collection. `--quick` is only a smoke check; `--software` labels a separate SwiftShader run. Neither may be silently substituted for the recorded reference benchmark. The proposed endurance preset retains real damage/spawns and is visibly labeled.
+
+The two profiling E2E cases verify opt-in gates, rendered observations, pause/resume and teardown. They use Playwright's browser clock for bounded RAF execution in headless SwiftShader; they do not measure real FPS or bypass game rules. Manual E2E mode still exposes only its existing game hooks and ignores profiling/preset flags. See [Playwright Clock](https://playwright.dev/docs/clock) and the [measured report](docs/performance/profiling.md) for the distinction.
 
 ## Visual regression
 

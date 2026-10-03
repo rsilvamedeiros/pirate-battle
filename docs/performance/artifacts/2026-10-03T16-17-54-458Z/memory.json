@@ -1,0 +1,202 @@
+[
+  {
+    "cycle": 0,
+    "status": null,
+    "usage": {
+      "usedSize": 7295184,
+      "totalSize": 8482816,
+      "embedderHeapUsedSize": 775464,
+      "backingStorageSize": 1483946
+    },
+    "dom": {
+      "documents": 1,
+      "nodes": 266,
+      "jsEventListeners": 180
+    },
+    "hooks": {
+      "game": false,
+      "profiler": false,
+      "canvases": 0
+    }
+  },
+  {
+    "cycle": 1,
+    "status": {
+      "status": "running",
+      "activeMs": 60133.333333333336,
+      "endReason": null,
+      "frames": 4501,
+      "pausedFrames": 0,
+      "truncated": false,
+      "entities": {
+        "player": 1,
+        "chasers": 2,
+        "shooters": 1,
+        "projectiles": 2,
+        "effects": 1,
+        "total": 7
+      },
+      "elapsedWallMs": 59977
+    },
+    "usage": {
+      "usedSize": 7508672,
+      "totalSize": 8220672,
+      "embedderHeapUsedSize": 764376,
+      "backingStorageSize": 1483946
+    },
+    "dom": {
+      "documents": 1,
+      "nodes": 266,
+      "jsEventListeners": 180
+    },
+    "hooks": {
+      "game": false,
+      "profiler": false,
+      "canvases": 0
+    }
+  },
+  {
+    "cycle": 2,
+    "status": {
+      "status": "running",
+      "activeMs": 60100.00000000001,
+      "endReason": null,
+      "frames": 4504,
+      "pausedFrames": 0,
+      "truncated": false,
+      "entities": {
+        "player": 1,
+        "chasers": 2,
+        "shooters": 3,
+        "projectiles": 5,
+        "effects": 2,
+        "total": 13
+      },
+      "elapsedWallMs": 59938
+    },
+    "usage": {
+      "usedSize": 7617416,
+      "totalSize": 8220672,
+      "embedderHeapUsedSize": 775536,
+      "backingStorageSize": 1483946
+    },
+    "dom": {
+      "documents": 1,
+      "nodes": 266,
+      "jsEventListeners": 180
+    },
+    "hooks": {
+      "game": false,
+      "profiler": false,
+      "canvases": 0
+    }
+  },
+  {
+    "cycle": 3,
+    "status": {
+      "status": "running",
+      "activeMs": 60083.333333333336,
+      "endReason": null,
+      "frames": 4501,
+      "pausedFrames": 0,
+      "truncated": false,
+      "entities": {
+        "player": 1,
+        "chasers": 2,
+        "shooters": 1,
+        "projectiles": 3,
+        "effects": 3,
+        "total": 10
+      },
+      "elapsedWallMs": 59915
+    },
+    "usage": {
+      "usedSize": 7577892,
+      "totalSize": 8482816,
+      "embedderHeapUsedSize": 779856,
+      "backingStorageSize": 1483785
+    },
+    "dom": {
+      "documents": 1,
+      "nodes": 266,
+      "jsEventListeners": 180
+    },
+    "hooks": {
+      "game": false,
+      "profiler": false,
+      "canvases": 0
+    }
+  },
+  {
+    "cycle": 4,
+    "status": {
+      "status": "running",
+      "activeMs": 60183.333333333336,
+      "endReason": null,
+      "frames": 4511,
+      "pausedFrames": 0,
+      "truncated": false,
+      "entities": {
+        "player": 1,
+        "chasers": 2,
+        "shooters": 3,
+        "projectiles": 9,
+        "effects": 8,
+        "total": 23
+      },
+      "elapsedWallMs": 60074
+    },
+    "usage": {
+      "usedSize": 7617236,
+      "totalSize": 9007104,
+      "embedderHeapUsedSize": 795016,
+      "backingStorageSize": 1483785
+    },
+    "dom": {
+      "documents": 1,
+      "nodes": 266,
+      "jsEventListeners": 180
+    },
+    "hooks": {
+      "game": false,
+      "profiler": false,
+      "canvases": 0
+    }
+  },
+  {
+    "cycle": 5,
+    "status": {
+      "status": "running",
+      "activeMs": 60183.333333333336,
+      "endReason": null,
+      "frames": 4510,
+      "pausedFrames": 0,
+      "truncated": false,
+      "entities": {
+        "player": 1,
+        "chasers": 2,
+        "shooters": 1,
+        "projectiles": 9,
+        "effects": 8,
+        "total": 21
+      },
+      "elapsedWallMs": 60067
+    },
+    "usage": {
+      "usedSize": 7678380,
+      "totalSize": 8744960,
+      "embedderHeapUsedSize": 786896,
+      "backingStorageSize": 1483823
+    },
+    "dom": {
+      "documents": 1,
+      "nodes": 266,
+      "jsEventListeners": 180
+    },
+    "hooks": {
+      "game": false,
+      "profiler": false,
+      "canvases": 0
+    }
+  }
+]

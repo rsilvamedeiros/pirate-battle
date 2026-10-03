@@ -8,11 +8,11 @@ The preserved challenge uses original `assets/` relative links. In this Vite rep
 
 | Area | Implemented | Pending |
 | --- | --- | --- |
-| Core / engine | Typed configuration, navigation, weapons, seeded safe spawns, Chaser/Shooter behavior, damage, score, pause/restart and time/death completion | Final playtesting and profiling |
+| Core / engine | Typed configuration, navigation, weapons, seeded safe spawns, Chaser/Shooter behavior, damage, score, pause/restart, completion and opt-in post-render profiling | Standard-balance playtesting and physical-mobile profiling |
 | React / PixiJS | Menus, Options, arena, controls/HUD/feedback, results, paginated Ranking/Match History and network panel | Final accessibility/visual review |
 | Local persistence / HTTP | Options/identity, last result, pending outbox, confirmed database, idempotent PUT and boot/manual replay | Simultaneous-tab coordination; deployment verification |
 | Tests | Core/engine/persistence/API/mock units and integration; all twelve functional browser flows; six menu/arena/result visual baselines | Expanded adversarial variants; final report packaging |
-| Delivery | Production build verified locally | Public deployment and profiling evidence |
+| Delivery | Production build and headed desktop profiling with raw evidence verified locally | Public deployment and final delivery packaging |
 
 Play starts combat with both enemy types, three weapons, HP and scoring. Completed results survive refresh and are available through Last Result. Registration uses real mocked HTTP, with sending/confirmed/error states and retry. Ranking and Match History are active menu tabs; both derive from confirmed records. This remains a local browser demonstration, not a shared online leaderboard.
 
@@ -136,7 +136,7 @@ Ship tint deteriorates at HP ratios 0.65 and 0.3; each ship has a proportional h
 
 Verification results for this increment are recorded in [TESTING.md](TESTING.md#current-coverage). This evidence covers the implemented features, not the complete challenge. Browser tests use SwiftShader to avoid headless GPU-driver stalls; this does not establish hardware performance.
 
-Mobile emulation does not establish performance on a physical device. Review screenshots are not versioned visual baselines. Profiling tables remain unfilled; no FPS, memory, or deployment result is claimed.
+Mobile emulation does not establish performance on a physical device. Review screenshots are not versioned visual baselines. The [profiling record](docs/performance/profiling.md) now contains measured headed desktop render intervals/entities and five post-exit memory cycles, with compressed raw evidence. Public deployment remains unverified.
 
 ## Decisions and next work
 
@@ -144,12 +144,14 @@ ADRs remain Proposed. Frame clamping, collision geometry, routing, aiming, succe
 
 Visual regression now uses six [baseline PNGs and an environment record](tests/e2e/visual.spec.ts-snapshots/README.md). Captures use real rules and input, seed 42, stopped simulation time, fixed dates, completed assets/fonts and confirmed HTTP results. Application code is unchanged in this increment.
 
-Next work is real profiling and public deployment, followed by final English/default and Portuguese README versions and report packaging. The build's large entry chunk is an observed optimization concern; no frame-performance conclusion follows from its size. See the [challenge audit](docs/delivery/challenge-audit.md) for requirement-by-requirement gaps and the [construction guide](docs/README.md) for AI assistance and verification history.
+Profiling is opt-in with `?profile=1&seed=42`; `preset=endurance` explicitly selects validated 180 s, 500 HP and damage 1. Ordinary gameplay and manual E2E mode retain their existing behavior. The diagnostic bridge observes/exports numeric frame samples without changing simulation time. `node scripts/profile.mjs` drives actual input in headed Chromium with native time; short E2E behavior checks instead control the browser RAF clock and must not be used as FPS evidence. Cleanup removes the bridge and post-render ticker listener.
+
+Next work is public deployment, followed by final English/default and Portuguese README versions and report packaging. The build's large entry chunk remains a startup/download concern; the scoped combat profile does not assess startup loading or prove physical display presentation cadence. See the [challenge audit](docs/delivery/challenge-audit.md) for remaining delivery work and the [construction guide](docs/README.md) for AI assistance and verification history.
 
 ## Documentation references
 
 - [Architecture](ARCHITECTURE.md) and [ADR index](docs/adr/README.md)
 - [Gameplay](docs/specs/gameplay.md), [API contracts](docs/specs/api-contracts.md), and [network scenarios](docs/specs/network-scenarios.md)
 - [Requirement traceability and test plan](docs/testing/test-plan.md)
-- [Profiling template](docs/performance/profiling.md)
+- [Measured profiling record](docs/performance/profiling.md) and [reusable template](docs/performance/profiling-template.md)
 - [Practical testing guide](TESTING.md)

@@ -42,11 +42,11 @@ Related specification: [Gameplay](docs/specs/gameplay.md#combat-rules).
 
 Describe resource ownership, texture loading/reuse, failure recovery, and disposal on exit or restart ([ADR 0004](docs/adr/0004-react-pixi-sync-strategy.md)). TODO: document asset ownership, asynchronous cancellation, listener/ticker cleanup, and memory profiling evidence.
 
-Each session owns its PixiJS application and ticker. The supplied ship texture is cached by Assets and retained for reuse; display objects, canvas, ticker and input listeners are destroyed on exit. A disposed pending initialization destroys its completed candidate without attaching it; loading errors allow Retry or Main Menu. Memory profiling remains pending.
+Each session owns its PixiJS application and ticker. The supplied ship texture is cached by Assets and retained for reuse; display objects, canvas, ticker and input listeners are destroyed on exit. A disposed pending initialization destroys its completed candidate without attaching it; loading errors allow Retry or Main Menu. The [memory record](docs/performance/profiling.md#memory) now includes five real-time cycles, stable DOM/listener counts and investigated heap changes; it does not prove leak freedom.
 
 Player/Chaser/Shooter, cannonball, firing and impact textures must all load before gameplay starts. Enemy/projectile/effect sprite maps create each live sprite once and destroy it on entity removal, keeping shared textures cached. Ship tints deteriorate with HP, and PixiJS draws health bars for every ship. Effects follow active simulation time and freeze during pause/completion; all session objects are destroyed on teardown.
 
-Related validation: [Profiling template](docs/performance/profiling.md#memory).
+Related validation: [Measured memory profiling](docs/performance/profiling.md#memory).
 
 ## Local persistence
 
@@ -82,8 +82,8 @@ Related specification: [Gameplay](docs/specs/gameplay.md#game-configuration).
 
 Record observed constraints and evidence, including local mock data and behavior under clamped frame delays ([ADR 0006](docs/adr/0006-msw-in-production.md), [ADR 0003](docs/adr/0003-fixed-timestep-simulation.md)). TODO: document supported mobile orientation, reference hardware/browser, three-minute frame metrics, five-cycle memory results, and verified limitations.
 
-The current increment supports local combat, persisted results, HTTP registration, both record views and 14 network scenarios in portrait/landscape. Confirmed records are local to this browser, not a shared online backend. Six menu/arena/result visual baselines now exist for desktop and portrait mobile; see the [baseline record](tests/e2e/visual.spec.ts-snapshots/README.md). Profiling and deployment remain pending. Storage uses ordered writes rather than transactions; simultaneous-tab coordination is not implemented. Routes assume the current circular island and spawn attempts are bounded. Excess delay above the clamp is discarded; performance and memory targets remain unmeasured. The build reports a large entry chunk that must be considered during profiling and delivery.
+The current increment supports local combat, persisted results, HTTP registration, both record views and 14 network scenarios in portrait/landscape. Confirmed records are local to this browser, not a shared online backend. Six menu/arena/result visual baselines now exist for desktop and portrait mobile; see the [baseline record](tests/e2e/visual.spec.ts-snapshots/README.md). Headed desktop profiling now has raw frame/entity and five-cycle heap evidence; public deployment remains pending. Storage uses ordered writes rather than transactions; simultaneous-tab coordination is not implemented. Routes assume the current circular island and spawn attempts are bounded. Excess delay above the clamp is discarded; profile results are scoped to one desktop and an explicitly proposed endurance preset; physical-mobile and display-presentation timing are unmeasured. The build reports a large entry chunk that must be considered during profiling and delivery.
 
 Delivery review: [Challenge audit](docs/delivery/challenge-audit.md).
 
-Related validation: [Profiling template](docs/performance/profiling.md).
+Related validation: [Measured profiling record](docs/performance/profiling.md).

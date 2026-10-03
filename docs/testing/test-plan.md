@@ -12,6 +12,8 @@ Increment 2 update: `tests/e2e/options.spec.ts` contains 13 cases, executed on C
 
 ## Traceability matrix
 
+Increment 9 update: opt-in diagnostics have three shell units and two browser behavior cases per project. The [profiling record](../performance/profiling.md) delivers native-time desktop measurements and five real memory cycles; the profiling E2E uses a controlled browser clock and is not FPS evidence. Current totals and final targeted execution are recorded in [TESTING.md](../../TESTING.md#current-coverage). Expanded historical planned variants below remain distinct from executed coverage.
+
 Increment 8 update: `tests/e2e/visual.spec.ts` implements the three required states in both browser projects, with six PNG baselines in its snapshot directory. See the [baseline record](../../tests/e2e/visual.spec.ts-snapshots/README.md) for capture settings and the [construction guide](../README.md#increment-8-visual-regression) for execution evidence. Earlier increment updates below are historical.
 
 Increment 7 update: the API/mock/persistence suites execute 158 unit/integration cases. E2E adds 8 leaderboard, 4 submission and 10 resilience cases per browser project, covering real HTTP/cache flows, retries, post-commit recovery and reset/obsolete work. All twelve challenge flows now have executable browser coverage. Expanded variants listed below remain planned where not explicitly implemented; visual baselines and profiling are still missing. Current verification outcomes live in [TESTING.md](../../TESTING.md#current-coverage), and delivery gaps are reviewed in the [challenge audit](../delivery/challenge-audit.md).
@@ -206,7 +208,7 @@ The repeated-PUT case is an API integration assertion inside the browser suite a
 - `it('keeps terminal states unchanged')`: subsequent commands/time cannot mutate gameplay after completion.
 - `it('creates independent fresh match state')`: a new match resets all core fields without retaining previous entities.
 
-Accumulator, frame clamp, clock baseline, React subscriptions, storage, and HTTP are shell responsibilities, not Vitest core expectations. Navigation also has dedicated engine units in `src/engine/game-engine.test.ts` for the accumulator, proposed 250 ms clamp, clock baseline, input clearing and snapshot notifications. E2E verifies observable integration; profiling remains pending.
+Accumulator, frame clamp, clock baseline, React subscriptions, storage, and HTTP are shell responsibilities, not Vitest core expectations. Navigation also has dedicated engine units in `src/engine/game-engine.test.ts` for the accumulator, proposed 250 ms clamp, clock baseline, input clearing and snapshot notifications. E2E verifies observable integration; desktop profiling is recorded in [the measured report](../performance/profiling.md).
 
 ### src/core/collisions.test.ts
 
@@ -299,4 +301,4 @@ Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for 
 - Proposed time-first boundary ordering replaces the earlier conflicting death-priority sentence. An earlier-step death stops remaining damage/contact/fire immediately; unit coverage checks the coincident boundary.
 - Initial enemy type sequencing now advances only on successful spawns. Bounded candidate/grid attempts skip unsafe intervals; blocked recovery is covered by units.
 - Proposed collision radii, broadside spacing, 0.15 rad aim tolerance and ring routes are implemented. Ship-to-ship separation beyond spawn safety and Chaser contact is not modeled; validate balance through playtesting.
-- Functional HTTP/API suites, shared seeded network schedules and visual baselines are implemented. A dedicated StrictMode project, public-worker readiness and measured profiling still need implementation or verification. Simultaneous-tab storage coordination remains unresolved. Development lifecycle reviews are recorded separately in the construction guide; the challenge audit records delivery blockers.
+- Functional HTTP/API suites, shared seeded network schedules and visual baselines are implemented. Desktop profiling is measured with scoped limitations. A dedicated StrictMode project and public-worker readiness still need implementation or verification. Simultaneous-tab storage coordination remains unresolved. Development lifecycle reviews are recorded separately in the construction guide; the challenge audit records delivery blockers.

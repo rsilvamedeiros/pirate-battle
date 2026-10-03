@@ -8,6 +8,7 @@ import { fixedStepMs } from '../core/simulation'
 import type { GameHooks } from '../engine/test-hooks'
 import type { GameplayConfig } from '../core/config'
 import { prepareMatch } from '../engine/scenarios'
+import { createRenderProfiler, profilingConfiguration } from '../engine/profiling'
 import type { ResultsStore } from '../persistence/results'
 import { ResultDetails } from './ResultDetails'
 import './GameScreen.css'
@@ -43,13 +44,17 @@ export function GameScreen({ config, resultsStore, onExit, onRestart }: { config
   const [runtime] = useState(() => {
     const parameters = new URLSearchParams(location.search)
     const manual = parameters.get('e2e') === '1'
+    const profiling = !manual && parameters.get('profile') === '1'
     const requestedSeed = Number(parameters.get('seed') ?? 1)
-    const seed = manual ? Number.isInteger(requestedSeed) && requestedSeed >= 0 && requestedSeed <= 4294967295 ? requestedSeed : 1
+    const seed = manual || profiling ? Number.isInteger(requestedSeed) && requestedSeed >= 0 && requestedSeed <= 4294967295 ? requestedSeed : 1
       : crypto.getRandomValues(new Uint32Array(1))[0]
-    const match = prepareMatch(config, seed, manual ? parameters.get('fixture') : null)
+    const selected = profiling ? profilingConfiguration(config, parameters.get('preset') === 'endurance') : config
+    const match = prepareMatch(selected, seed, manual ? parameters.get('fixture') : null)
     let time = 0
     const clock = { now: () => manual ? time : performance.now() }
-    return { manual, engine: createGameEngine(match.config, clock, match.setup), addTime: (milliseconds: number) => { time += milliseconds } }
+    const engine = createGameEngine(match.config, clock, match.setup)
+    return { manual, engine, profiler: profiling ? createRenderProfiler(engine.getState, seed) : null,
+      addTime: (milliseconds: number) => { time += milliseconds } }
   })
   const { engine } = runtime
   const snapshot = useSyncExternalStore(engine.subscribe, engine.getSnapshot)
@@ -71,13 +76,14 @@ export function GameScreen({ config, resultsStore, onExit, onRestart }: { config
     let hooks: GameHooks | undefined
     async function boot() {
       try {
-        const candidate = await createArenaView(host.current!, engine, runtime.manual)
+        const candidate = await createArenaView(host.current!, engine, runtime.manual, runtime.profiler?.frame)
         if (disposed) { candidate.destroy(); return }
         view = candidate
         candidate.start()
         removeInput = attachKeyboard(engine)
         root.current?.focus()
         if (document.hidden || !document.hasFocus()) engine.pause()
+        if (runtime.profiler) window.__profiling = runtime.profiler
         if (runtime.manual) {
           hooks = {
             getState: () => structuredClone(engine.getState()),
@@ -107,6 +113,7 @@ export function GameScreen({ config, resultsStore, onExit, onRestart }: { config
       engine.clearActions()
       view?.destroy()
       if (hooks && window.__game === hooks) delete window.__game
+      if (runtime.profiler && window.__profiling === runtime.profiler) delete window.__profiling
     }
   }, [engine, runtime])
 
@@ -143,6 +150,7 @@ export function GameScreen({ config, resultsStore, onExit, onRestart }: { config
         ))}
       </nav>
       <p className="navigation-hint">W / ↑ to sail · A / ← and D / → to rotate · Space to fire · Q / E for broadsides · Esc / P to pause</p>
+      {runtime.profiler && <p className="navigation-hint">Profiling enabled · real clock · seed {new URLSearchParams(location.search).get('seed') ?? '1'}{new URLSearchParams(location.search).get('preset') === 'endurance' && ' · endurance preset: 500 HP, 1 damage, 180s'}</p>}
       {ready && snapshot.status !== 'running' && <SessionDialog key={snapshot.status} engine={engine} resultsStore={resultsStore} onExit={onExit} onRestart={onRestart} />}
     </main>
   )

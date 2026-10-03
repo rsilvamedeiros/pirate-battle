@@ -10,7 +10,7 @@ const impactUrl = `${import.meta.env.BASE_URL}assets/png/default/effects/explosi
 const chaserUrl = `${import.meta.env.BASE_URL}assets/png/default/ships/ship_2.png`
 const shooterUrl = `${import.meta.env.BASE_URL}assets/png/default/ships/ship_3.png`
 
-export async function createArenaView(host: HTMLDivElement, engine: GameEngine, manualClock: boolean) {
+export async function createArenaView(host: HTMLDivElement, engine: GameEngine, manualClock: boolean, onRender?: (now: number) => void) {
   const [texture, projectileTexture, fireTexture, impactTexture, chaserTexture, shooterTexture] = await Promise.all(
     [shipUrl, projectileUrl, fireUrl, impactUrl, chaserUrl, shooterUrl].map((url) => Assets.load<Texture>(url)),
   )
@@ -124,6 +124,8 @@ export async function createArenaView(host: HTMLDivElement, engine: GameEngine, 
     if (!manualClock) engine.frame()
     draw(false)
   }
+  // PixiJS renders at LOW (-25); collect only after that render completes.
+  const afterRender = () => onRender?.(performance.now())
   let destroyed = false
   return {
     start() {
@@ -132,6 +134,7 @@ export async function createArenaView(host: HTMLDivElement, engine: GameEngine, 
       draw()
       if (!manualClock) {
         app.ticker.add(tick)
+        if (onRender) app.ticker.add(afterRender, undefined, -26)
         app.start()
       }
     },
@@ -140,6 +143,7 @@ export async function createArenaView(host: HTMLDivElement, engine: GameEngine, 
       if (destroyed) return
       destroyed = true
       app.ticker.remove(tick)
+      app.ticker.remove(afterRender)
       projectileSprites.clear()
       effectSprites.clear()
       enemySprites.clear()

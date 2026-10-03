@@ -1,0 +1,1329 @@
+{
+  "signatures": {
+    "gameEngine": [
+      "getState",
+      "getSnapshot",
+      "press",
+      "release",
+      "pause",
+      "resume",
+      "clearActions",
+      "frame",
+      "subscribe"
+    ],
+    "renderProfiler": [
+      "frame",
+      "status",
+      "export"
+    ],
+    "gameRuntime": [
+      "manual",
+      "engine",
+      "profiler",
+      "addTime"
+    ],
+    "simulationState": [
+      "enemies",
+      "projectiles",
+      "effects",
+      "ticks",
+      "elapsedMs",
+      "player",
+      "randomState"
+    ],
+    "pixiApplication": [
+      "stage",
+      "renderer",
+      "_ticker"
+    ]
+  },
+  "cycles": [
+    {
+      "cycle": 0,
+      "shapeCounts": {
+        "gameEngine": 0,
+        "renderProfiler": 0,
+        "gameRuntime": 0,
+        "simulationState": 0,
+        "pixiApplication": 0
+      },
+      "retainedBrowserObjectPaths": [
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 295651,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:44"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 169647
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 295651,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 32,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11496,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11498,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 269493
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 295651,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:18"
+          },
+          {
+            "type": "object",
+            "name": "WebGL2RenderingContext",
+            "id": 274957
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 295651,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:2"
+          },
+          {
+            "type": "object",
+            "name": "WebGLRenderingContext",
+            "id": 274999
+          }
+        ]
+      ],
+      "retainedBrowserObjectProperties": [
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 169647,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 269493,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGL2RenderingContext",
+          "id": 274957,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGLRenderingContext",
+          "id": 274999,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 1,
+      "shapeCounts": {
+        "gameEngine": 0,
+        "renderProfiler": 0,
+        "gameRuntime": 0,
+        "simulationState": 0,
+        "pixiApplication": 0
+      },
+      "retainedBrowserObjectPaths": [
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 368221,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 32,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11496,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11498,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 269493
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 368221,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:45"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 169647
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 368221,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:18"
+          },
+          {
+            "type": "object",
+            "name": "WebGL2RenderingContext",
+            "id": 274957
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 368221,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:2"
+          },
+          {
+            "type": "object",
+            "name": "WebGLRenderingContext",
+            "id": 274999
+          }
+        ]
+      ],
+      "retainedBrowserObjectProperties": [
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 269493,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 169647,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGL2RenderingContext",
+          "id": 274957,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGLRenderingContext",
+          "id": 274999,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "shapeCounts": {
+        "gameEngine": 0,
+        "renderProfiler": 0,
+        "gameRuntime": 0,
+        "simulationState": 0,
+        "pixiApplication": 0
+      },
+      "retainedBrowserObjectPaths": [
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 439919,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 32,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11496,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11498,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 269493
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 439919,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:18"
+          },
+          {
+            "type": "object",
+            "name": "WebGL2RenderingContext",
+            "id": 274957
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 439919,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:2"
+          },
+          {
+            "type": "object",
+            "name": "WebGLRenderingContext",
+            "id": 274999
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 439919,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:45"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 169647
+          }
+        ]
+      ],
+      "retainedBrowserObjectProperties": [
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 269493,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGL2RenderingContext",
+          "id": 274957,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGLRenderingContext",
+          "id": 274999,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 169647,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "shapeCounts": {
+        "gameEngine": 0,
+        "renderProfiler": 0,
+        "gameRuntime": 0,
+        "simulationState": 0,
+        "pixiApplication": 0
+      },
+      "retainedBrowserObjectPaths": [
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 510369,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 32,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11496,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11498,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 269493
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 510369,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:18"
+          },
+          {
+            "type": "object",
+            "name": "WebGL2RenderingContext",
+            "id": 274957
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 510369,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:2"
+          },
+          {
+            "type": "object",
+            "name": "WebGLRenderingContext",
+            "id": 274999
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 510369,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:45"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 169647
+          }
+        ]
+      ],
+      "retainedBrowserObjectProperties": [
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 269493,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGL2RenderingContext",
+          "id": 274957,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGLRenderingContext",
+          "id": 274999,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 169647,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "shapeCounts": {
+        "gameEngine": 0,
+        "renderProfiler": 0,
+        "gameRuntime": 0,
+        "simulationState": 0,
+        "pixiApplication": 0
+      },
+      "retainedBrowserObjectPaths": [
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 580093,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 32,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11496,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11498,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 269493
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 580093,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:45"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 169647
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 580093,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:18"
+          },
+          {
+            "type": "object",
+            "name": "WebGL2RenderingContext",
+            "id": 274957
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 580093,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:2"
+          },
+          {
+            "type": "object",
+            "name": "WebGLRenderingContext",
+            "id": 274999
+          }
+        ]
+      ],
+      "retainedBrowserObjectProperties": [
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 269493,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 169647,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGL2RenderingContext",
+          "id": 274957,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGLRenderingContext",
+          "id": 274999,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "shapeCounts": {
+        "gameEngine": 0,
+        "renderProfiler": 0,
+        "gameRuntime": 0,
+        "simulationState": 0,
+        "pixiApplication": 0
+      },
+      "retainedBrowserObjectPaths": [
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 649963,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:45"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 169647
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 649963,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 32,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11496,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11498,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "object",
+            "name": "HTMLCanvasElement",
+            "id": 269493
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 649963,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:18"
+          },
+          {
+            "type": "object",
+            "name": "WebGL2RenderingContext",
+            "id": 274957
+          }
+        ],
+        [
+          {
+            "type": "synthetic",
+            "name": "(GC roots)",
+            "id": 3,
+            "edgeToNext": "element:29"
+          },
+          {
+            "type": "synthetic",
+            "name": "C++ Persistent roots",
+            "id": 649963,
+            "edgeToNext": "internal:blink::ScriptState::ScriptState(v8::Local<v8::Context>, DOMWrapperWorld *, ExecutionContext *)@..\\..\\third_party\\blink\\renderer\\platform\\bindings\\script_state.cc:31"
+          },
+          {
+            "type": "native",
+            "name": "blink::ScriptStateImpl",
+            "id": 90,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::V8PerContextData",
+            "id": 11488,
+            "edgeToNext": "element:1"
+          },
+          {
+            "type": "native",
+            "name": "blink::HeapHashTableBacking<blink::HashTable<const blink::WrapperTypeInfo *, blink::KeyValuePair<const blink::WrapperTypeInfo *, v8::TracedReference<v8::Object>>, blink::KeyValuePairExtractor, blink::HashMapValueTraits<blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HashTraits<v8::TracedReference<v8::Object>>>, blink::HashTraits<const blink::WrapperTypeInfo *>, blink::HeapAllocator>>",
+            "id": 11490,
+            "edgeToNext": "element:2"
+          },
+          {
+            "type": "object",
+            "name": "WebGLRenderingContext",
+            "id": 274999
+          }
+        ]
+      ],
+      "retainedBrowserObjectProperties": [
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 169647,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "HTMLCanvasElement",
+          "id": 269493,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGL2RenderingContext",
+          "id": 274957,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        },
+        {
+          "type": "object",
+          "name": "WebGLRenderingContext",
+          "id": 274999,
+          "sampleProperties": [
+            "__proto__"
+          ]
+        }
+      ]
+    }
+  ],
+  "largestShallowByteIncreases": [
+    {
+      "name": "code:system / InstructionStream",
+      "baselineBytes": 1757952,
+      "finalBytes": 2050304,
+      "deltaBytes": 292352
+    },
+    {
+      "name": "code:system / TrustedByteArray",
+      "baselineBytes": 425592,
+      "finalBytes": 471640,
+      "deltaBytes": 46048
+    },
+    {
+      "name": "native:system / WeakArrayList",
+      "baselineBytes": 77380,
+      "finalBytes": 116424,
+      "deltaBytes": 39044
+    },
+    {
+      "name": "code:system / ProtectedFixedArray",
+      "baselineBytes": 36952,
+      "finalBytes": 60812,
+      "deltaBytes": 23860
+    },
+    {
+      "name": "code:system / FeedbackVector",
+      "baselineBytes": 164504,
+      "finalBytes": 185776,
+      "deltaBytes": 21272
+    },
+    {
+      "name": "code:system / Code",
+      "baselineBytes": 101520,
+      "finalBytes": 119880,
+      "deltaBytes": 18360
+    },
+    {
+      "name": "code:system / UncompiledDataWithoutPreparseData",
+      "baselineBytes": 70900,
+      "finalBytes": 77980,
+      "deltaBytes": 7080
+    },
+    {
+      "name": "code:system / LoadHandler",
+      "baselineBytes": 33116,
+      "finalBytes": 37716,
+      "deltaBytes": 4600
+    },
+    {
+      "name": "string:#define SHADER_NAME graphics-vertex-4\n\n\n        #ifdef GL_ES // This checks if it is WebGL1\n        #define in attribute\n        #define out varying\n        #endif\n        precision highp float;\n\n    in vec2 aPosition;\n    in vec2 aUV;\n\n    out vec4 vColor;\n    out vec2 vUV;\n\n    //-----header START-----//\n//----global-uniforms-bit----//\n\n          uniform mat3 uProjectionMatrix;\n          uniform mat3 uWorldTransformMatrix;\n          uniform vec4 uWorldColorAlpha;\n          uniform vec2 uResolution;\n        \n//----color-bit----//\n\n            in vec4 aColor;\n        \n//----texture-batch-bit----//\n\n                in vec2 aTextureIdAndRound;\n                out float vTextureId;\n\n            \n//----local-uniform-bit----//\n\n\n            uniform mat3 uTransformMatrix;\n            uniform vec4 uColor;\n            uniform float uRound;\n        \n//----round-pixels-bit----//\n\n            vec2 roundPixels(vec2 position, vec2 targetSize)\n            {\n                return (floor(((position * 0.5 + 0.5) * targetSize",
+      "baselineBytes": 0,
+      "finalBytes": 4336,
+      "deltaBytes": 4336
+    },
+    {
+      "name": "string:#define SHADER_NAME graphics-vertex-6\n\n\n        #ifdef GL_ES // This checks if it is WebGL1\n        #define in attribute\n        #define out varying\n        #endif\n        precision highp float;\n\n    in vec2 aPosition;\n    in vec2 aUV;\n\n    out vec4 vColor;\n    out vec2 vUV;\n\n    //-----header START-----//\n//----global-uniforms-bit----//\n\n          uniform mat3 uProjectionMatrix;\n          uniform mat3 uWorldTransformMatrix;\n          uniform vec4 uWorldColorAlpha;\n          uniform vec2 uResolution;\n        \n//----color-bit----//\n\n            in vec4 aColor;\n        \n//----texture-batch-bit----//\n\n                in vec2 aTextureIdAndRound;\n                out float vTextureId;\n\n            \n//----local-uniform-bit----//\n\n\n            uniform mat3 uTransformMatrix;\n            uniform vec4 uColor;\n            uniform float uRound;\n        \n//----round-pixels-bit----//\n\n            vec2 roundPixels(vec2 position, vec2 targetSize)\n            {\n                return (floor(((position * 0.5 + 0.5) * targetSize",
+      "baselineBytes": 0,
+      "finalBytes": 4336,
+      "deltaBytes": 4336
+    },
+    {
+      "name": "string:#define SHADER_NAME graphics-vertex-3\n\n\n        #ifdef GL_ES // This checks if it is WebGL1\n        #define in attribute\n        #define out varying\n        #endif\n        precision highp float;\n\n    in vec2 aPosition;\n    in vec2 aUV;\n\n    out vec4 vColor;\n    out vec2 vUV;\n\n    //-----header START-----//\n//----global-uniforms-bit----//\n\n          uniform mat3 uProjectionMatrix;\n          uniform mat3 uWorldTransformMatrix;\n          uniform vec4 uWorldColorAlpha;\n          uniform vec2 uResolution;\n        \n//----color-bit----//\n\n            in vec4 aColor;\n        \n//----texture-batch-bit----//\n\n                in vec2 aTextureIdAndRound;\n                out float vTextureId;\n\n            \n//----local-uniform-bit----//\n\n\n            uniform mat3 uTransformMatrix;\n            uniform vec4 uColor;\n            uniform float uRound;\n        \n//----round-pixels-bit----//\n\n            vec2 roundPixels(vec2 position, vec2 targetSize)\n            {\n                return (floor(((position * 0.5 + 0.5) * targetSize",
+      "baselineBytes": 0,
+      "finalBytes": 4336,
+      "deltaBytes": 4336
+    },
+    {
+      "name": "string:#define SHADER_NAME graphics-vertex-7\n\n\n        #ifdef GL_ES // This checks if it is WebGL1\n        #define in attribute\n        #define out varying\n        #endif\n        precision highp float;\n\n    in vec2 aPosition;\n    in vec2 aUV;\n\n    out vec4 vColor;\n    out vec2 vUV;\n\n    //-----header START-----//\n//----global-uniforms-bit----//\n\n          uniform mat3 uProjectionMatrix;\n          uniform mat3 uWorldTransformMatrix;\n          uniform vec4 uWorldColorAlpha;\n          uniform vec2 uResolution;\n        \n//----color-bit----//\n\n            in vec4 aColor;\n        \n//----texture-batch-bit----//\n\n                in vec2 aTextureIdAndRound;\n                out float vTextureId;\n\n            \n//----local-uniform-bit----//\n\n\n            uniform mat3 uTransformMatrix;\n            uniform vec4 uColor;\n            uniform float uRound;\n        \n//----round-pixels-bit----//\n\n            vec2 roundPixels(vec2 position, vec2 targetSize)\n            {\n                return (floor(((position * 0.5 + 0.5) * targetSize",
+      "baselineBytes": 0,
+      "finalBytes": 4336,
+      "deltaBytes": 4336
+    },
+    {
+      "name": "string:#define SHADER_NAME graphics-vertex-5\n\n\n        #ifdef GL_ES // This checks if it is WebGL1\n        #define in attribute\n        #define out varying\n        #endif\n        precision highp float;\n\n    in vec2 aPosition;\n    in vec2 aUV;\n\n    out vec4 vColor;\n    out vec2 vUV;\n\n    //-----header START-----//\n//----global-uniforms-bit----//\n\n          uniform mat3 uProjectionMatrix;\n          uniform mat3 uWorldTransformMatrix;\n          uniform vec4 uWorldColorAlpha;\n          uniform vec2 uResolution;\n        \n//----color-bit----//\n\n            in vec4 aColor;\n        \n//----texture-batch-bit----//\n\n                in vec2 aTextureIdAndRound;\n                out float vTextureId;\n\n            \n//----local-uniform-bit----//\n\n\n            uniform mat3 uTransformMatrix;\n            uniform vec4 uColor;\n            uniform float uRound;\n        \n//----round-pixels-bit----//\n\n            vec2 roundPixels(vec2 position, vec2 targetSize)\n            {\n                return (floor(((position * 0.5 + 0.5) * targetSize",
+      "baselineBytes": 0,
+      "finalBytes": 4336,
+      "deltaBytes": 4336
+    },
+    {
+      "name": "object shape:system / DescriptorArray",
+      "baselineBytes": 320780,
+      "finalBytes": 324260,
+      "deltaBytes": 3480
+    },
+    {
+      "name": "native:DOMRectReadOnly",
+      "baselineBytes": 2016,
+      "finalBytes": 5376,
+      "deltaBytes": 3360
+    },
+    {
+      "name": "native:PerformanceEventTiming",
+      "baselineBytes": 768,
+      "finalBytes": 4096,
+      "deltaBytes": 3328
+    },
+    {
+      "name": "code:system / TrustedWeakFixedArray",
+      "baselineBytes": 4708,
+      "finalBytes": 7656,
+      "deltaBytes": 2948
+    },
+    {
+      "name": "code:system / AllocationSite",
+      "baselineBytes": 7888,
+      "finalBytes": 10760,
+      "deltaBytes": 2872
+    },
+    {
+      "name": "object shape:system / Map",
+      "baselineBytes": 264064,
+      "finalBytes": 266840,
+      "deltaBytes": 2776
+    },
+    {
+      "name": "native:LargestContentfulPaint",
+      "baselineBytes": 952,
+      "finalBytes": 3400,
+      "deltaBytes": 2448
+    }
+  ],
+  "caveat": "Property signatures survive minification but are heuristic instance identification. Shortest strong paths and shallow bytes are not dominator retained sizes or a proof of leak freedom."
+}

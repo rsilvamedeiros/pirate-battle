@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "activeMs": 180000,
+  "endReason": "time-expired",
+  "frames": 13479,
+  "pausedFrames": 0,
+  "truncated": false,
+  "entities": {
+    "player": 1,
+    "chasers": 2,
+    "shooters": 6,
+    "projectiles": 10,
+    "effects": 7,
+    "total": 26
+  },
+  "elapsedWallMs": 180467
+}

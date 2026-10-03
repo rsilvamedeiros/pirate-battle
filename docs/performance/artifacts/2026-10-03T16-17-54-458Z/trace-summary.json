@@ -1,0 +1,186 @@
+{
+  "recording": "approximately 150?180 active seconds",
+  "events": [
+    {
+      "name": "v8.callFunction",
+      "count": 5332,
+      "totalMs": 3382.308,
+      "maxMs": 146.617
+    },
+    {
+      "name": "FireAnimationFrame",
+      "count": 5026,
+      "totalMs": 3346.443000000014,
+      "maxMs": 148.883
+    },
+    {
+      "name": "FunctionCall",
+      "count": 5324,
+      "totalMs": 3091.9230000000007,
+      "maxMs": 146.164
+    },
+    {
+      "name": "PrePaint",
+      "count": 2513,
+      "totalMs": 493.1470000000007,
+      "maxMs": 1.884
+    },
+    {
+      "name": "CpuProfiler::StartProfiling",
+      "count": 2,
+      "totalMs": 140.031,
+      "maxMs": 137.106
+    },
+    {
+      "name": "IntersectionObserverController::computeIntersections",
+      "count": 5026,
+      "totalMs": 83.51700000000132,
+      "maxMs": 0.756
+    },
+    {
+      "name": "V8.GC_MC_BACKGROUND_MARKING",
+      "count": 25,
+      "totalMs": 72.35000000000001,
+      "maxMs": 13.75
+    },
+    {
+      "name": "V8.GC_SCAVENGER_BACKGROUND_SCAVENGE_PARALLEL",
+      "count": 66,
+      "totalMs": 67.251,
+      "maxMs": 7.799
+    },
+    {
+      "name": "MinorGC",
+      "count": 22,
+      "totalMs": 55.254999999999995,
+      "maxMs": 9.886
+    },
+    {
+      "name": "V8.GCScavenger",
+      "count": 22,
+      "totalMs": 53.075,
+      "maxMs": 9.845
+    },
+    {
+      "name": "Layout",
+      "count": 86,
+      "totalMs": 52.186,
+      "maxMs": 5.863
+    },
+    {
+      "name": "V8.GC_SCAVENGER",
+      "count": 22,
+      "totalMs": 51.71,
+      "maxMs": 9.835
+    },
+    {
+      "name": "V8.GC_SCAVENGER_SCAVENGE",
+      "count": 22,
+      "totalMs": 50.49700000000001,
+      "maxMs": 9.819
+    },
+    {
+      "name": "Layerize",
+      "count": 2513,
+      "totalMs": 47.68400000000021,
+      "maxMs": 0.508
+    },
+    {
+      "name": "V8.GC_SCAVENGER_SCAVENGE_PARALLEL_PHASE",
+      "count": 22,
+      "totalMs": 39.977999999999994,
+      "maxMs": 9.579
+    },
+    {
+      "name": "V8.GC_SCAVENGER_SCAVENGE_PARALLEL",
+      "count": 29,
+      "totalMs": 24.364000000000008,
+      "maxMs": 4.201
+    },
+    {
+      "name": "Paint",
+      "count": 170,
+      "totalMs": 23.423,
+      "maxMs": 0.746
+    },
+    {
+      "name": "V8.GCIncrementalMarking",
+      "count": 229,
+      "totalMs": 23.03000000000001,
+      "maxMs": 0.931
+    },
+    {
+      "name": "V8.GC_MC_INCREMENTAL",
+      "count": 229,
+      "totalMs": 22.245,
+      "maxMs": 0.928
+    },
+    {
+      "name": "MajorGC",
+      "count": 3,
+      "totalMs": 18.01,
+      "maxMs": 7.706
+    },
+    {
+      "name": "V8.GCFinalizeMC",
+      "count": 3,
+      "totalMs": 17.594,
+      "maxMs": 7.602
+    },
+    {
+      "name": "V8.GC_MARK_COMPACTOR",
+      "count": 3,
+      "totalMs": 17.525,
+      "maxMs": 7.576
+    },
+    {
+      "name": "TimerFire",
+      "count": 8,
+      "totalMs": 15.739,
+      "maxMs": 14.866
+    },
+    {
+      "name": "V8.GC_MC_BACKGROUND_SWEEPING",
+      "count": 11,
+      "totalMs": 12.905000000000001,
+      "maxMs": 3.594
+    },
+    {
+      "name": "V8.GC_SCAVENGER_SCAVENGE_ROOTS",
+      "count": 22,
+      "totalMs": 10.684999999999999,
+      "maxMs": 9.078
+    },
+    {
+      "name": "V8.GC_MC_EVACUATE",
+      "count": 6,
+      "totalMs": 7.2250000000000005,
+      "maxMs": 4.248
+    },
+    {
+      "name": "HitTest",
+      "count": 66,
+      "totalMs": 6.8309999999999995,
+      "maxMs": 0.55
+    },
+    {
+      "name": "V8.GC_BACKGROUND_SAFEPOINT",
+      "count": 1,
+      "totalMs": 5.322,
+      "maxMs": 5.322
+    },
+    {
+      "name": "V8.GC_MC_CLEAR",
+      "count": 3,
+      "totalMs": 5.151,
+      "maxMs": 3.046
+    },
+    {
+      "name": "XHRLoad",
+      "count": 1,
+      "totalMs": 4.578,
+      "maxMs": 4.578
+    }
+  ],
+  "caveat": "Nested event totals overlap and must not be summed as exclusive CPU time."
+}
