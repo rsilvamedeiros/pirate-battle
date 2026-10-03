@@ -110,7 +110,7 @@ npm run test:e2e
 | npm run lint:code | Check TypeScript source/tooling with ESLint |
 | npm run lint:styles | Check every application SCSS file with Stylelint, failing on warnings |
 | npm run lint:styles:fix | Apply supported SCSS lint fixes; review changes and run npm run format afterward |
-| npm run format | Apply the shared Prettier formatting rules to source, SCSS, tests, scripts and root configuration/HTML files |
+| npm run format | Apply the shared Prettier formatting rules to source, SCSS, tests, scripts, GitHub workflows and root configuration/HTML files |
 | npm run format:check | Check formatting without writing files; documentation, supplied assets, generated files and archived evidence are excluded |
 | npm run build | Type-check and produce the optimized build |
 | npm run preview | Serve an existing optimized build for manual review |
@@ -118,6 +118,29 @@ npm run test:e2e
 | npm run test:e2e:ui | Build and open Playwright UI |
 | npm run test:e2e:report | Open the latest HTML report |
 | npx playwright test --config=playwright.strict.config.ts | Run three lifecycle/focus/orientation cases in both development StrictMode projects, using port 4174 |
+
+## Continuous integration
+
+[.github/workflows/ci.yml](.github/workflows/ci.yml) runs on pushes, pull requests and manual dispatch from the repository's Actions tab. A newer run cancels an older run for the same branch or pull request. Actions are pinned to commit SHAs, repository permissions are read-only, and no private service credentials are needed.
+
+| Job | Environment | Checks and outputs |
+| --- | --- | --- |
+| quality | Ubuntu 24.04, Node.js 24 | npm ci, format:check, ESLint/Stylelint, typecheck, Vitest and optimized build; unit JSON artifact |
+| browser (optimized) | Windows Server 2022, Node.js 24, locked Playwright Chromium | Optimized preview; all desktop/mobile functional and visual tests; HTML/JSON reports and failure traces/screenshots |
+| browser (strict-mode) | Windows Server 2022, Node.js 24, locked Playwright Chromium | Development lifecycle/focus/orientation checks in both projects; HTML/JSON reports and failure traces/screenshots |
+
+Browser jobs start only after quality passes, run independently, and retain the existing zero-retry policy. Snapshots are compared with the committed images; CI never regenerates them. Windows matches the baseline platform suffix, but fonts and rendering may differ from the Windows 10 reference environment. Inspect actual/diff images from the first hosted run before declaring visual compatibility; do not rename baselines or relax thresholds to hide differences. A green workflow is not a physical-mobile or deployed-site validation.
+
+Open Actions → CI → the run to inspect step logs. Download `unit-results-<attempt>`, `browser-reports-optimized-<attempt>` or `browser-reports-strict-mode-<attempt>` from Artifacts; retention is 14 days. Browser uploads run after failures unless the workflow was cancelled. Extract each browser archive to its own directory, then use:
+
+```sh
+npx playwright show-report <optimized-extraction>/playwright-report
+npx playwright show-report <strict-extraction>/playwright-report/strict-mode
+```
+
+Open a failed case's trace from its HTML report, or run `npx playwright show-trace <trace.zip>`. Browser artifacts also preserve `test-results/` with JSON and failure attachments. Unit JSON is at the root of its extracted artifact. If installation fails before tests produce output, inspect the failed step's logs; there may be no report to upload. The hosted workflow itself remains unverified until the committed file is pushed and a run completes.
+
+## Targeted browser runs
 
 Target a suite or a browser project:
 

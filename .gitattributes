@@ -11,3 +11,4 @@ scripts/*.mjs text eol=lf
 /.editorconfig text eol=lf
 /.prettierignore text eol=lf
 /.gitattributes text eol=lf
+.github/**/*.yml text eol=lf

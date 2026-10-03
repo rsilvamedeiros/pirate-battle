@@ -33,7 +33,7 @@ Open the URL printed by Vite. No environment variables, credentials or private s
 | npm run lint:code | Check TypeScript source/tooling with ESLint |
 | npm run lint:styles | Check application SCSS with Stylelint |
 | npm run lint:styles:fix | Apply supported SCSS lint fixes; review the diff and run format afterward |
-| npm run format | Format source, SCSS, tests, scripts and root configuration/HTML files |
+| npm run format | Format source, SCSS, tests, scripts, GitHub workflows and root configuration/HTML files |
 | npm run format:check | Verify formatting without changing files |
 | npm run typecheck | Check application, tooling and browser-test types |
 | npm run test:unit | Run core, engine, persistence, API and mock tests |
@@ -44,6 +44,12 @@ Open the URL printed by Vite. No environment variables, credentials or private s
 | node scripts/profile.mjs | Measure the optimized build in headed Chromium with native time; run build first |
 
 Browser tests own ports 4173 (preview) and 4174 (StrictMode development). Keep them available. Failure traces/screenshots are retained under test-results/; HTML reports are under playwright-report/. The [testing guide](TESTING.md) explains reproduction, visual baseline updates and delivery reports.
+
+## Continuous integration
+
+[GitHub Actions](.github/workflows/ci.yml) runs on pushes, pull requests and manual dispatch. The quality job checks formatting, ESLint/Stylelint, types, unit tests and the optimized build. After it passes, separate Windows jobs run the full Chromium desktop/mobile E2E suite (including visuals) and development StrictMode checks. Reports and failure traces are retained as downloadable artifacts for 14 days.
+
+CI uses Node.js 24 and the committed lockfile. Browser jobs use Windows to match the versioned `win32` baselines; hosted Windows images can still differ from the Windows 10 reference environment. The first hosted run must confirm visual compatibility. See [TESTING.md](TESTING.md#continuous-integration) for reports and failure review.
 
 ## Controls
 

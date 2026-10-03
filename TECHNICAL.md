@@ -69,9 +69,13 @@ The core has no React, PixiJS, browser time, storage, or network dependencies. S
 
 ## Formatting
 
-Run `npm run format` to format application source, SCSS, tests, scripts and root JavaScript/TypeScript/JSON/HTML files. Run `npm run format:check` to verify formatting without writing files. Prettier is pinned to an exact development dependency version; `eslint-config-prettier` disables conflicting formatting rules while ESLint keeps checking code correctness.
+Run `npm run format` to format application source, SCSS, tests, scripts, GitHub workflows and root JavaScript/TypeScript/JSON/HTML files. Run `npm run format:check` to verify formatting without writing files. Prettier is pinned to an exact development dependency version; `eslint-config-prettier` disables conflicting formatting rules while ESLint keeps checking code correctness.
 
 [.prettierrc.json](.prettierrc.json) defines single quotes, no optional semicolons, trailing commas and a 100-column wrapping preference. [.editorconfig](.editorconfig) defines UTF-8, two-space indentation and LF endings; [.gitattributes](.gitattributes) preserves LF for formatted source across checkouts. [.prettierignore](.prettierignore) excludes Markdown documentation, supplied assets, generated workers, visual baselines and archived profiling/test evidence. Formatting does not replace linting, type checks or tests.
+
+## Continuous integration
+
+[.github/workflows/ci.yml](.github/workflows/ci.yml) separates quality checks on Ubuntu from optimized-browser and development StrictMode jobs on Windows, all using Node.js 24 and npm ci. Windows preserves the platform suffix of the existing visual baselines; hosted-image rendering compatibility requires confirmation in the first GitHub run. Dependencies are cached through npm, while browsers come from the locked Playwright package. Actions use pinned commit SHAs and read-only repository permissions. See [TESTING.md](TESTING.md#continuous-integration) for triggers, report artifacts, failure review and limitations. CI runs tests and builds; public deployment remains a separate delivery step.
 
 ## Styling
 
