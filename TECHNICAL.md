@@ -8,9 +8,11 @@ The preserved challenge uses original `assets/` relative links. In this Vite rep
 
 The game is hosted on [Vercel](https://game-pirate-battle.vercel.app/). [Deployed verification](docs/delivery/public-verification.md) records smoke coverage and outstanding checks. Initial rendering/reload can be noticeably delayed; startup download/evaluation, worker readiness and combat resource initialization are distinct from simulation frame time. The large entry chunk remains a possible contributor, without measured attribution.
 
-## Current implementation
+## Delivered implementation
 
-| Area | Implemented | Pending |
+Development of the challenge solution is complete. The application is published, and the local verification passed 161 unit/integration tests, 176 E2E executions and six development StrictMode executions. The table describes delivered capabilities and their documented limits or additional validation opportunities; it is not an unfinished implementation backlog.
+
+| Area | Delivered | Limits / further validation |
 | --- | --- | --- |
 | Core / engine | Typed configuration, navigation, weapons, seeded safe spawns, Chaser/Shooter behavior, damage, score, pause/restart, completion and opt-in post-render profiling | Standard-balance playtesting and physical-mobile profiling |
 | React / PixiJS | Menus, Options, arena, controls/HUD/feedback, results, paginated Ranking/Match History and network panel | Final accessibility/visual review |

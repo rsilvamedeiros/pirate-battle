@@ -1,14 +1,39 @@
 # Pirate Battle
 
-[Portuguese guide](README.pt-BR.md) | [Original challenge](CHALLENGE.md)
+[Play the game](https://game-pirate-battle.vercel.app/) | [Portuguese guide](README.pt-BR.md) | [Upstream challenge repository](https://github.com/junglegaming/game-developer-challenge)
 
 A browser-only naval shooter built with React, strict TypeScript and PixiJS. Sail around the island, fight Chasers and Shooters, and earn one point per enemy destroyed. React owns menus and semantic HUD/dialogs; the pure simulation owns combat. Axios and TanStack Query consume REST APIs mocked by MSW in development and optimized builds.
 
-## Delivery status
+## Project status
 
-The local implementation includes gameplay, persistent Options/results, paginated records, idempotent submission/recovery, 14 network scenarios, desktop/mobile E2E and versioned visual baselines. [Measured profiling](docs/performance/profiling.md) includes a three-minute match and five memory cycles with raw evidence.
+**Development is complete for the technical challenge scope, and the game is published on Vercel.** Gameplay, menus, persistence, ranking/history APIs, failure recovery, automated tests, architecture documentation and profiling evidence have been implemented and delivered. Documented limitations describe the delivered solution; optional future improvements are listed separately.
+
+Verification completed: **161 unit/integration tests, 176 desktop/mobile E2E executions and 6 development StrictMode executions passed**, including six visual comparisons without baseline updates. Formatting, lint, strict types and optimized build passed. [Versioned reports](docs/delivery/artifacts/2026-10-03-release/README.md) preserve these results. [Measured profiling](docs/performance/profiling.md) includes a three-minute match and five memory cycles, with its environment, build and measurement limits recorded.
 
 **Play the published game: [Pirate Battle](https://game-pirate-battle.vercel.app/).** The Vercel deployment is publicly accessible. See the [deployed verification record](docs/delivery/public-verification.md) for worker, reload and recovery checks and their limits.
+
+## Challenge source
+
+This solution implements the naval-shooter challenge from [junglegaming/game-developer-challenge](https://github.com/junglegaming/game-developer-challenge): browser gameplay with React, TypeScript and PixiJS, mocked REST ranking/history, reproducible tests and documented performance. The upstream repository is the source for the full assignment and supplied assets; [CHALLENGE.md](CHALLENGE.md) preserves the original statement locally.
+
+## Technical implementation
+
+| Area | Delivered implementation |
+| --- | --- |
+| Simulation | Pure TypeScript core, fixed 60 Hz steps, accumulator/frame clamp, injectable clock and seeded PRNG |
+| Gameplay | Chaser pursuit/contact damage, Shooter ranged attacks, safe spawns, independent weapon cooldowns and duplicate-free damage/scoring |
+| Geometry | Arena bounds, island blocking, swept projectile collisions, range/lifetime removal and deterministic contact ordering |
+| React/PixiJS boundary | PixiJS owns continuous rendering; React subscribes to HUD snapshots only when displayed values change |
+| Lifecycle | Cached textures, visible loading/retry, session resource cleanup and StrictMode-safe initialization/disposal |
+| Input and accessibility | Simultaneous keyboard/multitouch actions, automatic/manual pause, portrait/landscape layouts, semantic HUD and keyboard dialog focus |
+| Configuration | 31 typed balance parameters, immutable per-match snapshots and validated persistent Options |
+| API and cache | Typed REST contracts, Axios cancellation, TanStack Query queries/mutations, configuration-grouped ranking and deterministic tie-breaking |
+| Submission recovery | Idempotent PUT keyed by matchId, durable localStorage outbox, boot/manual replay and protection against obsolete responses |
+| Network mocks | Production MSW worker, shared fixtures/handlers, 14 seeded failure/latency scenarios and explicit demo reset |
+| Quality and styling | SCSS Modules, shared Sass tokens, strict TypeScript, ESLint, Stylelint, Prettier and a GitHub Actions workflow |
+| Documentation and evidence | Docs-as-Code, ADRs, functional specs, requirement-to-test mapping, HTML reports, visual baselines and frame/entity/memory profiling |
+
+Module boundaries and tradeoffs are detailed in [ARCHITECTURE.md](ARCHITECTURE.md) and [TECHNICAL.md](TECHNICAL.md).
 
 ## Evaluator walkthrough
 
@@ -98,7 +123,7 @@ Only ?e2e=1 exposes copied-state/manual-clock test hooks; tests still use real r
 
 ## Publish on Vercel
 
-After committing and pushing this reviewed source, import the repository into Vercel. Use these project settings, following [Vercel's Vite guide](https://vercel.com/docs/frameworks/frontend/vite) and [build settings](https://vercel.com/docs/builds/configure-a-build):
+The game is already published. To reproduce or maintain the deployment, use these settings, following [Vercel's Vite guide](https://vercel.com/docs/frameworks/frontend/vite) and [build settings](https://vercel.com/docs/builds/configure-a-build):
 
 | Setting | Value |
 | --- | --- |
@@ -114,7 +139,7 @@ The app navigates through React state at `/`; scenarios use query parameters, so
 
 Open the production HTTPS URL in a fresh browser profile without a Vercel login requirement. Confirm worker startup, Options persistence after reload, one completed record in both tabs, and recovery for `submit-timeout-after-commit` and `offline-at-match-end`. Check desktop and mobile portrait/landscape, plus the browser console. The complete [public acceptance checklist](docs/delivery/final-review.md#public-acceptance-checklist) records these checks.
 
-Provide the public URL, repository URL and deployed commit SHA in the submission message. The public URL is linked above; after this final commit, redeploy and confirm that Vercel reports the same commit SHA as the delivered source. Keep the production site accessible throughout evaluation.
+Provide the public URL, repository URL and deployed commit SHA in the submission message. Redeploy changes and confirm the source revision in Vercel when updating the delivery. Keep the production site accessible throughout evaluation. Hosted CI status and physical-device checks are documented separately from the completed local test suite.
 
 ## Architecture, evidence and limitations
 
@@ -128,6 +153,15 @@ Provide the public URL, repository URL and deployed commit SHA in the submission
 Known limits include one circular island/routing scheme, uncoordinated simultaneous-tab storage writes, no shared backend, a large entry chunk, Windows-specific visual baselines and no physical-mobile performance measurement. Profiling records post-render cadence rather than display presentation; five post-GC cycles do not prove leak freedom.
 
 Initial rendering and page reload can have a noticeable startup delay, as reported during delivery review. The browser must load/evaluate the application and initialize the local data worker; entering combat also initializes PixiJS and textures. These are startup costs, separate from in-match FPS. The existing large entry chunk is a possible contributor; no bottleneck attribution or loading optimization is claimed. See the [deployed observations](docs/delivery/public-verification.md).
+
+## Optional future improvements
+
+These suggestions are outside the completed challenge implementation:
+
+- Profile first-load/reload costs, then evaluate bundle splitting and asset preloading against measured startup timings.
+- Expand device/browser coverage with physical phones and additional visual/performance reference environments.
+- Explore additional arenas, enemy patterns and audio feedback as gameplay extensions.
+- For a product beyond the local mocked-API challenge, consider a shared backend and coordinated multi-tab persistence.
 
 ## Assets and AI assistance
 

@@ -1,8 +1,18 @@
 # Pirate Battle
 
-[English guide](README.md) | [Enunciado original](CHALLENGE.md)
+[Jogar](https://game-pirate-battle.vercel.app/) | [English guide](README.md) | [Repositório original do desafio](https://github.com/junglegaming/game-developer-challenge)
 
 Jogo naval 2D desenvolvido para o desafio de React, TypeScript e PixiJS. Navegue pela arena, desvie da ilha e enfrente Chasers e Shooters usando disparos frontais e laterais. A interface do jogo e a documentação técnica permanecem em inglês; este arquivo é o guia complementar em português.
+
+## Estado do projeto
+
+**O desenvolvimento do escopo do desafio está concluído e o jogo está publicado na Vercel.** Foram entregues gameplay, telas, persistência, ranking/histórico, recuperação de falhas, testes automatizados, arquitetura e evidências de profiling. As limitações estão documentadas; sugestões de evolução ficam separadas do escopo implementado.
+
+A validação passou com **161 testes unitários/integração, 176 execuções E2E desktop/mobile e 6 execuções em StrictMode**, incluindo seis comparações visuais sem atualizar os baselines. Formatação, lint, tipos e build também passaram. Os [relatórios versionados](docs/delivery/artifacts/2026-10-03-release/README.md) registram as evidências e seu alcance.
+
+## Fonte do desafio
+
+O projeto implementa o shooter naval proposto em [junglegaming/game-developer-challenge](https://github.com/junglegaming/game-developer-challenge), com React, TypeScript, PixiJS, APIs simuladas, testes e documentação de performance. Esse é o repositório fonte do enunciado e dos assets. O texto completo também permanece preservado em [CHALLENGE.md](CHALLENGE.md).
 
 ## O que foi construído
 
@@ -12,6 +22,10 @@ Jogo naval 2D desenvolvido para o desafio de React, TypeScript e PixiJS. Navegue
 - Ranking e Match History usando Axios, TanStack Query e MSW, paginação e comparação por configuração.
 - Registro idempotente, fila persistente de envios pendentes, recuperação após refresh e 14 cenários de rede.
 - Testes unitários, E2E em desktop/mobile, baselines visuais e profiling medido com evidências.
+- Colisões contínuas de projéteis, spawn seguro, limites de alcance/vida útil e pontuação sem duplicação.
+- HUD por snapshots, sem renderização React a cada frame; cache de texturas e limpeza de recursos compatível com StrictMode.
+- Contratos REST tipados, cancelamento de consultas, retries limitados, desempate determinístico e proteção contra respostas obsoletas.
+- SCSS Modules, tokens Sass, ESLint, Stylelint, Prettier, workflow de CI, ADRs e specs rastreáveis aos testes.
 
 **Jogue na Vercel: [Pirate Battle](https://game-pirate-battle.vercel.app/).** A publicação está acessível. A [verificação publicada](docs/delivery/public-verification.md) registra os checks de worker, refresh, persistência e recuperação, com seus limites.
 
@@ -19,7 +33,7 @@ Jogo naval 2D desenvolvido para o desafio de React, TypeScript e PixiJS. Navegue
 
 A publicação na Vercel usa preset Vite, raiz do repositório, Node.js 24.x, instalação `npm ci`, build `npm run build` e saída `dist`. Não são necessárias variáveis de ambiente. O [README em inglês](README.md#publish-on-vercel) contém as instruções completas e referências da plataforma.
 
-Os checks publicados confirmaram worker, refresh, persistência de Options, registro nas duas abas e recuperação dos envios pendentes. Após este commit, faça o redeploy e confira o SHA na Vercel e a correção do ícone. A revisão manual em celular físico e nas duas orientações permanece separada. Envie a URL pública, a URL do repositório e o SHA do commit publicado.
+Os checks publicados confirmaram worker, refresh, persistência de Options, registro nas duas abas e recuperação dos envios pendentes. Ao atualizar a entrega, faça o redeploy e confira o SHA na Vercel. A revisão manual em celular físico permanece separada dos testes automatizados. Envie a URL pública, a URL do repositório e o SHA do commit publicado.
 
 Os [relatórios da última verificação local](docs/delivery/artifacts/2026-10-03-release/README.md) ficam versionados junto às evidências anteriores e ao profiling. O enunciado original permanece em CHALLENGE.md; o README padrão e os documentos técnicos permanecem em inglês.
 
@@ -67,6 +81,13 @@ Os testes mobile usam emulação; não comprovam desempenho num celular físico.
 ## Carregamento inicial
 
 A primeira renderização e o refresh podem apresentar uma pequena demora, observada na revisão da entrega. O startup do aplicativo e do worker, além de PixiJS e texturas ao entrar na partida, tem custo separado do FPS durante o combate. A causa exata não foi medida; o bundle principal grande permanece uma possível contribuição. Esta atualização documenta a observação e não reivindica uma otimização do carregamento.
+
+## Sugestões de evolução fora do escopo entregue
+
+- Medir o startup para orientar divisão do bundle e preload de assets.
+- Ampliar cobertura em celulares físicos e outros navegadores.
+- Explorar novas arenas, padrões de inimigos e feedback sonoro.
+- Em uma evolução de produto, avaliar backend compartilhado e coordenação entre abas.
 
 ## Apoio da IA
 
