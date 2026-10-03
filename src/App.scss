@@ -1,3 +1,5 @@
+@use './styles/tokens' as tokens;
+
 .app-shell {
   min-height: 100svh;
   display: grid;
@@ -31,10 +33,10 @@
 .primary-button:hover:not(:disabled) { background-image: url('/assets/png/retina/ui/menu/button_primary_hover.png'); }
 .primary-button:active:not(:disabled) { background-image: url('/assets/png/retina/ui/menu/button_primary_pressed.png'); }
 .primary-button:disabled { background-image: url('/assets/png/retina/ui/menu/button_primary_disabled.png'); color: #211e1a; }
-.secondary-button { background-image: url('/assets/png/retina/ui/menu/button_secondary_normal.png'); color: #fff0ce; font-size: 1rem; }
+.secondary-button { background-image: url('/assets/png/retina/ui/menu/button_secondary_normal.png'); color: tokens.$text-primary; font-size: 1rem; }
 .secondary-button:active:not(:disabled) { background-image: url('/assets/png/retina/ui/menu/button_secondary_pressed.png'); }
 .secondary-button:disabled { opacity: 0.7; }
-.availability { margin-top: 10px; color: #e1d5bb; font-size: 0.85rem; }
+.availability { margin-top: 10px; color: tokens.$text-muted; font-size: 0.85rem; }
 .session-summary { margin: 24px 0 20px; font-size: 0.95rem; }
 .ranking-actions { display: flex; justify-content: center; gap: 8px; margin-top: 22px; }
 .ranking-actions button { flex: 1; padding-inline: 16px; }
@@ -47,7 +49,7 @@ th, td { padding: 8px 4px; text-align: left; }
 thead { color: #ffe2a1; }
 tbody th { font-weight: normal; }
 tbody tr + tr { border-top: 1px solid #ffffff15; }
-.intro { margin-top: 12px; color: #e1d5bb; }
+.intro { margin-top: 12px; color: tokens.$text-muted; }
 .options-screen form { margin-top: 28px; }
 .option-field { margin-block: 24px; text-align: left; }
 .option-field label { display: block; font-weight: bold; margin-bottom: 10px; }
@@ -57,20 +59,20 @@ tbody tr + tr { border-top: 1px solid #ffffff15; }
   min-width: 0;
   padding: 12px;
   min-height: 48px;
-  border: 2px solid #be9650;
+  border: 2px solid tokens.$border-input;
   border-radius: 6px;
-  background: #102432;
-  color: #fff0ce;
+  background: tokens.$surface-input;
+  color: tokens.$text-primary;
   font-size: 1.25rem;
 }
 .number-control input[aria-invalid='true'] { border-color: #ffa79f; }
-.number-control span { color: #e1d5bb; font-size: 0.85rem; }
-.field-hint { color: #e1d5bb; font-size: 0.85rem; line-height: 1.5; margin-top: 8px; }
+.number-control span { color: tokens.$text-muted; font-size: 0.85rem; }
+.field-hint { color: tokens.$text-muted; font-size: 0.85rem; line-height: 1.5; margin-top: 8px; }
 .field-error { color: #ffb9af; font-size: 0.9rem; line-height: 1.5; margin-top: 8px; }
 .save-feedback { min-height: 46px; font-size: 0.9rem; line-height: 1.5; }
 .form-actions { display: grid; justify-content: center; gap: 10px; margin-top: 16px; }
 .footer-hint { margin-top: 22px; }
-.storage-notice { background: #102432; border: 1px solid #eec477; padding: 12px; margin-bottom: 20px; font-size: 0.9rem; line-height: 1.5; }
+.storage-notice { background: tokens.$surface-input; border: 1px solid #eec477; padding: 12px; margin-bottom: 20px; font-size: 0.9rem; line-height: 1.5; }
 .result-details dl { display: grid; gap: 12px; margin: 20px 0; }
 .result-details dl div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; text-align: left; }
 .result-details dt { font-weight: bold; }
@@ -87,7 +89,7 @@ tbody tr + tr { border-top: 1px solid #ffffff15; }
 .network-panel button { margin-top: 8px; padding: 12px 16px; }
 .configuration-group { margin-top: 20px; text-align: left; }
 .configuration-group label, .network-panel label { display: block; font-weight: bold; margin-block: 12px; }
-.configuration-group select, .network-panel select { width: 100%; min-height: 48px; padding: 10px; border: 2px solid #be9650; border-radius: 6px; background: #102432; color: #fff0ce; }
+.configuration-group select, .network-panel select { width: 100%; min-height: 48px; padding: 10px; border: 2px solid tokens.$border-input; border-radius: 6px; background: tokens.$surface-input; color: tokens.$text-primary; }
 .pending-records { border-top: 1px solid #eec47755; margin-top: 16px; }
 
 @media (max-width: 480px) {

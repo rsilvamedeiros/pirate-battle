@@ -11,7 +11,7 @@ import { prepareMatch } from '../engine/scenarios'
 import { createRenderProfiler, profilingConfiguration } from '../engine/profiling'
 import type { ResultsStore } from '../persistence/results'
 import { ResultDetails } from './ResultDetails'
-import './GameScreen.css'
+import './GameScreen.scss'
 
 function SessionDialog({ engine, resultsStore, onExit, onRestart, onResume }: { engine: GameEngine; resultsStore: ResultsStore; onExit(): void; onRestart(): void; onResume(): void }) {
   const dialog = useRef<HTMLDialogElement>(null)

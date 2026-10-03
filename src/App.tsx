@@ -10,7 +10,7 @@ import type { DataRuntime } from './api/runtime'
 import { configurationKey } from './api/contracts'
 import { RecordsPanel } from './ui/RecordsPanel'
 import { NetworkPanel } from './ui/NetworkPanel'
-import './App.css'
+import './App.scss'
 
 const controls = [
   ['Move forward', 'W / ↑', 'Hold Forward'],

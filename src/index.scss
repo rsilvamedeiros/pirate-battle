@@ -1,6 +1,8 @@
+@use './styles/tokens' as tokens;
+
 :root {
   font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
-  color: #fff0ce;
+  color: tokens.$text-primary;
   background: #0d4254;
   color-scheme: dark;
   font-synthesis: none;
@@ -15,7 +17,7 @@ button, input { font: inherit; }
 button, summary { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
 button:focus-visible, input:focus-visible, summary:focus-visible {
-  outline: 3px solid #fff1a8;
+  outline: 3px solid tokens.$focus-ring;
   outline-offset: 5px;
 }
 h1, p { margin: 0; }

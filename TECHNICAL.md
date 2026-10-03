@@ -21,6 +21,7 @@ Play starts combat with both enemy types, three weapons, HP and scoring. Complet
 | Technology | Current role |
 | --- | --- |
 | Vite | Development server and production build |
+| Sass | SCSS compilation with explicit `@use` modules and a shared palette |
 | React | Menus, Options, HUD snapshots, session dialogs and record/scenario panels; StrictMode at the entry point |
 | TypeScript | Strict checking for application, tooling, and E2E files |
 | Vitest 4 | Core, engine and persistence tests in Node with injected storage |
@@ -60,11 +61,17 @@ Play starts combat with both enemy types, three weapons, HP and scoring. Complet
 | [src/ui/OptionsScreen.tsx](src/ui/OptionsScreen.tsx) | Two-field form, associated errors, Save/Main Menu actions, focus |
 | [src/App.tsx](src/App.tsx) | Menu/Options/game/result navigation and saved state subscriptions |
 | [src/main.tsx](src/main.tsx) | One-time storage bootstrap and React StrictMode mount |
-| [src/App.css](src/App.css) | Supplied menu assets and responsive screen styling |
+| [src/App.scss](src/App.scss) | Supplied menu assets and responsive screen styling |
 | [playwright.config.ts](playwright.config.ts) | Desktop/mobile projects, preview server, reports, failure traces |
 | [vitest.config.ts](vitest.config.ts) | Node-based core, engine and persistence test discovery |
 
 The core has no React, PixiJS, browser time, storage, or network dependencies. Storage belongs to the imperative shell. Bootstrap runs outside StrictMode so its development mount cycle does not regenerate the local player identity.
+
+## Styling
+
+[src/index.scss](src/index.scss) owns global typography, resets and keyboard focus. [src/App.scss](src/App.scss) owns menus, forms and record panels; [src/ui/GameScreen.scss](src/ui/GameScreen.scss) owns the arena, HUD, touch controls and dialogs. All three explicitly load [src/styles/_tokens.scss](src/styles/_tokens.scss), which contains shared palette variables and emits no CSS.
+
+Keep selectors shallow and preserve stylesheet order and responsive breakpoints. Add shared tokens when a value has a common visual role; keep one-off layout values next to their component. Vite compiles SCSS using the development dependency installed by `npm ci`; no additional plugin or runtime dependency is required.
 
 ## Configuration and persistence
 
