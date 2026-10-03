@@ -61,7 +61,8 @@ Play starts combat with both enemy types, three weapons, HP and scoring. Complet
 | [src/ui/OptionsScreen.tsx](src/ui/OptionsScreen.tsx) | Two-field form, associated errors, Save/Main Menu actions, focus |
 | [src/App.tsx](src/App.tsx) | Menu/Options/game/result navigation and saved state subscriptions |
 | [src/main.tsx](src/main.tsx) | One-time storage bootstrap and React StrictMode mount |
-| [src/App.scss](src/App.scss) | Supplied menu assets and responsive screen styling |
+| [src/App.module.scss](src/App.module.scss) | Scoped menu layout, supplied assets and responsive styling |
+| [src/styles/ui.module.scss](src/styles/ui.module.scss) | Explicitly shared button, message and table styles |
 | [playwright.config.ts](playwright.config.ts) | Desktop/mobile projects, preview server, reports, failure traces |
 | [vitest.config.ts](vitest.config.ts) | Node-based core, engine and persistence test discovery |
 
@@ -79,7 +80,19 @@ Run `npm run format` to format application source, SCSS, tests, scripts, GitHub 
 
 ## Styling
 
-[src/index.scss](src/index.scss) owns global typography, resets and keyboard focus. [src/App.scss](src/App.scss) owns menus, forms and record panels; [src/ui/GameScreen.scss](src/ui/GameScreen.scss) owns the arena, HUD, touch controls and dialogs. All three explicitly load [src/styles/_tokens.scss](src/styles/_tokens.scss), which contains shared palette variables and emits no CSS.
+[src/index.scss](src/index.scss) owns global typography, resets, keyboard focus and the `visually-hidden` accessibility utility. Component styles use SCSS Modules with explicit class imports. Vite generates scoped class names and compiles the source to CSS; no additional runtime styling dependency is needed.
+
+| Stylesheet | Responsibility |
+| --- | --- |
+| [src/App.module.scss](src/App.module.scss) | Menu shell, control instructions, tabs and configuration selection |
+| [src/ui/GameScreen.module.scss](src/ui/GameScreen.module.scss) | Arena, HUD, touch controls, session dialogs and orientation layouts |
+| [src/ui/OptionsScreen.module.scss](src/ui/OptionsScreen.module.scss) | Options form, validation feedback and field layout |
+| [src/ui/ResultDetails.module.scss](src/ui/ResultDetails.module.scss) | Result summary and pending-registration message |
+| [src/ui/RecordsPanel.module.scss](src/ui/RecordsPanel.module.scss) | Ranking/history panel and pagination |
+| [src/ui/NetworkPanel.module.scss](src/ui/NetworkPanel.module.scss) | Scenario selection and pending registrations |
+| [src/styles/ui.module.scss](src/styles/ui.module.scss) | Shared buttons, notices, actions and explicitly styled tables |
+
+Components import their own module and the shared UI module when needed; they do not rely on App loading their styles. Table rules are scoped to the shared table class instead of global element selectors. Palette values come from [src/styles/_tokens.scss](src/styles/_tokens.scss), which emits no CSS. Browser tests locate UI through roles, accessible names and semantic containers rather than generated class names.
 
 Keep selectors shallow and preserve stylesheet order and responsive breakpoints. Add shared tokens when a value has a common visual role; keep one-off layout values next to their component. Vite compiles SCSS using the development dependency installed by `npm ci`; no additional plugin or runtime dependency is required.
 

@@ -1,3 +1,5 @@
+import sharedStyles from '../styles/ui.module.scss'
+import styles from './NetworkPanel.module.scss'
 import { useState, useSyncExternalStore } from 'react'
 import type { DataRuntime } from '../api/runtime'
 import { scenarioDefinitions, isScenarioId } from '../mocks/scenarios'
@@ -9,7 +11,7 @@ export function NetworkPanel({ runtime, store }: { runtime: DataRuntime; store: 
   const results = useSyncExternalStore(store.subscribe, store.getSnapshot)
   const [selection, setSelection] = useState(scenario.id)
   return (
-    <details className="network-panel">
+    <details className={styles['network-panel']}>
       <summary>Network scenarios</summary>
       <label htmlFor="network-scenario">Scenario</label>
       <select
@@ -33,7 +35,7 @@ export function NetworkPanel({ runtime, store }: { runtime: DataRuntime; store: 
       {network.error && network.status !== 'error' && <p role="alert">{network.error}</p>}
       <button
         type="button"
-        className="secondary-button"
+        className={sharedStyles['secondary-button']}
         disabled={network.busy}
         onClick={() => void runtime.changeScenario(selection)}
       >
@@ -42,7 +44,7 @@ export function NetworkPanel({ runtime, store }: { runtime: DataRuntime; store: 
       {scenario.id === 'offline-at-match-end' && (
         <button
           type="button"
-          className="secondary-button"
+          className={sharedStyles['secondary-button']}
           disabled={network.busy}
           onClick={() => {
             setSelection('success')
@@ -52,20 +54,20 @@ export function NetworkPanel({ runtime, store }: { runtime: DataRuntime; store: 
           Recover connection
         </button>
       )}
-      <p className="availability">
+      <p className={sharedStyles['availability']}>
         Reset discards completed demo records, the last result and all pending submissions. Options
         and player identity are kept.
       </p>
       <button
         type="button"
-        className="secondary-button"
+        className={sharedStyles['secondary-button']}
         disabled={network.busy}
         onClick={() => void runtime.changeScenario(scenario.id, true)}
       >
         Reset demo data
       </button>
       {Object.keys(results.entries).length > 0 && (
-        <div className="pending-records">
+        <div className={styles['pending-records']}>
           <p>{Object.keys(results.entries).length} pending registrations. You can keep playing.</p>
           {Object.values(results.entries).map(({ record, lastError }) => (
             <div key={record.matchId}>
@@ -75,7 +77,7 @@ export function NetworkPanel({ runtime, store }: { runtime: DataRuntime; store: 
               </p>
               <button
                 type="button"
-                className="secondary-button"
+                className={sharedStyles['secondary-button']}
                 onClick={() => store.retrySubmission(record.matchId)}
               >
                 Retry Registration

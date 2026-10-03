@@ -1,0 +1,29 @@
+.records-panel {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.records-panel caption {
+  padding-bottom: 12px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.records-panel td {
+  overflow-wrap: anywhere;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 0.85rem;
+}
+
+.pagination button {
+  min-height: 44px;
+  padding: 10px 14px;
+}

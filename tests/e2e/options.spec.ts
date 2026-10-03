@@ -169,10 +169,10 @@ test('remains usable when browser storage cannot be read or written', async ({ p
 })
 
 test('keeps menu and options within the viewport', async ({ page, isMobile }) => {
-  await expect(page.locator('.game-title img')).toBeVisible()
+  await expect(page.getByRole('img', { name: 'Pirate Battle', exact: true })).toBeVisible()
   expect(
     await page
-      .locator('.game-title img')
+      .getByRole('img', { name: 'Pirate Battle', exact: true })
       .evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0),
   ).toBe(true)
   if (isMobile) await page.getByRole('button', { name: 'Options', exact: true }).tap()

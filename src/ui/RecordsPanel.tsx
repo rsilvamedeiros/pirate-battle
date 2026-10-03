@@ -1,3 +1,5 @@
+import sharedStyles from '../styles/ui.module.scss'
+import styles from './RecordsPanel.module.scss'
 import { useQuery } from '@tanstack/react-query'
 import { useSyncExternalStore } from 'react'
 import type { DataRuntime } from '../api/runtime'
@@ -27,14 +29,14 @@ export function RecordsPanel({ runtime, kind, playerId, configKey, page, onPage 
   const data = query.data
   return (
     <section
-      className="records-panel"
+      className={styles['records-panel']}
       role="tabpanel"
       aria-labelledby={`${kind}-tab`}
       id={`${kind}-panel`}
     >
       <h2>{kind === 'ranking' ? 'Ranking' : 'Match History'}</h2>
       {kind === 'ranking' && (
-        <p className="availability">
+        <p className={sharedStyles['availability']}>
           Only matches with the selected configuration are compared. Ties use active duration,
           completion date, then match ID.
         </p>
@@ -43,7 +45,11 @@ export function RecordsPanel({ runtime, kind, playerId, configKey, page, onPage 
       {network.status === 'error' && (
         <div>
           <p role="alert">{network.error ?? 'Match records are unavailable.'}</p>
-          <button type="button" className="secondary-button" onClick={() => void runtime.start()}>
+          <button
+            type="button"
+            className={sharedStyles['secondary-button']}
+            onClick={() => void runtime.start()}
+          >
             Retry Connection
           </button>
         </div>
@@ -58,15 +64,19 @@ export function RecordsPanel({ runtime, kind, playerId, configKey, page, onPage 
             {normalizeApiError(query.error).message}
             {data && ' Previously loaded records are shown.'}
           </p>
-          <button type="button" className="secondary-button" onClick={() => void query.refetch()}>
+          <button
+            type="button"
+            className={sharedStyles['secondary-button']}
+            onClick={() => void query.refetch()}
+          >
             Retry Records
           </button>
         </div>
       )}
       {data && data.items.length === 0 && <p>No matches found.</p>}
       {data && data.items.length > 0 && (
-        <div className="table-scroll">
-          <table>
+        <div className={sharedStyles['table-scroll']}>
+          <table className={sharedStyles.table}>
             <caption>{kind === 'ranking' ? 'Ranked matches' : 'Your completed matches'}</caption>
             <thead>
               <tr>
@@ -113,10 +123,10 @@ export function RecordsPanel({ runtime, kind, playerId, configKey, page, onPage 
         </div>
       )}
       {data && (
-        <nav className="pagination" aria-label={`${kind} pagination`}>
+        <nav className={styles['pagination']} aria-label={`${kind} pagination`}>
           <button
             type="button"
-            className="secondary-button"
+            className={sharedStyles['secondary-button']}
             disabled={page <= 1 || query.isFetching}
             onClick={() => onPage(page - 1)}
           >
@@ -127,7 +137,7 @@ export function RecordsPanel({ runtime, kind, playerId, configKey, page, onPage 
           </span>
           <button
             type="button"
-            className="secondary-button"
+            className={sharedStyles['secondary-button']}
             disabled={page >= data.totalPages || query.isFetching}
             onClick={() => onPage(page + 1)}
           >

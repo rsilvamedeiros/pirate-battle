@@ -1,3 +1,5 @@
+import sharedStyles from '../styles/ui.module.scss'
+import styles from './GameScreen.module.scss'
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { PointerEvent } from 'react'
 import { createGameEngine } from '../engine/game-engine'
@@ -11,7 +13,6 @@ import { prepareMatch } from '../engine/scenarios'
 import { createRenderProfiler, profilingConfiguration } from '../engine/profiling'
 import type { ResultsStore } from '../persistence/results'
 import { ResultDetails } from './ResultDetails'
-import './GameScreen.scss'
 
 function SessionDialog({
   engine,
@@ -39,7 +40,7 @@ function SessionDialog({
   return (
     <dialog
       ref={dialog}
-      className="session-dialog"
+      className={styles['session-dialog']}
       aria-labelledby="session-dialog-heading"
       onKeyDown={(event) => {
         if (event.key !== 'Tab') return
@@ -76,15 +77,15 @@ function SessionDialog({
         <ResultDetails result={resultsStore.getSnapshot().lastResult!} store={resultsStore} />
       )}
       {completed ? (
-        <button type="button" className="primary-button" onClick={onRestart}>
+        <button type="button" className={sharedStyles['primary-button']} onClick={onRestart}>
           Play Again
         </button>
       ) : (
-        <button type="button" className="primary-button" onClick={onResume}>
+        <button type="button" className={sharedStyles['primary-button']} onClick={onResume}>
           Resume
         </button>
       )}
-      <button type="button" className="secondary-button" onClick={onExit}>
+      <button type="button" className={sharedStyles['secondary-button']} onClick={onExit}>
         Main Menu
       </button>
     </dialog>
@@ -219,10 +220,10 @@ export function GameScreen({
   }
 
   return (
-    <main className="game-screen" tabIndex={-1} ref={root} aria-label="Game session">
-      <header className="game-hud">
+    <main className={styles['game-screen']} tabIndex={-1} ref={root} aria-label="Game session">
+      <header className={styles['game-hud']}>
         <h1>Pirate Battle</h1>
-        <div className="hud-values" aria-label="Match status">
+        <div className={styles['hud-values']} aria-label="Match status">
           <span>Health: {snapshot.health}</span>
           <span>Score: {snapshot.score}</span>
           <span data-testid="remaining-time">Time: {snapshot.remainingSeconds}s</span>
@@ -231,37 +232,37 @@ export function GameScreen({
         <button
           ref={pauseButton}
           type="button"
-          className="secondary-button"
+          className={sharedStyles['secondary-button']}
           disabled={!ready || snapshot.status !== 'running'}
           onClick={() => engine.pause()}
         >
           Pause
         </button>
       </header>
-      <div className="arena-frame" ref={host}>
+      <div className={styles['arena-frame']} ref={host}>
         {!ready && !error && (
-          <p role="status" className="arena-message">
+          <p role="status" className={styles['arena-message']}>
             Loading your ship…
           </p>
         )}
         {error && (
-          <div className="arena-message">
+          <div className={styles['arena-message']}>
             <p role="alert">The arena could not be loaded.</p>
-            <button type="button" className="primary-button" onClick={onRestart}>
+            <button type="button" className={sharedStyles['primary-button']} onClick={onRestart}>
               Retry
             </button>
-            <button type="button" className="secondary-button" onClick={onExit}>
+            <button type="button" className={sharedStyles['secondary-button']} onClick={onExit}>
               Main Menu
             </button>
           </div>
         )}
       </div>
       {!ready && !error && (
-        <button type="button" className="secondary-button" onClick={onExit}>
+        <button type="button" className={sharedStyles['secondary-button']} onClick={onExit}>
           Main Menu
         </button>
       )}
-      <nav className="movement-controls" aria-label="Ship controls">
+      <nav className={styles['movement-controls']} aria-label="Ship controls">
         {(
           [
             ['left', 'Rotate Left'],
@@ -285,12 +286,12 @@ export function GameScreen({
           </button>
         ))}
       </nav>
-      <p className="navigation-hint">
+      <p className={styles['navigation-hint']}>
         W / ↑ to sail · A / ← and D / → to rotate · Space to fire · Q / E for broadsides · Esc / P
         to pause
       </p>
       {runtime.profiler && (
-        <p className="navigation-hint">
+        <p className={styles['navigation-hint']}>
           Profiling enabled · real clock · seed{' '}
           {new URLSearchParams(location.search).get('seed') ?? '1'}
           {new URLSearchParams(location.search).get('preset') === 'endurance' &&

@@ -1,3 +1,5 @@
+import sharedStyles from './styles/ui.module.scss'
+import styles from './App.module.scss'
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { browserOptionsStorage, savePlayerOptions } from './persistence/options'
 import type { LoadedOptions, PlayerOptions } from './persistence/options'
@@ -10,7 +12,6 @@ import type { DataRuntime } from './api/runtime'
 import { configurationKey } from './api/contracts'
 import { RecordsPanel } from './ui/RecordsPanel'
 import { NetworkPanel } from './ui/NetworkPanel'
-import './App.scss'
 
 const controls = [
   ['Move forward', 'W / ↑', 'Hold Forward'],
@@ -86,15 +87,15 @@ function App({
     )
 
   return (
-    <main className="app-shell">
-      <div className="menu-panel">
+    <main className={styles['app-shell']}>
+      <div className={styles['menu-panel']}>
         {notice && (
-          <p className="storage-notice" role="status">
+          <p className={sharedStyles['storage-notice']} role="status">
             {notice}
           </p>
         )}
         {results.notice && !notice && !results.writeFailed && (
-          <p className="storage-notice" role="status">
+          <p className={sharedStyles['storage-notice']} role="status">
             {results.notice}
           </p>
         )}
@@ -104,13 +105,13 @@ function App({
               Last Result
             </h1>
             <ResultDetails result={results.lastResult} store={resultsStore} />
-            <div className="form-actions">
-              <button type="button" className="primary-button" onClick={play}>
+            <div className={sharedStyles['form-actions']}>
+              <button type="button" className={sharedStyles['primary-button']} onClick={play}>
                 Play Again
               </button>
               <button
                 type="button"
-                className="secondary-button"
+                className={sharedStyles['secondary-button']}
                 onClick={() => {
                   setScreen('menu')
                   requestAnimationFrame(() => optionsButton.current?.focus())
@@ -131,20 +132,20 @@ function App({
           />
         ) : (
           <section aria-labelledby="menu-heading">
-            <h1 id="menu-heading" className="game-title">
+            <h1 id="menu-heading" className={styles['game-title']}>
               <img
                 src={`${import.meta.env.BASE_URL}assets/png/retina/ui/menu/title_pirate_battle.png`}
                 alt="Pirate Battle"
               />
             </h1>
-            <p className="tagline">Set sail. Take command.</p>
-            <div className="menu-actions">
-              <button type="button" className="primary-button" onClick={play}>
+            <p className={styles['tagline']}>Set sail. Take command.</p>
+            <div className={styles['menu-actions']}>
+              <button type="button" className={sharedStyles['primary-button']} onClick={play}>
                 Play
               </button>
               <button
                 type="button"
-                className="primary-button"
+                className={sharedStyles['primary-button']}
                 ref={optionsButton}
                 onClick={() => setScreen('options')}
               >
@@ -153,24 +154,24 @@ function App({
               {results.lastResult && (
                 <button
                   type="button"
-                  className="secondary-button"
+                  className={sharedStyles['secondary-button']}
                   onClick={() => setScreen('result')}
                 >
                   Last Result
                 </button>
               )}
             </div>
-            <p className="availability">
+            <p className={sharedStyles['availability']}>
               Face Chasers and Shooters. Stay afloat and earn your score.
             </p>
-            <p className="session-summary">
+            <p className={styles['session-summary']}>
               {options.sessionTime}s voyage · Enemies every {options.enemySpawnInterval}s
             </p>
-            <details className="controls">
+            <details className={styles['controls']}>
               <summary>Controls</summary>
               <p>Move, rotate, and fire together. Touch controls support simultaneous actions.</p>
-              <div className="table-scroll">
-                <table>
+              <div className={sharedStyles['table-scroll']}>
+                <table className={sharedStyles.table}>
                   <caption className="visually-hidden">Keyboard and touch controls</caption>
                   <thead>
                     <tr>
@@ -191,14 +192,14 @@ function App({
                 </table>
               </div>
             </details>
-            <div className="ranking-actions" role="tablist" aria-label="Match records">
+            <div className={styles['ranking-actions']} role="tablist" aria-label="Match records">
               {(['ranking', 'history'] as const).map((kind) => (
                 <button
                   key={kind}
                   id={`${kind}-tab`}
                   type="button"
                   role="tab"
-                  className="secondary-button"
+                  className={sharedStyles['secondary-button']}
                   aria-selected={tab === kind}
                   aria-controls={`${kind}-panel`}
                   onClick={() => setTab(kind)}
@@ -228,7 +229,7 @@ function App({
               ))}
             </div>
             {tab === 'ranking' && (
-              <div className="configuration-group">
+              <div className={styles['configuration-group']}>
                 <label htmlFor="ranking-group">Ranking configuration</label>
                 <select
                   id="ranking-group"

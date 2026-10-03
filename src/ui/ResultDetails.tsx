@@ -1,10 +1,12 @@
+import sharedStyles from '../styles/ui.module.scss'
+import styles from './ResultDetails.module.scss'
 import type { LastResult, ResultsStore } from '../persistence/results'
 
 export function ResultDetails({ result, store }: { result: LastResult; store: ResultsStore }) {
   const { record } = result
   const snapshot = store.getSnapshot()
   return (
-    <div className="result-details">
+    <div className={styles['result-details']}>
       <dl>
         <div>
           <dt>Score</dt>
@@ -37,13 +39,15 @@ export function ResultDetails({ result, store }: { result: LastResult; store: Re
               : 'Registration pending.'}
       </p>
       {result.submissionStatus !== 'confirmed' && (
-        <p className="availability">You can play again while this record is pending.</p>
+        <p className={`${sharedStyles['availability']} ${styles['pending-message']}`}>
+          You can play again while this record is pending.
+        </p>
       )}
       {result.lastError && <p role="alert">{result.lastError}</p>}
       {result.submissionStatus !== 'confirmed' && (
         <button
           type="button"
-          className="secondary-button"
+          className={sharedStyles['secondary-button']}
           onClick={() => store.retrySubmission(record.matchId)}
         >
           Retry Registration
@@ -51,12 +55,12 @@ export function ResultDetails({ result, store }: { result: LastResult; store: Re
       )}
       {snapshot.writeFailed && (
         <>
-          <p role="alert" className="storage-notice">
+          <p role="alert" className={sharedStyles['storage-notice']}>
             {snapshot.notice}
           </p>
           <button
             type="button"
-            className="secondary-button"
+            className={sharedStyles['secondary-button']}
             onClick={() => store.retryPersistence()}
           >
             Retry Save

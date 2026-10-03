@@ -1,0 +1,26 @@
+.result-details dl {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.result-details dl div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+}
+
+.result-details dt {
+  font-weight: bold;
+}
+
+.result-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.result-details .pending-message {
+  line-height: 1.5;
+}

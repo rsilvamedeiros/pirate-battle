@@ -72,13 +72,15 @@ test('keeps arena proportions, HUD and controls usable across orientation change
     const layout = await page.evaluate(() => {
       const canvas = document.querySelector('canvas')!
       const bounds = canvas.getBoundingClientRect()
-      const hud = document.querySelector('.game-hud')!.getBoundingClientRect()
-      const controls = Array.from(document.querySelectorAll('.movement-controls button')).map(
-        (button) => {
-          const box = button.getBoundingClientRect()
-          return { width: box.width, height: box.height, left: box.left, right: box.right }
-        },
-      )
+      const hud = document
+        .querySelector('main[aria-label="Game session"] header')!
+        .getBoundingClientRect()
+      const controls = Array.from(
+        document.querySelectorAll('nav[aria-label="Ship controls"] button'),
+      ).map((button) => {
+        const box = button.getBoundingClientRect()
+        return { width: box.width, height: box.height, left: box.left, right: box.right }
+      })
       return {
         ratio: bounds.width / bounds.height,
         left: bounds.left,
@@ -95,6 +97,7 @@ test('keeps arena proportions, HUD and controls usable across orientation change
     expect(layout.hudLeft).toBeGreaterThanOrEqual(0)
     expect(layout.hudRight).toBeLessThanOrEqual(viewport.width)
     expect(layout.overflow).toBe(false)
+    expect(layout.controls).toHaveLength(6)
     for (const control of layout.controls) {
       expect(control.width).toBeGreaterThanOrEqual(44)
       expect(control.height).toBeGreaterThanOrEqual(44)

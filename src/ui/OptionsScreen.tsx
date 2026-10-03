@@ -1,3 +1,5 @@
+import sharedStyles from '../styles/ui.module.scss'
+import styles from './OptionsScreen.module.scss'
 import { useEffect, useRef, useState } from 'react'
 import { defaultGameplayConfig, gameplayOptionLimits, validateGameplayConfig } from '../core/config'
 import type { PlayerOptions } from '../persistence/options'
@@ -69,18 +71,18 @@ export function OptionsScreen({ options, onSave, onBack }: OptionsScreenProps) {
   }
 
   return (
-    <section aria-labelledby="options-heading" className="options-screen">
+    <section aria-labelledby="options-heading" className={styles['options-screen']}>
       <h1 id="options-heading" tabIndex={-1} ref={heading}>
         Options
       </h1>
-      <p className="intro">Prepare your next voyage.</p>
+      <p className={styles['intro']}>Prepare your next voyage.</p>
       <form onSubmit={submit} noValidate>
         {fields.map(({ name, label }) => {
           const limits = gameplayOptionLimits[name]
           return (
-            <div className="option-field" key={name}>
+            <div className={styles['option-field']} key={name}>
               <label htmlFor={name}>{label}</label>
-              <div className="number-control">
+              <div className={styles['number-control']}>
                 <input
                   ref={name === 'sessionTime' ? sessionInput : spawnInput}
                   id={name}
@@ -103,35 +105,37 @@ export function OptionsScreen({ options, onSave, onBack }: OptionsScreenProps) {
                 />
                 <span aria-hidden="true">seconds</span>
               </div>
-              <p className="field-hint" id={`${name}-hint`}>
+              <p className={styles['field-hint']} id={`${name}-hint`}>
                 {limits.min}–{limits.max} seconds
               </p>
               {errors[name] && (
-                <p className="field-error" id={`${name}-error`} role="alert">
+                <p className={styles['field-error']} id={`${name}-error`} role="alert">
                   {errors[name]}
                 </p>
               )}
             </div>
           )
         })}
-        <div className="save-feedback">
+        <div className={styles['save-feedback']}>
           <p role="status">{message}</p>
           {storageError && (
-            <p className="field-error" role="alert">
+            <p className={styles['field-error']} role="alert">
               {storageError}
             </p>
           )}
         </div>
-        <div className="form-actions">
-          <button className="primary-button" type="submit">
+        <div className={sharedStyles['form-actions']}>
+          <button className={sharedStyles['primary-button']} type="submit">
             Save
           </button>
-          <button className="secondary-button" type="button" onClick={onBack}>
+          <button className={sharedStyles['secondary-button']} type="button" onClick={onBack}>
             Main Menu
           </button>
         </div>
       </form>
-      <p className="field-hint footer-hint">Only saved settings are used for a new match.</p>
+      <p className={`${styles['field-hint']} ${styles['footer-hint']}`}>
+        Only saved settings are used for a new match.
+      </p>
     </section>
   )
 }

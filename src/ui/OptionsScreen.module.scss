@@ -1,0 +1,72 @@
+@use '../styles/tokens' as tokens;
+
+.intro {
+  margin-top: 12px;
+  color: tokens.$text-muted;
+}
+
+.options-screen form {
+  margin-top: 28px;
+}
+
+.option-field {
+  margin-block: 24px;
+  text-align: left;
+}
+
+.option-field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.number-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.number-control input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  min-height: 48px;
+  border: 2px solid tokens.$border-input;
+  border-radius: 6px;
+  background: tokens.$surface-input;
+  color: tokens.$text-primary;
+  font-size: 1.25rem;
+}
+
+.number-control input[aria-invalid='true'] {
+  border-color: #ffa79f;
+}
+
+.number-control span {
+  color: tokens.$text-muted;
+  font-size: 0.85rem;
+}
+
+.field-hint {
+  color: tokens.$text-muted;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.field-error {
+  color: #ffb9af;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.save-feedback {
+  min-height: 46px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.footer-hint {
+  margin-top: 22px;
+}
