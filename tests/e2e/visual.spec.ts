@@ -7,7 +7,9 @@ test.setTimeout(60000)
 
 // Freeze dates only: worker startup, HTTP timeouts and retries keep real timers.
 test.beforeEach(async ({ page }) => {
-  page.on('pageerror', (error) => { throw error })
+  page.on('pageerror', (error) => {
+    throw error
+  })
   await page.clock.setFixedTime(new Date('2026-10-03T12:00:00.000Z'))
 })
 
@@ -18,7 +20,14 @@ async function ready(page: Page) {
   })
 }
 
-const screenshot = { fullPage: true, animations: 'disabled', caret: 'hide', scale: 'css', maxDiffPixels: 0, timeout: 15000 } as const
+const screenshot = {
+  fullPage: true,
+  animations: 'disabled',
+  caret: 'hide',
+  scale: 'css',
+  maxDiffPixels: 0,
+  timeout: 15000,
+} as const
 
 test('matches the main menu baseline', async ({ page }) => {
   await page.goto('/?e2e=1&seed=42&scenario=success')

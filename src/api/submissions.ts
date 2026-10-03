@@ -6,10 +6,15 @@ import type { MatchRecord } from './contracts'
 import type { MatchApi } from './client'
 import { normalizeApiError, retryDelay, retryRequest } from './client'
 
-const recordQuery = (query: { queryKey: readonly unknown[] }) => query.queryKey[0] === 'ranking' || query.queryKey[0] === 'match-history'
+const recordQuery = (query: { queryKey: readonly unknown[] }) =>
+  query.queryKey[0] === 'ranking' || query.queryKey[0] === 'match-history'
 export { recordQuery }
 
-export function createSubmissionCoordinator(store: ResultsStore, api: MatchApi, client: QueryClient) {
+export function createSubmissionCoordinator(
+  store: ResultsStore,
+  api: MatchApi,
+  client: QueryClient,
+) {
   let enabled = false
   let generation = 0
   const tried = new Set<string>()
@@ -24,13 +29,17 @@ export function createSubmissionCoordinator(store: ResultsStore, api: MatchApi, 
     tried.add(matchId)
     const promise = Promise.resolve().then(async () => {
       const observer = new MutationObserver<MatchRecord, Error, MatchRecord>(client, {
-        mutationKey: ['submit-match', matchId], networkMode: 'always',
+        mutationKey: ['submit-match', matchId],
+        networkMode: 'always',
         mutationFn: (record) => {
           if (started !== generation || controller.signal.aborted) throw new axios.CanceledError()
-          if (!store.markSending(matchId)) throw new axios.CanceledError('The pending record could not be saved.')
+          if (!store.markSending(matchId))
+            throw new axios.CanceledError('The pending record could not be saved.')
           return api.submit(record, controller.signal)
         },
-        retry: (count, error) => started === generation && !controller.signal.aborted && retryRequest(count, error), retryDelay,
+        retry: (count, error) =>
+          started === generation && !controller.signal.aborted && retryRequest(count, error),
+        retryDelay,
       })
       try {
         const record = await observer.mutate(entry.record)
@@ -39,9 +48,13 @@ export function createSubmissionCoordinator(store: ResultsStore, api: MatchApi, 
         await client.cancelQueries({ predicate: recordQuery })
         await client.invalidateQueries({ predicate: recordQuery })
       } catch (error) {
-        if (started === generation && axios.isCancel(error) && !controller.signal.aborted) tried.delete(matchId)
-        if (started === generation && !axios.isCancel(error)) store.markFailed(matchId, normalizeApiError(error).message)
-      } finally { if (inFlight.get(matchId)?.controller === controller) inFlight.delete(matchId) }
+        if (started === generation && axios.isCancel(error) && !controller.signal.aborted)
+          tried.delete(matchId)
+        if (started === generation && !axios.isCancel(error))
+          store.markFailed(matchId, normalizeApiError(error).message)
+      } finally {
+        if (inFlight.get(matchId)?.controller === controller) inFlight.delete(matchId)
+      }
     })
     inFlight.set(matchId, { controller, promise })
     return promise
@@ -51,15 +64,26 @@ export function createSubmissionCoordinator(store: ResultsStore, api: MatchApi, 
     for (const id of Object.keys(store.getSnapshot().entries)) if (!tried.has(id)) void submit(id)
   }
   const unsubscribe = store.subscribe(replay)
-  store.setSubmissionHandler((id) => { void submit(id) })
+  store.setSubmissionHandler((id) => {
+    void submit(id)
+  })
   return {
     submit,
-    start() { enabled = true; replay() },
+    start() {
+      enabled = true
+      replay()
+    },
     suspend() {
-      enabled = false; generation++; tried.clear()
+      enabled = false
+      generation++
+      tried.clear()
       for (const request of inFlight.values()) request.controller.abort()
       inFlight.clear()
     },
-    dispose() { this.suspend(); unsubscribe(); store.setSubmissionHandler(() => {}) },
+    dispose() {
+      this.suspend()
+      unsubscribe()
+      store.setSubmissionHandler(() => {})
+    },
   }
 }

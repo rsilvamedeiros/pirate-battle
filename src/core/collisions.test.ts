@@ -16,10 +16,22 @@ describe('swept projectile contacts', () => {
     expect(circleContact({ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 10, y: 0 }, 2)).toBeNull()
   })
   it.each([
-    [{ x: 10, y: 10 }, { x: 0, y: 10 }],
-    [{ x: 990, y: 10 }, { x: 1000, y: 10 }],
-    [{ x: 10, y: 10 }, { x: 10, y: 0 }],
-    [{ x: 10, y: 690 }, { x: 10, y: 700 }],
+    [
+      { x: 10, y: 10 },
+      { x: 0, y: 10 },
+    ],
+    [
+      { x: 990, y: 10 },
+      { x: 1000, y: 10 },
+    ],
+    [
+      { x: 10, y: 10 },
+      { x: 10, y: 0 },
+    ],
+    [
+      { x: 10, y: 690 },
+      { x: 10, y: 700 },
+    ],
   ])('detects each arena edge including the projectile footprint', (from, to) => {
     expect(arenaContact(from, to)).toBeCloseTo(0.6)
   })

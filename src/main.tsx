@@ -9,7 +9,12 @@ import { QueryClientProvider } from '@tanstack/react-query'
 
 // Bootstrap once outside StrictMode so setup does not regenerate player identity.
 const initialOptions = loadPlayerOptions(browserOptionsStorage, () => crypto.randomUUID())
-const resultsStore = createResultsStore(browserOptionsStorage, initialOptions.options, () => crypto.randomUUID(), () => new Date().toISOString())
+const resultsStore = createResultsStore(
+  browserOptionsStorage,
+  initialOptions.options,
+  () => crypto.randomUUID(),
+  () => new Date().toISOString(),
+)
 const dataRuntime = createDataRuntime(resultsStore, browserOptionsStorage, initialOptions.options)
 void dataRuntime.start()
 

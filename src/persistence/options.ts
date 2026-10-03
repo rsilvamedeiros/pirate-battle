@@ -29,33 +29,43 @@ export const browserOptionsStorage: OptionsStorage = {
 function isPlayerOptions(value: unknown): value is PlayerOptions {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) return false
   const record = value as Record<string, unknown>
-  return record.version === 1
-    && typeof record.playerId === 'string' && record.playerId.trim().length > 0
-    && typeof record.playerName === 'string' && record.playerName.trim().length > 0
-    && validateGameplayConfig({
+  return (
+    record.version === 1 &&
+    typeof record.playerId === 'string' &&
+    record.playerId.trim().length > 0 &&
+    typeof record.playerName === 'string' &&
+    record.playerName.trim().length > 0 &&
+    validateGameplayConfig({
       ...defaultGameplayConfig,
       sessionTime: record.sessionTime,
       enemySpawnInterval: record.enemySpawnInterval,
     }).valid
+  )
 }
 
 export function savePlayerOptions(storage: OptionsStorage, options: PlayerOptions): boolean {
   if (!isPlayerOptions(options)) return false
   try {
-    storage.setItem(optionsStorageKey, JSON.stringify({
-      version: options.version,
-      playerId: options.playerId,
-      playerName: options.playerName,
-      sessionTime: options.sessionTime,
-      enemySpawnInterval: options.enemySpawnInterval,
-    }))
+    storage.setItem(
+      optionsStorageKey,
+      JSON.stringify({
+        version: options.version,
+        playerId: options.playerId,
+        playerName: options.playerName,
+        sessionTime: options.sessionTime,
+        enemySpawnInterval: options.enemySpawnInterval,
+      }),
+    )
     return true
   } catch {
     return false
   }
 }
 
-export function loadPlayerOptions(storage: OptionsStorage, createPlayerId: () => string): LoadedOptions {
+export function loadPlayerOptions(
+  storage: OptionsStorage,
+  createPlayerId: () => string,
+): LoadedOptions {
   let notice: string | null = null
   try {
     const raw = storage.getItem(optionsStorageKey)

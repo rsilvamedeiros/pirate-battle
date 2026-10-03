@@ -7,8 +7,11 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: 0,
   workers: 1,
-  reporter: [['list'], ['html', { outputFolder: 'playwright-report/strict-mode', open: 'never' }],
-    ['json', { outputFile: 'test-results/strict-mode/report.json' }]],
+  reporter: [
+    ['list'],
+    ['html', { outputFolder: 'playwright-report/strict-mode', open: 'never' }],
+    ['json', { outputFile: 'test-results/strict-mode/report.json' }],
+  ],
   outputDir: 'test-results/strict-mode',
   use: {
     baseURL: 'http://127.0.0.1:4174',
@@ -20,7 +23,14 @@ export default defineConfig({
     launchOptions: { args: ['--use-angle=swiftshader'] },
   },
   projects: [
-    { name: 'strict-desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 } },
+    {
+      name: 'strict-desktop',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+        deviceScaleFactor: 1,
+      },
+    },
     { name: 'strict-mobile', use: { ...devices['Pixel 7'] } },
   ],
   webServer: {

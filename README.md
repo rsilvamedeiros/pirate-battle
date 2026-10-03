@@ -30,6 +30,8 @@ Open the URL printed by Vite. No environment variables, credentials or private s
 | npm run build | Type-check and generate dist/ |
 | npm run preview | Serve the optimized build locally |
 | npm run lint | Check source/tooling lint rules |
+| npm run format | Format source, SCSS, tests, scripts and root configuration/HTML files |
+| npm run format:check | Verify formatting without changing files |
 | npm run typecheck | Check application, tooling and browser-test types |
 | npm run test:unit | Run core, engine, persistence, API and mock tests |
 | npm run test:e2e | Build and run desktop/mobile browser and visual suites |

@@ -1,0 +1,13 @@
+# Keep formatted source consistent across Windows and Unix checkouts.
+src/**/*.ts text eol=lf
+src/**/*.tsx text eol=lf
+src/**/*.scss text eol=lf
+tests/**/*.ts text eol=lf
+scripts/*.mjs text eol=lf
+/*.js text eol=lf
+/*.ts text eol=lf
+/*.json text eol=lf
+/index.html text eol=lf
+/.editorconfig text eol=lf
+/.prettierignore text eol=lf
+/.gitattributes text eol=lf

@@ -34,7 +34,7 @@ test('blocks forward movement at the island and arena edge', async ({ page }) =>
   await page.keyboard.up('w')
   expect((await state(page)).player.x).toBeLessThanOrEqual(360)
   await page.keyboard.down('a')
-  await advance(page, Math.PI / 3 * 1000)
+  await advance(page, (Math.PI / 3) * 1000)
   await page.keyboard.up('a')
   await page.keyboard.down('w')
   await advance(page, 5000)
@@ -54,16 +54,22 @@ test('retains arena proportions and world coordinates after resize', async ({ pa
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
-test('moves and rotates with simultaneous browser touch contacts', async ({ page, browserName }) => {
+test('moves and rotates with simultaneous browser touch contacts', async ({
+  page,
+  browserName,
+}) => {
   test.skip(browserName !== 'chromium')
   await startGame(page)
   const forward = await page.getByRole('button', { name: 'Forward', exact: true }).boundingBox()
   const right = await page.getByRole('button', { name: 'Rotate Right', exact: true }).boundingBox()
   const protocol = await page.context().newCDPSession(page)
-  await protocol.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [
-    { id: 1, x: forward!.x + forward!.width / 2, y: forward!.y + forward!.height / 2 },
-    { id: 2, x: right!.x + right!.width / 2, y: right!.y + right!.height / 2 },
-  ] })
+  await protocol.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [
+      { id: 1, x: forward!.x + forward!.width / 2, y: forward!.y + forward!.height / 2 },
+      { id: 2, x: right!.x + right!.width / 2, y: right!.y + right!.height / 2 },
+    ],
+  })
   await advance(page, 250)
   await protocol.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
   const moved = await state(page)

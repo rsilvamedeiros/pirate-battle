@@ -2,7 +2,9 @@ import { createInitialState, fixedStepMs, stepSimulation } from '../core/simulat
 import type { GameInput, InitialSetup } from '../core/simulation'
 import type { GameplayConfig } from '../core/config'
 
-export interface GameClock { now(): number }
+export interface GameClock {
+  now(): number
+}
 export interface HudSnapshot {
   health: number
   score: number
@@ -13,7 +15,11 @@ export interface HudSnapshot {
 export const maxFrameMs = 250
 export type GameAction = keyof GameInput
 
-export function createGameEngine(config: GameplayConfig, clock: GameClock, setup: InitialSetup = {}) {
+export function createGameEngine(
+  config: GameplayConfig,
+  clock: GameClock,
+  setup: InitialSetup = {},
+) {
   let state = createInitialState(config, setup)
   let lastTime: number | null = null
   let accumulator = 0
@@ -32,25 +38,36 @@ export function createGameEngine(config: GameplayConfig, clock: GameClock, setup
 
   function publish() {
     const next = makeSnapshot()
-    if (next.health === snapshot.health && next.score === snapshot.score
-      && next.remainingSeconds === snapshot.remainingSeconds && next.status === snapshot.status) return
+    if (
+      next.health === snapshot.health &&
+      next.score === snapshot.score &&
+      next.remainingSeconds === snapshot.remainingSeconds &&
+      next.status === snapshot.status
+    )
+      return
     snapshot = next
     for (const listener of listeners) listener()
   }
 
-  function clearActions() { actions.clear() }
+  function clearActions() {
+    actions.clear()
+  }
 
   return {
     getState: () => state,
     getSnapshot: () => snapshot,
     subscribe(listener: () => void) {
       listeners.add(listener)
-      return () => { listeners.delete(listener) }
+      return () => {
+        listeners.delete(listener)
+      }
     },
     press(source: string, action: GameAction) {
       if (state.status === 'running') actions.set(source, action)
     },
-    release(source: string) { actions.delete(source) },
+    release(source: string) {
+      actions.delete(source)
+    },
     clearActions,
     pause() {
       if (state.status !== 'running') return
@@ -70,18 +87,33 @@ export function createGameEngine(config: GameplayConfig, clock: GameClock, setup
     },
     frame() {
       const time = clock.now()
-      if (state.status !== 'running') { lastTime = null; return }
-      if (lastTime === null) { lastTime = time; return }
+      if (state.status !== 'running') {
+        lastTime = null
+        return
+      }
+      if (lastTime === null) {
+        lastTime = time
+        return
+      }
       accumulator += Math.min(maxFrameMs, Math.max(0, time - lastTime))
       lastTime = time
       const held = new Set(actions.values())
-      const input: GameInput = { forward: held.has('forward'), left: held.has('left'), right: held.has('right'),
-        frontFire: held.has('frontFire'), leftFire: held.has('leftFire'), rightFire: held.has('rightFire') }
+      const input: GameInput = {
+        forward: held.has('forward'),
+        left: held.has('left'),
+        right: held.has('right'),
+        frontFire: held.has('frontFire'),
+        leftFire: held.has('leftFire'),
+        rightFire: held.has('rightFire'),
+      }
       while (accumulator + 1e-8 >= fixedStepMs && state.status === 'running') {
         state = stepSimulation(state, input)
         accumulator = Math.max(0, accumulator - fixedStepMs)
       }
-      if (state.status === 'completed') { accumulator = 0; clearActions() }
+      if (state.status === 'completed') {
+        accumulator = 0
+        clearActions()
+      }
       publish()
     },
   }

@@ -7,18 +7,27 @@ function setup() {
   let now = 0
   const engine = createGameEngine(defaultGameplayConfig, { now: () => now })
   engine.frame()
-  return { engine, frame: (milliseconds: number) => { now += milliseconds; engine.frame() } }
+  return {
+    engine,
+    frame: (milliseconds: number) => {
+      now += milliseconds
+      engine.frame()
+    },
+  }
 }
 
 describe('fixed-step engine', () => {
-  it.each([30, 60, 144])('produces the same movement and active time at %s display frames per second', (fps) => {
-    const { engine, frame } = setup()
-    engine.press('keyboard', 'forward')
-    for (let index = 0; index < fps; index++) frame(1000 / fps)
-    expect(engine.getState().ticks).toBe(60)
-    expect(engine.getState().elapsedMs).toBeCloseTo(1000)
-    expect(engine.getState().player.x).toBeCloseTo(330)
-  })
+  it.each([30, 60, 144])(
+    'produces the same movement and active time at %s display frames per second',
+    (fps) => {
+      const { engine, frame } = setup()
+      engine.press('keyboard', 'forward')
+      for (let index = 0; index < fps; index++) frame(1000 / fps)
+      expect(engine.getState().ticks).toBe(60)
+      expect(engine.getState().elapsedMs).toBeCloseTo(1000)
+      expect(engine.getState().player.x).toBeCloseTo(330)
+    },
+  )
   it('accumulates partial frames into complete steps', () => {
     const { engine, frame } = setup()
     engine.press('test', 'forward')

@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { defaultGameplayConfig } from './config'
-import { arena, createInitialState, fixedStepMs, idleInput, island, playerRadius, stepSimulation } from './simulation'
+import {
+  arena,
+  createInitialState,
+  fixedStepMs,
+  idleInput,
+  island,
+  playerRadius,
+  stepSimulation,
+} from './simulation'
 
 const idle = idleInput
 
@@ -29,8 +37,10 @@ describe('navigation simulation', () => {
     expect(stepSimulation(state, { ...idle, left: true, right: true }).player.heading).toBe(0)
   })
   it.each([
-    [playerRadius, 150, Math.PI], [arena.width - playerRadius, 150, 0],
-    [150, playerRadius, -Math.PI / 2], [150, arena.height - playerRadius, Math.PI / 2],
+    [playerRadius, 150, Math.PI],
+    [arena.width - playerRadius, 150, 0],
+    [150, playerRadius, -Math.PI / 2],
+    [150, arena.height - playerRadius, Math.PI / 2],
   ])('contains the ship footprint at boundary %s / %s', (x, y, heading) => {
     const state = createInitialState(defaultGameplayConfig)
     state.player = { ...state.player, x, y, heading }
@@ -41,7 +51,9 @@ describe('navigation simulation', () => {
   it('blocks the ship at the island', () => {
     let state = createInitialState(defaultGameplayConfig)
     for (let tick = 0; tick < 300; tick++) state = stepSimulation(state, { ...idle, forward: true })
-    expect(Math.hypot(state.player.x - island.x, state.player.y - island.y)).toBeGreaterThanOrEqual(island.radius + playerRadius)
+    expect(Math.hypot(state.player.x - island.x, state.player.y - island.y)).toBeGreaterThanOrEqual(
+      island.radius + playerRadius,
+    )
     expect(state.player.x).toBeLessThanOrEqual(360)
   })
   it('suspends paused state without advancing timer or movement', () => {
@@ -49,14 +61,26 @@ describe('navigation simulation', () => {
     expect(stepSimulation(state, { ...idle, forward: true })).toBe(state)
   })
   it('completes at the configured time without floating point drift', () => {
-    let state = createInitialState({ ...defaultGameplayConfig, sessionTime: 60, playerHp: 500, chaserCollisionDamage: 1, shooterProjectileDamage: 1 })
+    let state = createInitialState({
+      ...defaultGameplayConfig,
+      sessionTime: 60,
+      playerHp: 500,
+      chaserCollisionDamage: 1,
+      shooterProjectileDamage: 1,
+    })
     for (let tick = 0; tick < 3600; tick++) state = stepSimulation(state, idle)
     expect(state.elapsedMs).toBe(60000)
     expect(state.status).toBe('completed')
     expect(stepSimulation(state, { ...idle, forward: true })).toBe(state)
   })
   it('clips the last timestep to a fractional session duration', () => {
-    let state = createInitialState({ ...defaultGameplayConfig, sessionTime: 60.001, playerHp: 500, chaserCollisionDamage: 1, shooterProjectileDamage: 1 })
+    let state = createInitialState({
+      ...defaultGameplayConfig,
+      sessionTime: 60.001,
+      playerHp: 500,
+      chaserCollisionDamage: 1,
+      shooterProjectileDamage: 1,
+    })
     for (let tick = 0; tick < 3601; tick++) state = stepSimulation(state, idle)
     expect(state.elapsedMs).toBeCloseTo(60001)
     expect(state.status).toBe('completed')

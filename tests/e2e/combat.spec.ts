@@ -21,10 +21,12 @@ test('applies real front hits once, destroys the target and scores once', async 
 
 test('scores simultaneous broadside kills once through touch controls', async ({ page }) => {
   await startGame(page, 'broadsides')
-  const points = await Promise.all(['Left Fire', 'Right Fire'].map(async (name, id) => {
-    const bounds = (await page.getByRole('button', { name, exact: true }).boundingBox())!
-    return { id, x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 }
-  }))
+  const points = await Promise.all(
+    ['Left Fire', 'Right Fire'].map(async (name, id) => {
+      const bounds = (await page.getByRole('button', { name, exact: true }).boundingBox())!
+      return { id, x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 }
+    }),
+  )
   const protocol = await page.context().newCDPSession(page)
   await protocol.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: points })
   await advance(page, 300)
@@ -38,7 +40,9 @@ test('scores simultaneous broadside kills once through touch controls', async ({
   await protocol.detach()
 })
 
-test('fires and renders one front projectile through the real keyboard control', async ({ page }) => {
+test('fires and renders one front projectile through the real keyboard control', async ({
+  page,
+}) => {
   await startGame(page)
   const canvas = page.locator('canvas')
   const before = await canvas.screenshot()
@@ -47,7 +51,12 @@ test('fires and renders one front projectile through the real keyboard control',
   await page.keyboard.up('Space')
   const fired = await state(page)
   expect(fired.projectiles).toHaveLength(1)
-  expect(fired.projectiles[0]).toMatchObject({ weapon: 'frontFire', heading: 0, damage: 20, speed: 400 })
+  expect(fired.projectiles[0]).toMatchObject({
+    weapon: 'frontFire',
+    heading: 0,
+    damage: 20,
+    speed: 400,
+  })
   expect(fired.projectiles[0].x).toBeCloseTo(236)
   expect(fired.effects.some(({ kind }) => kind === 'fire')).toBe(true)
   expect((await canvas.screenshot()).equals(before)).toBe(false)
@@ -130,13 +139,17 @@ test('freezes projectiles and cooldowns on pause without replaying held fire', a
   expect((await state(page)).cooldowns.frontFire).toBeCloseTo(750)
 })
 
-test('moves and fires with simultaneous touch contacts and releases on cancellation', async ({ page }) => {
+test('moves and fires with simultaneous touch contacts and releases on cancellation', async ({
+  page,
+}) => {
   await startGame(page)
   const controls = ['Forward', 'Front Fire', 'Left Fire', 'Right Fire']
-  const points = await Promise.all(controls.map(async (name, id) => {
-    const bounds = (await page.getByRole('button', { name, exact: true }).boundingBox())!
-    return { id, x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 }
-  }))
+  const points = await Promise.all(
+    controls.map(async (name, id) => {
+      const bounds = (await page.getByRole('button', { name, exact: true }).boundingBox())!
+      return { id, x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 }
+    }),
+  )
   const protocol = await page.context().newCDPSession(page)
   await protocol.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: points })
   await advance(page, 100)

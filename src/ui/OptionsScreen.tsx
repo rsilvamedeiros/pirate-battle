@@ -28,7 +28,9 @@ export function OptionsScreen({ options, onSave, onBack }: OptionsScreenProps) {
   const spawnInput = useRef<HTMLInputElement>(null)
   const heading = useRef<HTMLHeadingElement>(null)
 
-  useEffect(() => { heading.current?.focus() }, [])
+  useEffect(() => {
+    heading.current?.focus()
+  }, [])
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -37,12 +39,14 @@ export function OptionsScreen({ options, onSave, onBack }: OptionsScreenProps) {
     const result = validateGameplayConfig({
       ...defaultGameplayConfig,
       sessionTime: values.sessionTime.trim() === '' ? NaN : Number(values.sessionTime),
-      enemySpawnInterval: values.enemySpawnInterval.trim() === '' ? NaN : Number(values.enemySpawnInterval),
+      enemySpawnInterval:
+        values.enemySpawnInterval.trim() === '' ? NaN : Number(values.enemySpawnInterval),
     })
     if (!result.valid) {
       const nextErrors: Partial<Record<OptionField, string>> = {}
       for (const issue of result.issues) {
-        if (issue.field === 'sessionTime' || issue.field === 'enemySpawnInterval') nextErrors[issue.field] = issue.message
+        if (issue.field === 'sessionTime' || issue.field === 'enemySpawnInterval')
+          nextErrors[issue.field] = issue.message
       }
       setErrors(nextErrors)
       if (nextErrors.sessionTime) sessionInput.current?.focus()
@@ -56,7 +60,9 @@ export function OptionsScreen({ options, onSave, onBack }: OptionsScreenProps) {
       enemySpawnInterval: result.config.enemySpawnInterval,
     })
     if (!onSave(nextOptions)) {
-      setStorageError('Options could not be saved. Your previous settings are unchanged. Check browser storage and try again.')
+      setStorageError(
+        'Options could not be saved. Your previous settings are unchanged. Check browser storage and try again.',
+      )
       return
     }
     setMessage('Options saved. Changes apply to your next match.')
@@ -64,7 +70,9 @@ export function OptionsScreen({ options, onSave, onBack }: OptionsScreenProps) {
 
   return (
     <section aria-labelledby="options-heading" className="options-screen">
-      <h1 id="options-heading" tabIndex={-1} ref={heading}>Options</h1>
+      <h1 id="options-heading" tabIndex={-1} ref={heading}>
+        Options
+      </h1>
       <p className="intro">Prepare your next voyage.</p>
       <form onSubmit={submit} noValidate>
         {fields.map(({ name, label }) => {
@@ -95,18 +103,32 @@ export function OptionsScreen({ options, onSave, onBack }: OptionsScreenProps) {
                 />
                 <span aria-hidden="true">seconds</span>
               </div>
-              <p className="field-hint" id={`${name}-hint`}>{limits.min}–{limits.max} seconds</p>
-              {errors[name] && <p className="field-error" id={`${name}-error`} role="alert">{errors[name]}</p>}
+              <p className="field-hint" id={`${name}-hint`}>
+                {limits.min}–{limits.max} seconds
+              </p>
+              {errors[name] && (
+                <p className="field-error" id={`${name}-error`} role="alert">
+                  {errors[name]}
+                </p>
+              )}
             </div>
           )
         })}
         <div className="save-feedback">
           <p role="status">{message}</p>
-          {storageError && <p className="field-error" role="alert">{storageError}</p>}
+          {storageError && (
+            <p className="field-error" role="alert">
+              {storageError}
+            </p>
+          )}
         </div>
         <div className="form-actions">
-          <button className="primary-button" type="submit">Save</button>
-          <button className="secondary-button" type="button" onClick={onBack}>Main Menu</button>
+          <button className="primary-button" type="submit">
+            Save
+          </button>
+          <button className="secondary-button" type="button" onClick={onBack}>
+            Main Menu
+          </button>
         </div>
       </form>
       <p className="field-hint footer-hint">Only saved settings are used for a new match.</p>

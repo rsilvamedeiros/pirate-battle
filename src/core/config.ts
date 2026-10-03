@@ -39,7 +39,10 @@ export type GameplayConfig = {
 
 export const gameplayOptionLimits = Object.freeze({
   sessionTime: Object.freeze({ min: parameters.sessionTime.min, max: parameters.sessionTime.max }),
-  enemySpawnInterval: Object.freeze({ min: parameters.enemySpawnInterval.min, max: parameters.enemySpawnInterval.max }),
+  enemySpawnInterval: Object.freeze({
+    min: parameters.enemySpawnInterval.min,
+    max: parameters.enemySpawnInterval.max,
+  }),
 })
 
 export interface ConfigValidationIssue {
@@ -108,7 +111,10 @@ export function validateGameplayConfig(input: unknown): ConfigValidationResult {
   )
 
   if (config.shooterAttackRange > shooterReach) {
-    issues.push({ field: 'shooterAttackRange', message: 'Attack range cannot exceed projectile reach.' })
+    issues.push({
+      field: 'shooterAttackRange',
+      message: 'Attack range cannot exceed projectile reach.',
+    })
   }
 
   return issues.length > 0

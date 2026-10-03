@@ -5,13 +5,22 @@ import { createInitialState } from '../core/simulation'
 import { createResultsStore, lastResultStorageKey, outboxStorageKey } from './results'
 
 const identity = { playerId: 'local-player', playerName: 'Player' }
-const completed = () => ({ ...createInitialState(defaultGameplayConfig), status: 'completed' as const,
-  endReason: 'player-death' as const, elapsedMs: 1250.9, score: 3 })
+const completed = () => ({
+  ...createInitialState(defaultGameplayConfig),
+  status: 'completed' as const,
+  endReason: 'player-death' as const,
+  elapsedMs: 1250.9,
+  score: 3,
+})
 
 function setup() {
   const data = new Map<string, string>()
-  const storage = { getItem: vi.fn((key: string) => data.get(key) ?? null),
-    setItem: vi.fn((key: string, value: string) => { data.set(key, value) }) }
+  const storage = {
+    getItem: vi.fn((key: string) => data.get(key) ?? null),
+    setItem: vi.fn((key: string, value: string) => {
+      data.set(key, value)
+    }),
+  }
   let id = 0
   const createId = vi.fn(() => `match-${++id}`)
   const now = () => `2026-10-02T12:00:0${id}.000Z`
@@ -24,10 +33,19 @@ describe('completed results and durable outbox', () => {
     const { store, storage } = setup()
     const state = completed()
     const record = store.complete(state)
-    expect(record).toMatchObject({ ...identity, matchId: 'match-1', score: 3, durationMs: 1250, endReason: 'player-death' })
+    expect(record).toMatchObject({
+      ...identity,
+      matchId: 'match-1',
+      score: 3,
+      durationMs: 1250,
+      endReason: 'player-death',
+    })
     expect(record.config).not.toBe(state.config)
     expect(Object.isFrozen(record.config)).toBe(true)
-    expect(storage.setItem.mock.calls.map(([key]) => key)).toEqual([outboxStorageKey, lastResultStorageKey])
+    expect(storage.setItem.mock.calls.map(([key]) => key)).toEqual([
+      outboxStorageKey,
+      lastResultStorageKey,
+    ])
     expect(store.getSnapshot().entries['match-1'].attempts).toBe(0)
   })
 
@@ -61,12 +79,16 @@ describe('completed results and durable outbox', () => {
 
   it('retains all in-memory records on failed writes and retries without new identifiers', () => {
     const { store, storage, data, createId } = setup()
-    storage.setItem.mockImplementation(() => { throw new Error('Quota exceeded') })
+    storage.setItem.mockImplementation(() => {
+      throw new Error('Quota exceeded')
+    })
     const first = store.complete(completed())
     store.complete(completed())
     expect(store.getSnapshot().writeFailed).toBe(true)
     expect(data.size).toBe(0)
-    storage.setItem.mockImplementation((key, value) => { data.set(key, value) })
+    storage.setItem.mockImplementation((key, value) => {
+      data.set(key, value)
+    })
     expect(store.retryPersistence()).toBe(true)
     expect(store.getSnapshot().writeFailed).toBe(false)
     expect(store.getSnapshot().entries[first.matchId].record).toBe(first)
@@ -135,18 +157,27 @@ describe('completed results and durable outbox', () => {
   it('rejects invalid persisted records, bounds and configuration keys', () => {
     const { store } = setup()
     const record = store.complete(completed())
-    for (const invalid of [{ ...record, score: -1 }, { ...record, durationMs: 120001 },
-      { ...record, playedAt: 'invalid' }, { ...record, endReason: 'abandoned' },
-      { ...record, configKey: 'wrong' }, { ...record, config: { ...record.config, sessionTime: 0 } }]) {
+    for (const invalid of [
+      { ...record, score: -1 },
+      { ...record, durationMs: 120001 },
+      { ...record, playedAt: 'invalid' },
+      { ...record, endReason: 'abandoned' },
+      { ...record, configKey: 'wrong' },
+      { ...record, config: { ...record.config, sessionTime: 0 } },
+    ]) {
       expect(parseMatchRecord(invalid)).toBeNull()
     }
     expect(parseMatchRecord(record)).toEqual(record)
   })
 
   it('groups configurations by all validated fields independently of property order', () => {
-    const reversed = Object.fromEntries(Object.entries(defaultGameplayConfig).reverse()) as typeof defaultGameplayConfig
+    const reversed = Object.fromEntries(
+      Object.entries(defaultGameplayConfig).reverse(),
+    ) as typeof defaultGameplayConfig
     expect(configurationKey(reversed)).toBe(configurationKey(defaultGameplayConfig))
-    expect(configurationKey({ ...defaultGameplayConfig, frontProjectileDamage: 21 })).not.toBe(configurationKey(defaultGameplayConfig))
+    expect(configurationKey({ ...defaultGameplayConfig, frontProjectileDamage: 21 })).not.toBe(
+      configurationKey(defaultGameplayConfig),
+    )
   })
 
   it('publishes stable snapshots and detaches listeners', () => {
@@ -185,7 +216,9 @@ describe('completed results and durable outbox', () => {
   it('retains a durable recovery path when confirmation writes fail', () => {
     const { store, storage, boot } = setup()
     const record = store.complete(completed())
-    storage.setItem.mockImplementation(() => { throw new Error('Unavailable') })
+    storage.setItem.mockImplementation(() => {
+      throw new Error('Unavailable')
+    })
     store.confirm(record)
     expect(store.getSnapshot().writeFailed).toBe(true)
     expect(boot().getSnapshot().entries[record.matchId].record).toEqual(record)

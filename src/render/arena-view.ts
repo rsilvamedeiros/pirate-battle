@@ -10,16 +10,29 @@ const impactUrl = `${import.meta.env.BASE_URL}assets/png/default/effects/explosi
 const chaserUrl = `${import.meta.env.BASE_URL}assets/png/default/ships/ship_2.png`
 const shooterUrl = `${import.meta.env.BASE_URL}assets/png/default/ships/ship_3.png`
 
-export async function createArenaView(host: HTMLDivElement, engine: GameEngine, manualClock: boolean, onRender?: (now: number) => void) {
-  const [texture, projectileTexture, fireTexture, impactTexture, chaserTexture, shooterTexture] = await Promise.all(
-    [shipUrl, projectileUrl, fireUrl, impactUrl, chaserUrl, shooterUrl].map((url) => Assets.load<Texture>(url)),
-  )
+export async function createArenaView(
+  host: HTMLDivElement,
+  engine: GameEngine,
+  manualClock: boolean,
+  onRender?: (now: number) => void,
+) {
+  const [texture, projectileTexture, fireTexture, impactTexture, chaserTexture, shooterTexture] =
+    await Promise.all(
+      [shipUrl, projectileUrl, fireUrl, impactUrl, chaserUrl, shooterUrl].map((url) =>
+        Assets.load<Texture>(url),
+      ),
+    )
   const app = new Application()
   try {
     await app.init({
-      width: arena.width, height: arena.height, background: 0x238598,
-      resolution: window.devicePixelRatio || 1, autoDensity: true, antialias: true,
-      autoStart: false, sharedTicker: false,
+      width: arena.width,
+      height: arena.height,
+      background: 0x238598,
+      resolution: window.devicePixelRatio || 1,
+      autoDensity: true,
+      antialias: true,
+      autoStart: false,
+      sharedTicker: false,
     })
   } catch (error) {
     if (app.renderer) app.destroy(true, { children: true })
@@ -37,10 +50,14 @@ export async function createArenaView(host: HTMLDivElement, engine: GameEngine, 
   waves.stroke({ color: 0x9ae0df, width: 2, alpha: 0.25 })
   app.stage.addChild(waves)
   const land = new Graphics()
-    .circle(island.x, island.y, island.radius).fill(0xe5c888)
-    .circle(island.x, island.y, island.radius - 14).fill(0x63994c)
-    .circle(island.x - 24, island.y - 20, 18).fill(0x43763f)
-    .circle(island.x + 20, island.y + 30, 24).fill(0x43763f)
+    .circle(island.x, island.y, island.radius)
+    .fill(0xe5c888)
+    .circle(island.x, island.y, island.radius - 14)
+    .fill(0x63994c)
+    .circle(island.x - 24, island.y - 20, 18)
+    .fill(0x43763f)
+    .circle(island.x + 20, island.y + 30, 24)
+    .fill(0x43763f)
   app.stage.addChild(land)
   const ship = new Sprite(texture)
   ship.anchor.set(0.5)
@@ -53,18 +70,24 @@ export async function createArenaView(host: HTMLDivElement, engine: GameEngine, 
   const effectSprites = new Map<number, Sprite>()
   const enemySprites = new Map<number, Sprite>()
 
-  function shipTint(ratio: number) { return ratio > 0.65 ? 0xffffff : ratio > 0.3 ? 0xc9a379 : 0x96745c }
+  function shipTint(ratio: number) {
+    return ratio > 0.65 ? 0xffffff : ratio > 0.3 ? 0xc9a379 : 0x96745c
+  }
   function healthBar(x: number, y: number, ratio: number) {
     const barY = Math.max(10, y - 52)
-    health.rect(x - 24, barY, 48, 7).fill(0x183236)
-      .rect(x - 22, barY + 2, 44 * Math.max(0, ratio), 3).fill(ratio > 0.3 ? 0x88df73 : 0xff977c)
+    health
+      .rect(x - 24, barY, 48, 7)
+      .fill(0x183236)
+      .rect(x - 22, barY + 2, 44 * Math.max(0, ratio), 3)
+      .fill(ratio > 0.3 ? 0x88df73 : 0xff977c)
   }
 
   function removeMissing(sprites: Map<number, Sprite>, ids: Set<number>) {
-    for (const [id, sprite] of sprites) if (!ids.has(id)) {
-      sprite.destroy({ texture: false, textureSource: false })
-      sprites.delete(id)
-    }
+    for (const [id, sprite] of sprites)
+      if (!ids.has(id)) {
+        sprite.destroy({ texture: false, textureSource: false })
+        sprites.delete(id)
+      }
   }
 
   function draw(renderNow = true) {
@@ -82,7 +105,8 @@ export async function createArenaView(host: HTMLDivElement, engine: GameEngine, 
       if (!sprite) {
         sprite = new Sprite(enemy.kind === 'chaser' ? chaserTexture : shooterTexture)
         sprite.anchor.set(0.5)
-        sprite.width = 44; sprite.height = 64
+        sprite.width = 44
+        sprite.height = 64
         app.stage.addChildAt(sprite, app.stage.getChildIndex(health))
         enemySprites.set(enemy.id, sprite)
       }
@@ -110,13 +134,18 @@ export async function createArenaView(host: HTMLDivElement, engine: GameEngine, 
       if (!sprite) {
         sprite = new Sprite(effect.kind === 'fire' ? fireTexture : impactTexture)
         sprite.anchor.set(0.5)
-        sprite.width = sprite.height = effect.kind === 'fire' ? 22 : effect.kind === 'destruction' ? 70 : 30
+        sprite.width = sprite.height =
+          effect.kind === 'fire' ? 22 : effect.kind === 'destruction' ? 70 : 30
         app.stage.addChild(sprite)
         effectSprites.set(effect.id, sprite)
       }
       sprite.position.set(effect.x, effect.y)
       sprite.rotation = effect.heading
-      sprite.alpha = Math.min(1, (effect.expiresAtMs - elapsedMs) / (effect.kind === 'fire' ? 120 : effect.kind === 'destruction' ? 400 : 180))
+      sprite.alpha = Math.min(
+        1,
+        (effect.expiresAtMs - elapsedMs) /
+          (effect.kind === 'fire' ? 120 : effect.kind === 'destruction' ? 400 : 180),
+      )
     }
     if (renderNow) app.render()
   }

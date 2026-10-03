@@ -4,9 +4,15 @@ async function open(page: import('@playwright/test').Page, scenario = 'success')
   await page.goto(`/?scenario=${scenario}&seed=42`)
   await page.getByRole('tab', { name: 'Ranking', exact: true }).click()
 }
-test.beforeEach(({ page }) => { page.on('pageerror', (error) => { throw error }) })
+test.beforeEach(({ page }) => {
+  page.on('pageerror', (error) => {
+    throw error
+  })
+})
 
-test('loads both tabs through the worker with fixtures and complete history fields', async ({ page }) => {
+test('loads both tabs through the worker with fixtures and complete history fields', async ({
+  page,
+}) => {
   await open(page)
   const panel = page.getByRole('tabpanel')
   await expect(panel.locator('tbody tr')).toHaveCount(10)
@@ -35,9 +41,13 @@ test('paginates ranking and history independently and retains absolute ranks', a
 })
 test('distinguishes empty lists from loading and errors in both tabs', async ({ page }) => {
   await open(page, 'empty')
-  await expect(page.getByRole('tabpanel').getByText('No matches found.', { exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('tabpanel').getByText('No matches found.', { exact: true }),
+  ).toBeVisible()
   await page.getByRole('tab', { name: 'Match History', exact: true }).click()
-  await expect(page.getByRole('tabpanel').getByText('No matches found.', { exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('tabpanel').getByText('No matches found.', { exact: true }),
+  ).toBeVisible()
   await expect(page.getByRole('alert')).toHaveCount(0)
 })
 test('keeps loading and query failure from blocking Options or gameplay', async ({ page }) => {
@@ -49,14 +59,26 @@ test('keeps loading and query failure from blocking Options or gameplay', async 
   await page.getByRole('button', { name: 'Play', exact: true }).click()
   await expect(page.locator('canvas')).toHaveCount(1)
 })
-for (const [scenario, failed, unaffected] of [['ranking-failure', 'Ranking', 'Match History'], ['history-failure', 'Match History', 'Ranking']] as const) {
+for (const [scenario, failed, unaffected] of [
+  ['ranking-failure', 'Ranking', 'Match History'],
+  ['history-failure', 'Match History', 'Ranking'],
+] as const) {
   test(`isolates ${scenario} and supports query retry`, async ({ page }) => {
     await open(page, scenario)
     await page.getByRole('tab', { name: failed, exact: true }).click()
-    await expect(page.getByRole('tabpanel').getByRole('alert')).toContainText('selected network scenario', { timeout: 10000 })
-    await page.getByRole('tabpanel').getByRole('button', { name: 'Retry Records', exact: true }).click()
+    await expect(page.getByRole('tabpanel').getByRole('alert')).toContainText(
+      'selected network scenario',
+      { timeout: 10000 },
+    )
+    await page
+      .getByRole('tabpanel')
+      .getByRole('button', { name: 'Retry Records', exact: true })
+      .click()
     await expect(page.getByRole('tabpanel').getByRole('status')).toBeVisible()
-    await expect(page.getByRole('tabpanel').getByRole('alert')).toContainText('selected network scenario', { timeout: 10000 })
+    await expect(page.getByRole('tabpanel').getByRole('alert')).toContainText(
+      'selected network scenario',
+      { timeout: 10000 },
+    )
     await page.getByRole('tab', { name: unaffected, exact: true }).click()
     await expect(page.getByRole('tabpanel').locator('tbody tr')).not.toHaveCount(0)
     await expect(page.getByRole('tabpanel').getByRole('alert')).toHaveCount(0)
@@ -68,18 +90,24 @@ for (const [scenario, failed, unaffected] of [['ranking-failure', 'Ranking', 'Ma
     await expect(page.getByRole('tabpanel').getByRole('alert')).toHaveCount(0)
   })
 }
-test('filters ranking by current Options rather than comparing unequal configurations', async ({ page }) => {
+test('filters ranking by current Options rather than comparing unequal configurations', async ({
+  page,
+}) => {
   await open(page)
   await expect(page.getByRole('tabpanel').locator('tbody tr')).toHaveCount(10)
   await page.getByRole('button', { name: 'Options', exact: true }).click()
   await page.getByLabel('Game session time').fill('60')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await page.getByRole('button', { name: 'Main Menu', exact: true }).click()
-  await expect(page.getByRole('tabpanel').getByText('No matches found.', { exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('tabpanel').getByText('No matches found.', { exact: true }),
+  ).toBeVisible()
 })
 test('refetches a fresh cached tab and keeps keyboard tab navigation usable', async ({ page }) => {
   const reads: string[] = []
-  page.on('request', (request) => { if (request.url().includes('/api/ranking?')) reads.push(request.url()) })
+  page.on('request', (request) => {
+    if (request.url().includes('/api/ranking?')) reads.push(request.url())
+  })
   await open(page)
   await expect(page.getByRole('tabpanel').locator('tbody tr')).toHaveCount(10)
   const initialReads = reads.length

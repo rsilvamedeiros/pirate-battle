@@ -3,10 +3,18 @@ export const island = Object.freeze({ x: 500, y: 350, radius: 100 })
 export const playerRadius = 40
 export const projectileRadius = 4
 
-export interface Point { x: number; y: number }
+export interface Point {
+  x: number
+  y: number
+}
 
 /** First segment contact with a circle, including overlap at the origin. */
-export function circleContact(from: Point, to: Point, center: Point, radius: number): number | null {
+export function circleContact(
+  from: Point,
+  to: Point,
+  center: Point,
+  radius: number,
+): number | null {
   const ox = from.x - center.x
   const oy = from.y - center.y
   const c = ox * ox + oy * oy - radius * radius

@@ -28,7 +28,10 @@ describe('damage, scoring and terminal state', () => {
   })
   it('prevents a destroyed Chaser from applying collision damage', () => {
     const match = prepareMatch({ ...defaultGameplayConfig, chaserHp: 20 }, 42, 'chaser-impact')
-    const state = stepSimulation(createInitialState(match.config, match.setup), { ...idleInput, frontFire: true })
+    const state = stepSimulation(createInitialState(match.config, match.setup), {
+      ...idleInput,
+      frontFire: true,
+    })
     expect(state.enemies).toHaveLength(0)
     expect(state.player.hp).toBe(100)
     expect(state.score).toBe(1)
@@ -37,10 +40,29 @@ describe('damage, scoring and terminal state', () => {
     const match = prepareMatch({ ...defaultGameplayConfig }, 42, 'shooter-attack')
     const initial = createInitialState(match.config, match.setup)
     const blocker: Enemy = { ...initial.enemies[0], id: 2, x: 230 }
-    const projectile = { id: 3, weapon: 'shooterFire' as const, team: 'enemy' as const, x: 254, y: 350, heading: Math.PI,
-      speed: 250, damage: 10, range: 500, lifetimeMs: 2000, ageMs: 0, distance: 0 }
-    const next = stepWeapons({ ...initial, projectiles: [projectile], nextEntityId: 4 }, initial.config, initial.player, idleInput, 0, 300,
-      { enemies: [initial.enemies[0], blocker], playerHp: 100 })
+    const projectile = {
+      id: 3,
+      weapon: 'shooterFire' as const,
+      team: 'enemy' as const,
+      x: 254,
+      y: 350,
+      heading: Math.PI,
+      speed: 250,
+      damage: 10,
+      range: 500,
+      lifetimeMs: 2000,
+      ageMs: 0,
+      distance: 0,
+    }
+    const next = stepWeapons(
+      { ...initial, projectiles: [projectile], nextEntityId: 4 },
+      initial.config,
+      initial.player,
+      idleInput,
+      0,
+      300,
+      { enemies: [initial.enemies[0], blocker], playerHp: 100 },
+    )
     expect(next.enemies.map(({ hp }) => hp)).toEqual([60, 60])
     expect(next.playerHp).toBe(90)
   })
@@ -48,8 +70,15 @@ describe('damage, scoring and terminal state', () => {
     const match = prepareMatch({ ...defaultGameplayConfig }, 42, 'front-target')
     const state = createInitialState(match.config, match.setup)
     const target = { ...state.enemies[0], x: 240 }
-    const next = stepWeapons(state, state.config, state.player, { ...idleInput, frontFire: true }, 0, fixedStepMs,
-      { enemies: [{ ...target, id: 2 }, target], playerHp: 100 })
+    const next = stepWeapons(
+      state,
+      state.config,
+      state.player,
+      { ...idleInput, frontFire: true },
+      0,
+      fixedStepMs,
+      { enemies: [{ ...target, id: 2 }, target], playerHp: 100 },
+    )
     expect(next.enemies.find(({ id }) => id === 1)?.hp).toBe(40)
     expect(next.enemies.find(({ id }) => id === 2)?.hp).toBe(60)
   })
@@ -57,14 +86,20 @@ describe('damage, scoring and terminal state', () => {
     const match = prepareMatch({ ...defaultGameplayConfig }, 42, 'lethal-chaser')
     let state = createInitialState(match.config, match.setup)
     for (let i = 0; i < 6; i++) state = stepSimulation(state, idleInput)
-    expect(state).toMatchObject({ status: 'completed', endReason: 'player-death', player: { hp: 0 }, score: 0 })
+    expect(state).toMatchObject({
+      status: 'completed',
+      endReason: 'player-death',
+      player: { hp: 0 },
+      score: 0,
+    })
     expect(stepSimulation(state, { ...idleInput, frontFire: true, forward: true })).toBe(state)
     expect(createInitialState(match.config, match.setup).player.hp).toBe(25)
   })
   it('gives time expiry priority over pending lethal damage at the boundary', () => {
     const match = prepareMatch({ ...defaultGameplayConfig, sessionTime: 60 }, 42, 'lethal-chaser')
     const state = createInitialState(match.config, match.setup)
-    state.ticks = 3599; state.elapsedMs = 3599 * fixedStepMs
+    state.ticks = 3599
+    state.elapsedMs = 3599 * fixedStepMs
     state.enemies[0].x = 229
     const next = stepSimulation(state, { ...idleInput, frontFire: true, forward: true })
     expect(next.endReason).toBe('time-expired')

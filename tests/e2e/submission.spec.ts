@@ -2,13 +2,21 @@ import { expect, test } from '@playwright/test'
 import { advance, startGame } from './game-fixture.js'
 
 export async function stored(page: import('@playwright/test').Page) {
-  return page.evaluate(() => ({ result: JSON.parse(localStorage.getItem('pirate-battle.last-result.v1') ?? 'null'),
+  return page.evaluate(() => ({
+    result: JSON.parse(localStorage.getItem('pirate-battle.last-result.v1') ?? 'null'),
     outbox: JSON.parse(localStorage.getItem('pirate-battle.outbox.v1') ?? '{"entries":{}}'),
-    database: JSON.parse(localStorage.getItem('pirate-battle.msw-db.v1') ?? '{"records":{}}') }))
+    database: JSON.parse(localStorage.getItem('pirate-battle.msw-db.v1') ?? '{"records":{}}'),
+  }))
 }
-test.beforeEach(({ page }) => { page.on('pageerror', (error) => { throw error }) })
+test.beforeEach(({ page }) => {
+  page.on('pageerror', (error) => {
+    throw error
+  })
+})
 
-test('registers a real completion once and exposes it in both tabs after refresh', async ({ page }) => {
+test('registers a real completion once and exposes it in both tabs after refresh', async ({
+  page,
+}) => {
   await startGame(page, 'lethal-chaser', 'success')
   await advance(page, 100)
   await expect(page.getByRole('dialog').getByRole('status')).toHaveText('Registration confirmed.')
@@ -19,18 +27,26 @@ test('registers a real completion once and exposes it in both tabs after refresh
   await page.getByRole('button', { name: 'Main Menu', exact: true }).click()
   await page.getByRole('tab', { name: 'Ranking', exact: true }).click()
   await page.getByLabel('Ranking configuration').selectOption('last')
-  await expect(page.getByRole('tabpanel').locator(`[data-match-id="${record.matchId}"]`)).toHaveCount(1)
+  await expect(
+    page.getByRole('tabpanel').locator(`[data-match-id="${record.matchId}"]`),
+  ).toHaveCount(1)
   await page.getByRole('tab', { name: 'Match History', exact: true }).click()
-  await expect(page.getByRole('tabpanel').locator(`[data-match-id="${record.matchId}"]`)).toHaveCount(1)
+  await expect(
+    page.getByRole('tabpanel').locator(`[data-match-id="${record.matchId}"]`),
+  ).toHaveCount(1)
   await page.reload()
   await page.getByRole('button', { name: 'Last Result', exact: true }).click()
   await expect(page.getByRole('status')).toHaveText('Registration confirmed.')
   expect((await stored(page)).result.record).toEqual(record)
 })
-test('recovers pending registration after refresh without blocking another match', async ({ page }) => {
+test('recovers pending registration after refresh without blocking another match', async ({
+  page,
+}) => {
   await startGame(page, 'lethal-chaser', 'offline-at-match-end')
   await advance(page, 100)
-  await expect(page.getByRole('dialog').getByRole('status')).toHaveText('Registration pending. Please retry.')
+  await expect(page.getByRole('dialog').getByRole('status')).toHaveText(
+    'Registration pending. Please retry.',
+  )
   const original = (await stored(page)).result.record
   await page.getByRole('button', { name: 'Play Again', exact: true }).click()
   await expect.poll(() => page.evaluate(() => window.__game?.getState().status)).toBe('running')
@@ -67,7 +83,9 @@ test('coalesces repeated retry clicks and removes only each confirmed match', as
   expect(data.database.records[second.matchId]).toEqual(second)
   expect(data.result.record.matchId).toBe(second.matchId)
 })
-test('registers into an empty demo and refreshes views shown before registration', async ({ page }) => {
+test('registers into an empty demo and refreshes views shown before registration', async ({
+  page,
+}) => {
   await page.goto('/?e2e=1&seed=42&fixture=lethal-chaser&scenario=empty')
   await page.getByRole('tab', { name: 'Match History', exact: true }).click()
   await expect(page.getByRole('tabpanel')).toContainText('No matches found.')

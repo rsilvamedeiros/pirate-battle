@@ -14,7 +14,9 @@ test('spawns both types at safe scheduled positions and reproduces a seed', asyn
     expect(enemy.y).toBeGreaterThanOrEqual(40)
     expect(enemy.y).toBeLessThanOrEqual(660)
     expect(Math.hypot(enemy.x - 500, enemy.y - 350)).toBeGreaterThanOrEqual(140)
-    expect(Math.hypot(enemy.x - first.player.x, enemy.y - first.player.y)).toBeGreaterThanOrEqual(250)
+    expect(Math.hypot(enemy.x - first.player.x, enemy.y - first.player.y)).toBeGreaterThanOrEqual(
+      250,
+    )
   }
   await advance(page, 3000)
   const second = await state(page)
@@ -57,12 +59,18 @@ test('makes the Chaser approach, impact once and disappear without scoring', asy
   expect((await state(page)).player.hp).toBe(75)
 })
 
-test('makes the Shooter respect its first cooldown and apply one projectile hit', async ({ page }) => {
+test('makes the Shooter respect its first cooldown and apply one projectile hit', async ({
+  page,
+}) => {
   await startGame(page, 'shooter-attack')
   await advance(page, 1499)
   expect((await state(page)).projectiles).toHaveLength(0)
   await advance(page, 1)
-  expect((await state(page)).projectiles[0]).toMatchObject({ team: 'enemy', damage: 10, speed: 250 })
+  expect((await state(page)).projectiles[0]).toMatchObject({
+    team: 'enemy',
+    damage: 10,
+    speed: 250,
+  })
   await advance(page, 300)
   expect((await state(page)).player.hp).toBe(90)
   expect((await state(page)).projectiles).toHaveLength(0)

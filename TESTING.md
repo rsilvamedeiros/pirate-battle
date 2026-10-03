@@ -95,6 +95,7 @@ Run these commands independently:
 npm run test:unit
 npm run typecheck
 npm run lint
+npm run format:check
 npm run test:e2e
 ```
 
@@ -106,6 +107,8 @@ npm run test:e2e
 | npm run test:unit:watch | Rerun unit tests while editing |
 | npm run typecheck | Check application, tooling, and E2E TypeScript |
 | npm run lint | Run ESLint |
+| npm run format | Apply the shared Prettier formatting rules to source, SCSS, tests, scripts and root configuration/HTML files |
+| npm run format:check | Check formatting without writing files; documentation, supplied assets, generated files and archived evidence are excluded |
 | npm run build | Type-check and produce the optimized build |
 | npm run preview | Serve an existing optimized build for manual review |
 | npm run test:e2e | Build and run implemented desktop/mobile E2E suites |

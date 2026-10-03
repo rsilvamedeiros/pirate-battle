@@ -5,12 +5,18 @@ import type { CombatFixture } from '../../src/engine/scenarios'
 import type { ScenarioId } from '../../src/mocks/scenarios'
 
 export async function startGame(page: Page, fixture?: CombatFixture, scenario?: ScenarioId) {
-  await page.goto(`/?e2e=1&seed=42${fixture ? `&fixture=${fixture}` : ''}${scenario ? `&scenario=${scenario}` : ''}`)
+  await page.goto(
+    `/?e2e=1&seed=42${fixture ? `&fixture=${fixture}` : ''}${scenario ? `&scenario=${scenario}` : ''}`,
+  )
   await page.getByRole('button', { name: 'Play', exact: true }).click()
   // Cold SwiftShader initialization can exceed the default 5 s assertion limit.
   // Hooks are installed only after assets, rendering and input are initialized.
-  await expect.poll(() => page.evaluate(() => Boolean(window.__game)), { timeout: 15000 }).toBe(true)
-  await expect(page.getByRole('img', { name: 'Naval arena with your ship and a blocking island' })).toBeVisible()
+  await expect
+    .poll(() => page.evaluate(() => Boolean(window.__game)), { timeout: 15000 })
+    .toBe(true)
+  await expect(
+    page.getByRole('img', { name: 'Naval arena with your ship and a blocking island' }),
+  ).toBeVisible()
   await expect(page.getByRole('button', { name: 'Pause', exact: true })).toBeEnabled()
 }
 

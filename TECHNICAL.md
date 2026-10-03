@@ -67,6 +67,12 @@ Play starts combat with both enemy types, three weapons, HP and scoring. Complet
 
 The core has no React, PixiJS, browser time, storage, or network dependencies. Storage belongs to the imperative shell. Bootstrap runs outside StrictMode so its development mount cycle does not regenerate the local player identity.
 
+## Formatting
+
+Run `npm run format` to format application source, SCSS, tests, scripts and root JavaScript/TypeScript/JSON/HTML files. Run `npm run format:check` to verify formatting without writing files. Prettier is pinned to an exact development dependency version; `eslint-config-prettier` disables conflicting formatting rules while ESLint keeps checking code correctness.
+
+[.prettierrc.json](.prettierrc.json) defines single quotes, no optional semicolons, trailing commas and a 100-column wrapping preference. [.editorconfig](.editorconfig) defines UTF-8, two-space indentation and LF endings; [.gitattributes](.gitattributes) preserves LF for formatted source across checkouts. [.prettierignore](.prettierignore) excludes Markdown documentation, supplied assets, generated workers, visual baselines and archived profiling/test evidence. Formatting does not replace linting, type checks or tests.
+
 ## Styling
 
 [src/index.scss](src/index.scss) owns global typography, resets and keyboard focus. [src/App.scss](src/App.scss) owns menus, forms and record panels; [src/ui/GameScreen.scss](src/ui/GameScreen.scss) owns the arena, HUD, touch controls and dialogs. All three explicitly load [src/styles/_tokens.scss](src/styles/_tokens.scss), which contains shared palette variables and emits no CSS.

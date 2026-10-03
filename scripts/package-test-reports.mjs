@@ -7,11 +7,15 @@ import { pipeline } from 'node:stream/promises'
 
 // Reuse the ZIP writer bundled with the lockfile's Playwright installation.
 const require = createRequire(import.meta.url)
-const { yazl } = require(path.join(path.dirname(require.resolve('playwright-core/package.json')), 'lib/utilsBundle.js'))
+const { yazl } = require(
+  path.join(path.dirname(require.resolve('playwright-core/package.json')), 'lib/utilsBundle.js'),
+)
 
 const [reportArgument, outputArgument, ...extraArguments] = process.argv.slice(2)
 if (!reportArgument || !outputArgument) {
-  throw Error('Usage: node scripts/package-test-reports.mjs <html-report-directory> <new-evidence-directory> [extra-files...]')
+  throw Error(
+    'Usage: node scripts/package-test-reports.mjs <html-report-directory> <new-evidence-directory> [extra-files...]',
+  )
 }
 const report = path.resolve(reportArgument)
 const output = path.resolve(outputArgument)
@@ -27,7 +31,10 @@ async function add(directory) {
   }
 }
 await add(report)
-const completion = pipeline(archive.outputStream, createWriteStream(path.join(output, 'html-report.zip')))
+const completion = pipeline(
+  archive.outputStream,
+  createWriteStream(path.join(output, 'html-report.zip')),
+)
 archive.end()
 await completion
 for (const argument of extraArguments) {
@@ -42,11 +49,14 @@ async function inspect(directory) {
     else {
       const bytes = await fs.readFile(target)
       hashes[path.relative(output, target).split(path.sep).join('/')] = {
-        bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex'),
+        bytes: bytes.length,
+        sha256: createHash('sha256').update(bytes).digest('hex'),
       }
     }
   }
 }
 await inspect(output)
 await fs.writeFile(path.join(output, 'checksums.json'), `${JSON.stringify(hashes, null, 2)}\n`)
-console.log(`Packaged ${Object.keys(hashes).length} files at ${output}; extract html-report.zip and serve index.html to open the report.`)
+console.log(
+  `Packaged ${Object.keys(hashes).length} files at ${output}; extract html-report.zip and serve index.html to open the report.`,
+)

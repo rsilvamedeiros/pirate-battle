@@ -7,7 +7,12 @@ test('ends on real lethal damage and stops all gameplay', async ({ page }) => {
   await page.keyboard.down('Space')
   await advance(page, 100)
   const completed = await state(page)
-  expect(completed).toMatchObject({ status: 'completed', endReason: 'player-death', player: { hp: 0 }, score: 0 })
+  expect(completed).toMatchObject({
+    status: 'completed',
+    endReason: 'player-death',
+    player: { hp: 0 },
+    score: 0,
+  })
   await expect(page.getByText('Your ship was destroyed.', { exact: true })).toBeVisible()
   await advance(page, 30000)
   expect(await state(page)).toEqual(completed)
@@ -32,7 +37,9 @@ test('ends at configured active time while enemy rules remain enabled', async ({
   expect(completed.elapsedMs).toBe(120000)
   expect(completed.spawnCount).toBeGreaterThan(0)
   expect(completed.player.hp).toBeGreaterThan(0)
-  await expect(page.getByText('Time expired. Your voyage has ended.', { exact: true })).toBeVisible()
+  await expect(
+    page.getByText('Time expired. Your voyage has ended.', { exact: true }),
+  ).toBeVisible()
   await advance(page, 5000)
   expect(await state(page)).toEqual(completed)
 })

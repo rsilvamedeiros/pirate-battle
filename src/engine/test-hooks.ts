@@ -5,4 +5,8 @@ export interface GameHooks {
   advance(milliseconds: number): void
 }
 
-declare global { interface Window { __game?: GameHooks } }
+declare global {
+  interface Window {
+    __game?: GameHooks
+  }
+}
