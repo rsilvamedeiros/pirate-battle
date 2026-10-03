@@ -10,7 +10,7 @@ The developer sets the scope and constraints. Proposed decisions and generated m
 
 The documentation preparation covered test cases, determinism, isolation, failure scenarios, and reporting, with changes limited to Markdown. The test plan enumerates 124 logical cases; it is not a claim that the full suite is implemented or passing. Profiling tables contain placeholders, not measured results.
 
-Implementation started at the developer's request. AI assisted with configuration, menus/persistence, navigation/PixiJS, weapons, seeded enemies/damage, completed results and now HTTP integration, shared MSW scenarios, registration recovery, tests and a requirement audit. Visual baselines, measured profiling and public deployment remain pending.
+Implementation started at the developer's request. AI assisted with configuration, menus/persistence, navigation/PixiJS, weapons, seeded enemies/damage, completed results, HTTP integration, shared MSW scenarios, registration recovery, tests, a requirement audit and now visual regression. Measured profiling and public deployment remain pending.
 
 As testing is implemented, AI may also support writing tests, reviewing assertions, and investigating failures. Record that assistance here when it occurs, together with the commands actually executed and their results. Claims of coverage and performance must be supported by executable tests, reports, traces, and measurements.
 
@@ -25,7 +25,7 @@ As testing is implemented, AI may also support writing tests, reviewing assertio
 | 3 | Map requirements to tests and define profiling procedures | Drafted | [Test plan](testing/test-plan.md), [profiling template](performance/profiling.md) |
 | 4 | Resolve open decisions and implement the core, engine, input, PixiJS rendering, and React interface | In progress: local combat and persisted result implemented | [Simulation](../src/core/simulation.ts), [game screen](../src/ui/GameScreen.tsx), [result details](../src/ui/ResultDetails.tsx) |
 | 5 | Implement persistence, Axios/TanStack Query integration, MSW handlers, and recovery scenarios | Implemented locally; public worker verification pending | [Runtime](../src/api/runtime.ts), [coordinator](../src/api/submissions.ts), [handlers](../src/mocks/handlers.ts), [database](../src/mocks/database.ts) |
-| 6 | Implement and execute core/E2E tests and review visual baselines | Functional suites implemented; visual baselines pending | [Leaderboard E2E](../tests/e2e/leaderboard.spec.ts), [submission E2E](../tests/e2e/submission.spec.ts), [resilience E2E](../tests/e2e/resilience.spec.ts); final run record below |
+| 6 | Implement and execute core/E2E tests and review visual baselines | Functional and visual suites implemented; six baseline PNGs added for versioning | [Visual E2E](../tests/e2e/visual.spec.ts), [baseline record](../tests/e2e/visual.spec.ts-snapshots/README.md); execution records below |
 | 7 | Profile the optimized build, document limitations, and complete delivery | Planned | Filled profiling record, public deployment, and project setup/reproduction instructions |
 
 Steps may overlap. Update statuses and link evidence as work is completed; keep implementation details in the corresponding specifications and architecture documents.
@@ -104,7 +104,21 @@ Development StrictMode review completed five completion/exit cycles per desktop/
 
 AI assisted with implementation, tests, investigation, documentation and a [challenge compliance audit](delivery/challenge-audit.md). No score or hiring outcome is inferred. Before final submission, create versioned visual baselines, measure actual frame/memory behavior, deploy publicly, translate the developer-requested Portuguese solution introduction and package reports/final documentation. The original challenge remains unchanged.
 
+## Increment 8: Visual regression
+
+Delivered: `tests/e2e/visual.spec.ts` with Menu, stable arena and confirmed result comparisons on both Chromium projects; six PNG baselines ready to include in Git, plus a [reference environment/update record](../tests/e2e/visual.spec.ts-snapshots/README.md). No application code, gameplay rules, packages or global browser configuration changed.
+
+Each case starts in a fresh context with seed 42 and the success network scenario. Menu exposes control instructions. The arena advances to 3100 ms through the fixed-step engine and actual keyboard front/left fire, then asserts four projectiles, a live enemy and unchanged state throughout capture. Result completion uses real Chaser collision and waits for HTTP confirmation. The browser date is fixed, network timers continue running, the simulation clock remains stopped during capture, assets/fonts are awaited, CSS animations are disabled and no elements are masked.
+
+Verification: baseline generation passed all six executions, and the final `npm run test:e2e -- tests/e2e/visual.spec.ts --repeat-each=3` passed all 18 comparisons in 2.2 minutes without updating snapshots or automatic retries. All six images were visually reviewed. `npm run lint` and the optimized build/type checking passed; the existing large-chunk warning remains. Markdown links resolve and all six PNGs are ready for versioning. The latest HTML report contains the repeated visual run, not a new full functional run.
+
+Early cold-start runs exceeded screenshot or total-test deadlines; the suite now allows 15 seconds per screenshot assertion and 60 seconds per visual test. Pixel criteria and baseline images were not relaxed to resolve those failures. The final repeated comparison passed after these bounded timeout changes.
+
+AI assisted with test design, implementation, execution, timeout investigation, image review and documentation. Existing increment 7 functional/unit results remain historical; this increment adds six executions to the browser inventory (164 total), and revalidates the changed visual subset. Performance measurements, public deployment and final English/default plus Portuguese README/report packaging remain pending.
+
 ## Decisions to validate during implementation
+
+Latest delivery update: visual baselines are implemented in increment 8. The final documentation stage will create an English default README.md and a separate README.pt-BR.md with mutual links, keeping the original challenge in CHALLENGE.md.
 
 - Time-first boundary ordering and successful-spawn type sequencing are implemented as proposed choices; validate their documented behavior.
 - Collision footprints, projectile spacing, aiming tolerance and island routes are implemented; validate balancing, mobile usability and safe-spawn availability.

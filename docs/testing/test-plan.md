@@ -12,6 +12,8 @@ Increment 2 update: `tests/e2e/options.spec.ts` contains 13 cases, executed on C
 
 ## Traceability matrix
 
+Increment 8 update: `tests/e2e/visual.spec.ts` implements the three required states in both browser projects, with six PNG baselines in its snapshot directory. See the [baseline record](../../tests/e2e/visual.spec.ts-snapshots/README.md) for capture settings and the [construction guide](../README.md#increment-8-visual-regression) for execution evidence. Earlier increment updates below are historical.
+
 Increment 7 update: the API/mock/persistence suites execute 158 unit/integration cases. E2E adds 8 leaderboard, 4 submission and 10 resilience cases per browser project, covering real HTTP/cache flows, retries, post-commit recovery and reset/obsolete work. All twelve challenge flows now have executable browser coverage. Expanded variants listed below remain planned where not explicitly implemented; visual baselines and profiling are still missing. Current verification outcomes live in [TESTING.md](../../TESTING.md#current-coverage), and delivery gaps are reviewed in the [challenge audit](../delivery/challenge-audit.md).
 
 Increment 6 update: `src/persistence/results.test.ts` adds 13 cases for immutable records, validation, single completion capture, multiple pending entries, blocked/invalid storage, retry and partial-write recovery including equal timestamps. `tests/e2e/result.spec.ts` adds 7 cases for details, refresh, configuration, consecutive matches, local write recovery and responsive result actions; `navigation.spec.ts` adds 3 abandonment/resource-cleanup cases. These run on both existing browser projects. Registration transitions and network recovery remain planned, so the complete planned result/API coverage stays unchecked. Current counts and execution evidence live in [TESTING.md](../../TESTING.md#current-coverage).
@@ -36,9 +38,9 @@ Each numbered row maps directly to the corresponding item in §8. Status ☐ mea
 | 10 | Ranking/history queries, pagination, loading, empty, and errors (§8.10; §§5–6) | tests/e2e/leaderboard.spec.ts | E2E | ☐ |
 | 11 | Registration, both-tab updates, and pending recovery after refresh (§8.11; §§5–6) | tests/e2e/submission.spec.ts | E2E | ☐ |
 | 12 | Post-timeout deduplication and stale-response protection (§8.12; §§5–6) | tests/e2e/resilience.spec.ts | E2E | ☐ |
-| V1 | Main Menu visual baseline (§8, visual regression) | tests/e2e/visual.spec.ts | Visual / Playwright | ☐ |
-| V2 | Stable arena visual baseline (§8, visual regression) | tests/e2e/visual.spec.ts | Visual / Playwright | ☐ |
-| V3 | Result visual baseline (§8, visual regression) | tests/e2e/visual.spec.ts | Visual / Playwright | ☐ |
+| V1 | Main Menu visual baseline (§8, visual regression) | tests/e2e/visual.spec.ts | Visual / Playwright | ☑ |
+| V2 | Stable arena visual baseline (§8, visual regression) | tests/e2e/visual.spec.ts | Visual / Playwright | ☑ |
+| V3 | Result visual baseline (§8, visual regression) | tests/e2e/visual.spec.ts | Visual / Playwright | ☑ |
 | U1 | Configuration validation and snapshots (§3) | src/core/config.test.ts | Unit / Vitest | ☐ |
 | U2 | Time-based transitions and terminal state (§§2, 4) | src/core/simulation.test.ts | Unit / Vitest | ☐ |
 | U3 | Arena, island, and projectile collisions (§2) | src/core/collisions.test.ts | Unit / Vitest | ☐ |
@@ -267,11 +269,11 @@ Prefer the optimized preview build for the main E2E/visual runs; use the explici
 
 ## Visual regression
 
-Proposed baseline location: `tests/e2e/visual.spec.ts-snapshots/`, separated by project/platform. Pin browser version, OS, viewport, pixel density, fonts, locale, timezone, seed, fixtures, and screenshot target. Wait for real assets, fonts, network completion, and PixiJS render readiness.
+Implemented baseline location: `tests/e2e/visual.spec.ts-snapshots/`, separated by project/platform. The [reference record](../../tests/e2e/visual.spec.ts-snapshots/README.md) documents browser version, OS, viewport, pixel density, locale, timezone, seed, fixtures and screenshot target. Tests wait for real assets, fonts, result confirmation and PixiJS render readiness.
 
 Reach the desired arena/result through actual gameplay and deterministic clock steps. Stop the manual clock at an observed stable state, preserving the real game renderer. Disable CSS/Web Animations during capture and freeze PixiJS animation/effect time at a chosen frame through the same controlled clock; screenshot animation settings alone do not freeze a PixiJS canvas. Keep gameplay effects enabled in functional combat tests.
 
-Once implemented, generate baselines with `npm run test:e2e -- tests/e2e/visual.spec.ts --update-snapshots`; review all three states in both projects and commit the resulting images. Update only for intentional visual changes, inspect diffs, and rerun without `--update-snapshots`. Do not regenerate baselines merely to silence an unexplained failure. Pixel-difference thresholds remain proposed and must be documented when configured.
+Generate baselines with `npm run test:e2e -- tests/e2e/visual.spec.ts --update-snapshots`; review all three states in both projects and commit the resulting images. Update only for intentional visual changes, inspect diffs, and rerun without `--update-snapshots`. Do not regenerate baselines merely to silence an unexplained failure. Implemented comparison uses maxDiffPixels 0 and the default per-pixel threshold 0.2. Dates are fixed without freezing network timers; screenshots use CSS-pixel scale, full-page capture, disabled animations and no masks. The assertion allows 15 seconds for stable captures.
 
 ## Reports
 
@@ -281,7 +283,7 @@ Open the report using `npm run test:e2e:report`; inspect a failed case's trace f
 
 ## Commands
 
-All four scripts below are implemented. E2E runs all twelve functional files, including leaderboard/submission/resilience; the visual suite remains pending. Install Chromium with `npx playwright install chromium` before the first browser run. `test:unit:watch` and `typecheck` are also available.
+All four scripts below are implemented. E2E runs all twelve functional files, including leaderboard/submission/resilience, plus the visual suite. Install Chromium with `npx playwright install chromium` before the first browser run. `test:unit:watch` and `typecheck` are also available.
 
 | npm script | Proposed script body | Purpose |
 | --- | --- | --- |
@@ -297,4 +299,4 @@ Proposed targeted commands: `npm run test:e2e -- --project=chromium-mobile` for 
 - Proposed time-first boundary ordering replaces the earlier conflicting death-priority sentence. An earlier-step death stops remaining damage/contact/fire immediately; unit coverage checks the coincident boundary.
 - Initial enemy type sequencing now advances only on successful spawns. Bounded candidate/grid attempts skip unsafe intervals; blocked recovery is covered by units.
 - Proposed collision radii, broadside spacing, 0.15 rad aim tolerance and ring routes are implemented. Ship-to-ship separation beyond spawn safety and Chaser contact is not modeled; validate balance through playtesting.
-- Functional HTTP/API suites and shared seeded network schedules are implemented. Visual baselines, a dedicated StrictMode project, public-worker readiness and measured profiling still need implementation or verification. Simultaneous-tab storage coordination remains unresolved. Development lifecycle reviews are recorded separately in the construction guide; the challenge audit records delivery blockers.
+- Functional HTTP/API suites, shared seeded network schedules and visual baselines are implemented. A dedicated StrictMode project, public-worker readiness and measured profiling still need implementation or verification. Simultaneous-tab storage coordination remains unresolved. Development lifecycle reviews are recorded separately in the construction guide; the challenge audit records delivery blockers.

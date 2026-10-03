@@ -11,7 +11,7 @@ The preserved challenge uses original `assets/` relative links. In this Vite rep
 | Core / engine | Typed configuration, navigation, weapons, seeded safe spawns, Chaser/Shooter behavior, damage, score, pause/restart and time/death completion | Final playtesting and profiling |
 | React / PixiJS | Menus, Options, arena, controls/HUD/feedback, results, paginated Ranking/Match History and network panel | Final accessibility/visual review |
 | Local persistence / HTTP | Options/identity, last result, pending outbox, confirmed database, idempotent PUT and boot/manual replay | Simultaneous-tab coordination; deployment verification |
-| Tests | Core/engine/persistence/API/mock units and integration; all twelve functional browser flows | Versioned visual baselines and expanded adversarial variants |
+| Tests | Core/engine/persistence/API/mock units and integration; all twelve functional browser flows; six menu/arena/result visual baselines | Expanded adversarial variants; final report packaging |
 | Delivery | Production build verified locally | Public deployment and profiling evidence |
 
 Play starts combat with both enemy types, three weapons, HP and scoring. Completed results survive refresh and are available through Last Result. Registration uses real mocked HTTP, with sending/confirmed/error states and retry. Ranking and Match History are active menu tabs; both derive from confirmed records. This remains a local browser demonstration, not a shared online leaderboard.
@@ -142,7 +142,9 @@ Mobile emulation does not establish performance on a physical device. Review scr
 
 ADRs remain Proposed. Frame clamping, collision geometry, routing, aiming, successful-spawn sequencing and time-first terminal ordering are implemented as proposed choices. Validate tuning through gameplay and profiling. Ship-to-ship separation beyond spawn checks and Chaser impact is not modeled; routes assume the current circular island.
 
-Next work is visual baselines, real profiling and public deployment, followed by final English documentation/report packaging. The build's large entry chunk is an observed optimization concern; no frame-performance conclusion follows from its size. See the [challenge audit](docs/delivery/challenge-audit.md) for requirement-by-requirement gaps and the [construction guide](docs/README.md) for AI assistance and verification history.
+Visual regression now uses six [baseline PNGs and an environment record](tests/e2e/visual.spec.ts-snapshots/README.md). Captures use real rules and input, seed 42, stopped simulation time, fixed dates, completed assets/fonts and confirmed HTTP results. Application code is unchanged in this increment.
+
+Next work is real profiling and public deployment, followed by final English/default and Portuguese README versions and report packaging. The build's large entry chunk is an observed optimization concern; no frame-performance conclusion follows from its size. See the [challenge audit](docs/delivery/challenge-audit.md) for requirement-by-requirement gaps and the [construction guide](docs/README.md) for AI assistance and verification history.
 
 ## Documentation references
 

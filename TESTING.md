@@ -191,7 +191,21 @@ The data-integration increment passed all 158 unit/integration cases and all 158
 | tests/e2e/leaderboard.spec.ts | 8 | Desktop and mobile: 16 executions |
 | tests/e2e/submission.spec.ts | 4 | Desktop and mobile: 8 executions |
 | tests/e2e/resilience.spec.ts | 10 | Desktop and mobile: 20 executions |
+| tests/e2e/visual.spec.ts | 3 | Desktop and mobile: 6 visual executions; baseline comparison |
 
-The current execution record is maintained in [increment 7](docs/README.md#increment-7-http-records-and-recovery). Earlier increment results are historical. Playwright reports describe the latest actual run, and failures retain traces. Development StrictMode/lifecycle review is recorded separately. Screenshots are review artifacts unless explicitly versioned as visual baselines; lifecycle assertions are not memory measurements.
+The functional execution record is maintained in [increment 7](docs/README.md#increment-7-http-records-and-recovery); visual execution is recorded in [increment 8](docs/README.md#increment-8-visual-regression). The complete browser inventory is now 164 executions (82 cases per project); this increment runs the visual subset, not another full functional run. Playwright reports describe the latest actual run, and failures retain traces. Development StrictMode/lifecycle review is recorded separately. Lifecycle assertions are not memory measurements.
 
-Visual baselines, measured profiling and public deployment remain pending. HTTP coverage includes pagination, loading/empty/errors, cache refresh, boot/manual recovery, bounded retries, post-commit timeout and reset/obsolete-response protection. Unit schedules accept controlled waits; native HTTP timeout tests use the documented timeout boundary and observable states. Gameplay time stays independent. Expanded planned variants, variable-latency browser repetition and hidden-tab manual verification remain in the [test plan](docs/testing/test-plan.md). The [profiling template](docs/performance/profiling.md) requires actual measurements. Review the [challenge audit](docs/delivery/challenge-audit.md) before submission.
+Measured profiling and public deployment remain pending. HTTP coverage includes pagination, loading/empty/errors, cache refresh, boot/manual recovery, bounded retries, post-commit timeout and reset/obsolete-response protection. Unit schedules accept controlled waits; native HTTP timeout tests use the documented timeout boundary and observable states. Gameplay time stays independent. Expanded planned variants, variable-latency browser repetition and hidden-tab manual verification remain in the [test plan](docs/testing/test-plan.md). The [profiling template](docs/performance/profiling.md) requires actual measurements. Review the [challenge audit](docs/delivery/challenge-audit.md) before submission.
+
+## Visual regression
+
+Six PNG baselines live in [tests/e2e/visual.spec.ts-snapshots/](tests/e2e/visual.spec.ts-snapshots/README.md): Menu with expanded Controls, stable arena and confirmed result, for desktop and portrait mobile. Include these images in the commit. Their README records the Windows/Chromium reference environment, seeds, dates, capture settings and limitations. Other platforms require separately reviewed baselines.
+
+```sh
+npm run test:e2e -- tests/e2e/visual.spec.ts
+npm run test:e2e -- tests/e2e/visual.spec.ts --repeat-each=3
+# Intentional, reviewed changes only:
+npm run test:e2e -- tests/e2e/visual.spec.ts --update-snapshots
+```
+
+The simulation clock remains stopped during capture after real fixed-step gameplay and input. Dates are fixed while network timers remain active; result capture waits for actual registration confirmation. Assets/fonts finish loading, CSS animations are disabled and no elements are masked. Comparison permits zero differing pixels under Playwright's default 0.2 per-pixel threshold; each assertion has 15 seconds to acquire stable images. Review expected/actual/diff artifacts before updating; rerun without the update flag. Do not replace baselines to silence an unexplained failure.

@@ -1,6 +1,6 @@
 # Challenge compliance audit
 
-Reviewed against the complete [CHALLENGE.md](../../CHALLENGE.md) during increment 7. This is an evidence-based delivery checklist, not a hiring prediction or a claim that every requirement is complete. Proposed balance, endpoint, pagination and tie-break choices are distinguished from challenge requirements in the [specifications](../specs/gameplay.md) and [ADRs](../adr/README.md).
+Reviewed against the complete [CHALLENGE.md](../../CHALLENGE.md) during increment 7 and updated for visual regression in increment 8. This is an evidence-based delivery checklist, not a hiring prediction or a claim that every requirement is complete. Proposed balance, endpoint, pagination and tie-break choices are distinguished from challenge requirements in the [specifications](../specs/gameplay.md) and [ADRs](../adr/README.md).
 
 ## Requirement review
 
@@ -12,7 +12,7 @@ Reviewed against the complete [CHALLENGE.md](../../CHALLENGE.md) during incremen
 | Timer, completion, pause and restart (§2) | Active-time timer, time/death termination, frozen terminal state, fresh restart, manual/focus/visibility pause; engine/core/browser evidence | Manually verify hidden-tab behavior in the intended browser; no physical-device performance claim |
 | Screens and Options (§3) | Menu, validated persistent Options, PixiJS combat, completed details/registration, paginated Ranking and Match History | Final UX and keyboard review of all states |
 | Local match lifecycle (§3) | Immutable configuration/record, last result and queue persist; abandonment does not create a record or replace a result | Simultaneous browser-tab writes are not coordinated; document this local-demo limitation |
-| English solution content (§3) | Code identifiers and app interface are English; technical/spec/test/audit documents are English | The developer requested a Portuguese root README introduction. That solution prose conflicts with §3; translate it before submission. Preserve the original challenge separately |
+| English solution content (§3) | Code identifiers and app interface are English; technical/spec/test/audit documents are English | Agreed final layout: default README.md in English and a separate README.pt-BR.md, with mutual links; preserve the challenge in CHALLENGE.md. This documentation cleanup is deferred until final delivery |
 | React/PixiJS architecture (§4) | Core has no React/PixiJS/Date/Math.random dependencies; injected-clock engine; stable visible HUD snapshots; owned rendering/input lifecycle | Replace remaining architecture TODOs with final descriptions and reviewed ADR statuses |
 | Textures, sizing and resources (§4) | Supplied textures load before combat, retry failures, cache reuse, proportional/DPR canvas and teardown guards; asset/movement/navigation suites | Formal memory evidence and final browser/resize review |
 | Remote data and consistency (§5) | Shared typed REST records, configuration grouping, deterministic ordering, pagination, cache, bounded retries, refetch on tab return and invalidation after registration | Validate deployed-worker readiness and final cache/recovery demonstrations |
@@ -21,7 +21,7 @@ Reviewed against the complete [CHALLENGE.md](../../CHALLENGE.md) during incremen
 | Production MSW (§6; §11) | Worker starts unconditionally in development and optimized preview; HTTP is gated on readiness while gameplay remains accessible | Public URL and reload verification are mandatory and still missing |
 | Assets and accessibility (§7) | Supplied sprites/menu assets, visible loading/errors/focus, native dialogs, semantic result/HUD, labels, tabs and portrait/landscape controls | Final contrast/focus/physical touch review; emulation is not a physical-device audit |
 | Twelve functional E2E flows (§8) | All 158 executions passed in the final optimized-build run on Chromium desktop and Pixel 7 emulation; Options/assets/movement/combat/enemies/match-end/pause/result/navigation/leaderboard/submission/resilience suites | Expanded planned variants are not automatically covered by a passing test count; visual baselines remain required separately |
-| Visual regression (§8) | Review screenshots exist locally | Missing menu, stable arena and result baselines versioned in Git; review screenshots do not meet this requirement |
+| Visual regression (§8) | visual.spec.ts plus six reviewed Menu/arena/result PNG baselines, separated by desktop/mobile and Windows platform; all 18 repeated comparisons passed without updates or automatic retries | Include the baseline directory in the commit; other platforms need separately reviewed baselines. Execution record is in increment 8 of the construction guide |
 | Reports and traces (§8; §11) | HTML reporter and failure traces configured; commands documented | Export/package final reports for delivery; ignored local artifact folders alone are not delivered evidence |
 | Frame and entity metrics (§9) | Fixed 60 Hz simulation and optimized build exist | Missing measured average FPS, p95 frame time and entity counts over a real three-minute match; 60 Hz simulation does not prove 60 FPS rendering |
 | Memory profiling (§9) | Cleanup assertions and repeated lifecycle reviews exist | Missing measured heap after five start/play/exit cycles and investigation of growth; lifecycle tests are not memory profiling |
@@ -44,7 +44,7 @@ Reviewed against the complete [CHALLENGE.md](../../CHALLENGE.md) during incremen
 
 ## Delivery decision
 
-The project follows the intended gameplay and architectural direction, with documented proposed choices and executable evidence. It is **not ready for final submission** until visual baselines, real profiling, a public deployment, English solution README content and final report/documentation packaging are complete. Do not infer evaluation points from test totals.
+The project follows the intended gameplay and architectural direction, with documented proposed choices and executable evidence. It is **not ready for final submission** until real profiling, a public deployment, the agreed English/default and Portuguese README split, and final report/documentation packaging are complete. Visual baselines now exist and must be included in the commit. Do not infer evaluation points from test totals.
 
 The challenge requires the candidate to implement and explain gameplay rules (§4). AI assistance is recorded in the [construction guide](../README.md); the candidate must review the implementation, understand the tradeoffs and validate the delivered behavior. The challenge contains no explicit AI-use prohibition; separate hiring-process rules are not available in this repository.
 
