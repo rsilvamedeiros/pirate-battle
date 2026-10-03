@@ -3,7 +3,7 @@ import styles from './GameScreen.module.scss'
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { PointerEvent } from 'react'
 import { createGameEngine } from '../engine/game-engine'
-import type { GameEngine, GameAction } from '../engine/game-engine'
+import type { GameAction } from '../engine/game-engine'
 import { createArenaView } from '../render/arena-view'
 import { attachKeyboard } from '../input/keyboard'
 import { fixedStepMs } from '../core/simulation'
@@ -12,85 +12,7 @@ import type { GameplayConfig } from '../core/config'
 import { prepareMatch } from '../engine/scenarios'
 import { createRenderProfiler, profilingConfiguration } from '../engine/profiling'
 import type { ResultsStore } from '../persistence/results'
-import { ResultDetails } from './ResultDetails'
-
-function SessionDialog({
-  engine,
-  resultsStore,
-  onExit,
-  onRestart,
-  onResume,
-}: {
-  engine: GameEngine
-  resultsStore: ResultsStore
-  onExit(): void
-  onRestart(): void
-  onResume(): void
-}) {
-  const dialog = useRef<HTMLDialogElement>(null)
-  const completed = engine.getState().status === 'completed'
-  const dead = engine.getState().endReason === 'player-death'
-  useEffect(() => {
-    const element = dialog.current!
-    element.showModal()
-    return () => {
-      element.close()
-    }
-  }, [])
-  return (
-    <dialog
-      ref={dialog}
-      className={styles['session-dialog']}
-      aria-labelledby="session-dialog-heading"
-      onKeyDown={(event) => {
-        if (event.key !== 'Tab') return
-        const controls = Array.from(
-          event.currentTarget.querySelectorAll<HTMLElement>(
-            'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
-          ),
-        ).filter((element) => element.getClientRects().length > 0)
-        const first = controls[0],
-          last = controls.at(-1)
-        if (!first || !last) return
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault()
-          last.focus()
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault()
-          first.focus()
-        }
-      }}
-      onCancel={(event) => {
-        event.preventDefault()
-        if (!completed) onResume()
-      }}
-    >
-      <h2 id="session-dialog-heading">{completed ? 'Voyage complete' : 'Paused'}</h2>
-      <p>
-        {completed
-          ? dead
-            ? 'Your ship was destroyed.'
-            : 'Time expired. Your voyage has ended.'
-          : 'Take a breath. Resume when you are ready.'}
-      </p>
-      {completed && resultsStore.getSnapshot().lastResult && (
-        <ResultDetails result={resultsStore.getSnapshot().lastResult!} store={resultsStore} />
-      )}
-      {completed ? (
-        <button type="button" className={sharedStyles['primary-button']} onClick={onRestart}>
-          Play Again
-        </button>
-      ) : (
-        <button type="button" className={sharedStyles['primary-button']} onClick={onResume}>
-          Resume
-        </button>
-      )}
-      <button type="button" className={sharedStyles['secondary-button']} onClick={onExit}>
-        Main Menu
-      </button>
-    </dialog>
-  )
-}
+import { SessionDialog } from './SessionDialog'
 
 export function GameScreen({
   config,
@@ -301,7 +223,8 @@ export function GameScreen({
       {ready && snapshot.status !== 'running' && (
         <SessionDialog
           key={snapshot.status}
-          engine={engine}
+          status={snapshot.status}
+          endReason={engine.getState().endReason}
           resultsStore={resultsStore}
           onExit={onExit}
           onRestart={onRestart}

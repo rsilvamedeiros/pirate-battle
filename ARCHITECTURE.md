@@ -33,6 +33,8 @@ CSS adapts the same logical arena to portrait/landscape without changing simulat
 
 React components import scoped SCSS Modules for their own layouts and an explicit shared UI module for buttons, notices and tables. Global styles are limited to resets, typography, keyboard focus and the accessibility utility. This keeps menu and dialog selectors from affecting unrelated screens; stylesheet ownership is documented in [TECHNICAL.md](TECHNICAL.md#styling).
 
+App owns screen navigation and retained menu tab/page/group state; [MainMenu](src/ui/MainMenu.tsx) renders controls and record panels through controlled callbacks. GameScreen owns the session lifecycle; [SessionDialog](src/ui/SessionDialog.tsx) receives status and action callbacks, subscribes to result updates and owns native dialog opening/cleanup. Focus restoration remains in GameScreen after dialog cleanup.
+
 ## Simulation loop
 
 The engine consumes an injectable clock and advances a fixed 60 Hz simulation through an accumulator ([ADR 0003](docs/adr/0003-fixed-timestep-simulation.md), [ADR 0007](docs/adr/0007-seeded-rng-and-test-hooks.md)). Production uses performance.now; gated browser tests advance a manual clock through the same rules and rendering path.

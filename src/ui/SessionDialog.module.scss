@@ -1,0 +1,32 @@
+@use '../styles/tokens' as tokens;
+
+.session-dialog {
+  border: 2px solid tokens.$border-game;
+  border-radius: 12px;
+  background: tokens.$surface-control;
+  color: tokens.$text-primary;
+  padding: 28px;
+  width: min(90vw, 400px);
+  max-height: 90svh;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.session-dialog::backdrop {
+  background: #06151bcc;
+}
+
+.session-dialog h2 {
+  margin: 0 0 16px;
+}
+
+.session-dialog p {
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.session-dialog button {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+}

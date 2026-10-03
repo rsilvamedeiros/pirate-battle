@@ -219,14 +219,14 @@ Final review: all 161 unit/integration cases across 14 files and all 174 optimiz
 | tests/e2e/pause.spec.ts | 4 | Desktop and mobile: 8 executions |
 | tests/e2e/result.spec.ts | 7 | Desktop and mobile: 14 executions |
 | tests/e2e/navigation.spec.ts | 3 | Desktop and mobile: 6 executions |
-| tests/e2e/leaderboard.spec.ts | 8 | Desktop and mobile: 16 executions |
+| tests/e2e/leaderboard.spec.ts | 9 | Desktop and mobile: 18 executions |
 | tests/e2e/submission.spec.ts | 4 | Desktop and mobile: 8 executions |
 | tests/e2e/resilience.spec.ts | 10 | Desktop and mobile: 20 executions |
 | tests/e2e/visual.spec.ts | 3 | Desktop and mobile: 6 visual executions; baseline comparison |
 | tests/e2e/profiling.spec.ts | 2 | Desktop and mobile: 4 behavior checks; not performance measurements |
 | tests/e2e/lifecycle.spec.ts | 3 | Desktop and mobile: 6 optimized-preview executions; 6 additional development StrictMode executions |
 
-The complete optimized-browser inventory is 174 executions (87 per project); development StrictMode adds six separately executed cases. Earlier functional/visual/profiling records remain historical in construction increments 7–9. [Increment 10](docs/README.md#increment-10-final-regression-and-delivery-review) records corrections, the full final run and evidence packaging. Development checks and real-time performance measurements are reported separately.
+The complete optimized-browser inventory is 176 executions (88 per project); development StrictMode adds six separately executed cases. Component extraction added one menu-state preservation case per project; the archived final-review run remains the original 174 executions. Earlier functional/visual/profiling records remain historical in construction increments 7–9. [Increment 10](docs/README.md#increment-10-final-regression-and-delivery-review) records corrections, the full final run and evidence packaging. Development checks and real-time performance measurements are reported separately.
 
 Public deployment remains pending. HTTP coverage includes pagination, loading/empty/errors, cache refresh, boot/manual recovery, bounded retries, post-commit timeout and reset/obsolete-response protection. Unit schedules accept controlled waits; native HTTP timeout tests use the documented timeout boundary and observable states. Gameplay time stays independent. Expanded planned variants, variable-latency browser repetition and hidden-tab manual verification remain in the [test plan](docs/testing/test-plan.md). The [profiling record](docs/performance/profiling.md) now includes actual measurements; its limits are explicit. Review the [challenge audit](docs/delivery/challenge-audit.md) before submission.
 

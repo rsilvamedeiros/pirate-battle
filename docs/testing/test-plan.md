@@ -147,6 +147,8 @@ Asset failures are scoped request failures for assets, not additional ranking/hi
 
 ### tests/e2e/leaderboard.spec.ts
 
+- `it('preserves record tabs and pagination across Options and gameplay navigation')`: keep the selected tab, independent pages and restored Options focus when the extracted menu unmounts and mounts again.
+
 - `it('loads both tabs with typed match data')`: success shows player identification, scores, and history date/duration/end reason.
 - `it('shows empty states for both resources')`: empty reset has no records; loading and empty states remain distinct.
 - `it('paginates ranking and history independently')`: multi-page yields 10/10/5 records with correct totals and absolute ranks.

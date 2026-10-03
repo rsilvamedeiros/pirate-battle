@@ -39,6 +39,41 @@ test('paginates ranking and history independently and retains absolute ranks', a
   await page.getByRole('tab', { name: 'Ranking', exact: true }).click()
   await expect(panel.getByText('Page 3 of 3 · 25 matches', { exact: true })).toBeVisible()
 })
+test('preserves record tabs and pagination across Options and gameplay navigation', async ({
+  page,
+}) => {
+  test.setTimeout(60000)
+  await page.goto('/?e2e=1&scenario=multi-page&seed=42')
+  const panel = page.getByRole('tabpanel')
+  await page.getByRole('tab', { name: 'Ranking', exact: true }).click()
+  await panel.getByRole('button', { name: 'Next', exact: true }).click()
+  await panel.getByRole('button', { name: 'Next', exact: true }).click()
+  await expect(panel.getByText('Page 3 of 3 · 25 matches', { exact: true })).toBeVisible()
+  await page.getByRole('tab', { name: 'Match History', exact: true }).click()
+  await panel.getByRole('button', { name: 'Next', exact: true }).click()
+  await expect(panel.getByText('Page 2 of 3 · 25 matches', { exact: true })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Options', exact: true }).click()
+  await page.getByRole('button', { name: 'Main Menu', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Options', exact: true })).toBeFocused()
+  await expect(page.getByRole('tab', { name: 'Match History', exact: true })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  )
+  await expect(panel.getByText('Page 2 of 3 · 25 matches', { exact: true })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect
+    .poll(() => page.evaluate(() => Boolean(window.__game)), { timeout: 15000 })
+    .toBe(true)
+  await page.getByRole('button', { name: 'Pause', exact: true }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Main Menu', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Options', exact: true })).toBeFocused()
+  await expect(panel.getByText('Page 2 of 3 · 25 matches', { exact: true })).toBeVisible()
+  await page.getByRole('tab', { name: 'Ranking', exact: true }).click()
+  await expect(panel.getByText('Page 3 of 3 · 25 matches', { exact: true })).toBeVisible()
+})
+
 test('distinguishes empty lists from loading and errors in both tabs', async ({ page }) => {
   await open(page, 'empty')
   await expect(

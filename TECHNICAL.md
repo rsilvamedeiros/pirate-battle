@@ -44,7 +44,9 @@ Play starts combat with both enemy types, three weapons, HP and scoring. Complet
 | [src/engine/game-engine.ts](src/engine/game-engine.ts) | Injectable clock, fixed-step accumulator, input state and stable HUD snapshots |
 | [src/render/arena-view.ts](src/render/arena-view.ts) | Async texture loading, private PixiJS application, drawing and teardown |
 | [src/input/keyboard.ts](src/input/keyboard.ts) | Gameplay bindings, focus/visibility pause and listener cleanup |
-| [src/ui/GameScreen.tsx](src/ui/GameScreen.tsx) | Canvas lifecycle, touch pointers, semantic HUD, dialogs and gated test hooks |
+| [src/ui/GameScreen.tsx](src/ui/GameScreen.tsx) | Canvas/session lifecycle, touch pointers, semantic HUD and gated test hooks |
+| [src/ui/SessionDialog.tsx](src/ui/SessionDialog.tsx) | Pause/completion dialog, focus containment, result subscription and action callbacks |
+| [src/ui/MainMenu.tsx](src/ui/MainMenu.tsx) | Menu controls, record tabs/configuration, pagination callbacks and network panel |
 | [src/persistence/options.ts](src/persistence/options.ts) | Versioned storage envelope, local player identity, loading/saving/recovery |
 | [src/api/contracts.ts](src/api/contracts.ts) | Immutable MatchRecord, full configuration grouping and persisted-record validation |
 | [src/api/client.ts](src/api/client.ts) | Axios GET/PUT, 5-second timeout, cancellation, normalized errors and retry policies |
@@ -59,9 +61,9 @@ Play starts combat with both enemy types, three weapons, HP and scoring. Complet
 | [src/ui/RecordsPanel.tsx](src/ui/RecordsPanel.tsx) | Loading/empty/error/refresh states and paginated record views |
 | [src/ui/NetworkPanel.tsx](src/ui/NetworkPanel.tsx) | Scenario selection/recovery, explicit demo reset and pending retries |
 | [src/ui/OptionsScreen.tsx](src/ui/OptionsScreen.tsx) | Two-field form, associated errors, Save/Main Menu actions, focus |
-| [src/App.tsx](src/App.tsx) | Menu/Options/game/result navigation and saved state subscriptions |
+| [src/App.tsx](src/App.tsx) | Screen navigation, saved-state subscriptions and retained menu tab/page/group state |
 | [src/main.tsx](src/main.tsx) | One-time storage bootstrap and React StrictMode mount |
-| [src/App.module.scss](src/App.module.scss) | Scoped menu layout, supplied assets and responsive styling |
+| [src/App.module.scss](src/App.module.scss) | Shared screen shell and supplied panel assets |
 | [src/styles/ui.module.scss](src/styles/ui.module.scss) | Explicitly shared button, message and table styles |
 | [playwright.config.ts](playwright.config.ts) | Desktop/mobile projects, preview server, reports, failure traces |
 | [vitest.config.ts](vitest.config.ts) | Node-based core, engine and persistence test discovery |
@@ -84,8 +86,10 @@ Run `npm run format` to format application source, SCSS, tests, scripts, GitHub 
 
 | Stylesheet | Responsibility |
 | --- | --- |
-| [src/App.module.scss](src/App.module.scss) | Menu shell, control instructions, tabs and configuration selection |
-| [src/ui/GameScreen.module.scss](src/ui/GameScreen.module.scss) | Arena, HUD, touch controls, session dialogs and orientation layouts |
+| [src/App.module.scss](src/App.module.scss) | Shared screen shell and panel layout |
+| [src/ui/MainMenu.module.scss](src/ui/MainMenu.module.scss) | Menu actions, control instructions, record tabs and configuration selection |
+| [src/ui/GameScreen.module.scss](src/ui/GameScreen.module.scss) | Arena, HUD, touch controls and orientation layouts |
+| [src/ui/SessionDialog.module.scss](src/ui/SessionDialog.module.scss) | Pause/completion dialog and backdrop |
 | [src/ui/OptionsScreen.module.scss](src/ui/OptionsScreen.module.scss) | Options form, validation feedback and field layout |
 | [src/ui/ResultDetails.module.scss](src/ui/ResultDetails.module.scss) | Result summary and pending-registration message |
 | [src/ui/RecordsPanel.module.scss](src/ui/RecordsPanel.module.scss) | Ranking/history panel and pagination |
@@ -93,6 +97,8 @@ Run `npm run format` to format application source, SCSS, tests, scripts, GitHub 
 | [src/styles/ui.module.scss](src/styles/ui.module.scss) | Shared buttons, notices, actions and explicitly styled tables |
 
 Components import their own module and the shared UI module when needed; they do not rely on App loading their styles. Table rules are scoped to the shared table class instead of global element selectors. Palette values come from [src/styles/_tokens.scss](src/styles/_tokens.scss), which emits no CSS. Browser tests locate UI through roles, accessible names and semantic containers rather than generated class names.
+
+App retains menu state while MainMenu unmounts for Options, gameplay or Last Result. A successful Options save resets only the ranking page. MainMenu updates the controlled state through functional callbacks. GameScreen supplies SessionDialog with status, end reason and resume/restart/exit callbacks; the dialog receives no engine instance. Its result-store subscription updates pending/confirmed/error feedback independently, while its native dialog effect owns opening and cleanup. GameScreen retains focus restoration after dialog cleanup.
 
 Keep selectors shallow and preserve stylesheet order and responsive breakpoints. Add shared tokens when a value has a common visual role; keep one-off layout values next to their component. Vite compiles SCSS using the development dependency installed by `npm ci`; no additional plugin or runtime dependency is required.
 

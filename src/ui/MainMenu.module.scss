@@ -1,0 +1,88 @@
+@use '../styles/tokens' as tokens;
+
+.game-title img {
+  display: block;
+  width: min(100%, 400px);
+  height: auto;
+  margin: 0 auto;
+}
+
+.tagline {
+  margin: 12px 0 28px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.menu-actions {
+  display: grid;
+  justify-content: center;
+  gap: 12px;
+}
+
+.session-summary {
+  margin: 24px 0 20px;
+  font-size: 0.95rem;
+}
+
+.ranking-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.ranking-actions button {
+  flex: 1;
+  padding-inline: 16px;
+}
+
+.controls {
+  text-align: left;
+  border-block: 1px solid #eec47755;
+  padding: 14px 0;
+}
+
+.controls summary {
+  font-weight: bold;
+  text-align: center;
+  min-height: 28px;
+}
+
+.controls p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+
+.configuration-group {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.configuration-group label {
+  display: block;
+  font-weight: bold;
+  margin-block: 12px;
+}
+
+.configuration-group select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px;
+  border: 2px solid tokens.$border-input;
+  border-radius: 6px;
+  background: tokens.$surface-input;
+  color: tokens.$text-primary;
+}
+
+@media (max-width: 480px) {
+  .ranking-actions {
+    flex-direction: column;
+  }
+
+  .tagline {
+    font-size: 0.75rem;
+  }
+}
